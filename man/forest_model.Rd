@@ -42,8 +42,9 @@ This function takes the model output from one of the common model functions in
 
  The \code{panels} parameter is a \code{list} of lists each of which have an element
  \code{width}
- and, optionally, \code{display}, \code{display_na},
- \code{heading}, \code{hjust} and \code{fontface}.
+ and, optionally, \code{item}, \code{display}, \code{display_na},
+ \code{heading}, \code{hjust} and \code{fontface}. \code{item} can be \code{"forest"} for the forest
+ plot (exactly one required) or \code{"vline"} for a vertical line.
  \code{display} indicates which column to display as text from the standard ones produced by
  \code{\link[broom]{tidy}} and in addition
  \code{variable} (the term in the model, for factors without the level),

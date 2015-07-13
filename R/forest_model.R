@@ -19,8 +19,9 @@
 #'
 #'  The \code{panels} parameter is a \code{list} of lists each of which have an element
 #'  \code{width}
-#'  and, optionally, \code{display}, \code{display_na},
-#'  \code{heading}, \code{hjust} and \code{fontface}.
+#'  and, optionally, \code{item}, \code{display}, \code{display_na},
+#'  \code{heading}, \code{hjust} and \code{fontface}. \code{item} can be \code{"forest"} for the forest
+#'  plot (exactly one required) or \code{"vline"} for a vertical line.
 #'  \code{display} indicates which column to display as text from the standard ones produced by
 #'  \code{\link[broom]{tidy}} and in addition
 #'  \code{variable} (the term in the model, for factors without the level),
@@ -138,6 +139,9 @@ panel_forest_plot <-
            forest_mapping = aes(estimate, y, xmin = conf.low, xmax = conf.high),
            panels, trans = I, funcs = NULL, forest_theme = theme_~forest(),
            colour = "black", shape = 15, banded = TRUE) {
+
+    stopifnot(is.list(panels))
+
     fd_for_eval <- c(as.list(forest_data), trans = trans, funcs)
     max_y <- max(lazy_eval(forest_mapping$y, fd_for_eval))
 
@@ -145,16 +149,22 @@ panel_forest_plot <-
                               lazy_eval(forest_mapping$xmax, fd_for_eval)), na.rm = TRUE)
 
     panel_positions <- lapply(panels, function(panel) {
+      if (is.null(panel$width)) stop("All panels must have a width.")
       data_frame(width = panel$width,
+                 item = panel$item %||% NA,
                  display = paste(deparse(panel$display), collapse = "\n"),
                  hjust = panel$hjust %||% 0,
                  heading = panel$heading %||% NA,
                  fontface = panel$fontface %||% "plain")
     }) %>% rbind_all
+    if (sum(panel_positions$item == "forest", na.rm = TRUE) != 1) {
+      stop("One panel must include item \"forest\".")
+    }
+    forest_panel <- which(panel_positions$item == "forest")
     panel_positions <- panel_positions %>% mutate(
-      rel_width = width / width[which(display == "~forest()")],
+      rel_width = width / width[forest_panel],
       rel_x = cumsum(c(0, width[-n()])),
-      rel_x = (rel_x - rel_x[which(display == "~forest()")]) / width[which(display == "~forest()")],
+      rel_x = (rel_x - rel_x[forest_panel]) / width[forest_panel],
       abs_x = rel_x * diff(forest_min_max) + forest_min_max[1],
       abs_width = rel_width * diff(forest_min_max),
       abs_end_x = abs_x + abs_width,
@@ -163,9 +173,12 @@ panel_forest_plot <-
     )
 
     forest_lines <- panel_positions %>%
-      filter(display == "~line()") %>%
+      filter(item == "vline") %>%
       {expand.grid(y = c(0.5, max_y + 1.5),
-                   x = .$abs_x + .$abs_width / 2)} %>%
+                   x = ifelse(.$hjust == 0, .$abs_x,
+                              ifelse(.$hjust == 0.5, .$abs_x + .$abs_width / 2,
+                                     .$abs_end_x)))
+      } %>%
       rbind(data.frame(y = max_y + 0.5, x = c(min(panel_positions$abs_x), max(panel_positions$abs_end_x)))) %>%
       rbind(data.frame(y = c(0.5, max_y + 0.5), x = 0)) %>%
       cbind(group = rep(1:4, each = 2), linetype = rep(c("solid", "dashed"), c(6, 2)))
@@ -180,8 +193,7 @@ panel_forest_plot <-
       )
 
     forest_text <- lapply(1:length(panels), function(i) {
-      if (!is.null(panels[[i]]$display) &&
-          !(panel_positions$display[i] %in% c("~forest()", "~line()"))) {
+      if (!is.null(panels[[i]]$display)) {
         with(
           panel_positions[i, ],
           data_frame(x = text_x,
@@ -274,9 +286,9 @@ default_forest_panels <- function(measure = "Hazard ratio", factor_separate_line
        list(width = if (factor_separate_line) 0.02 else 0.1, display = ~variable, fontface = "bold", heading = "Variable"),
        list(width = if (factor_separate_line) 0.1 else 0.07, display = ~level),
        list(width = 0.05, display = ~n, hjust = 1, heading = "N"),
-       list(width = 0.03, display = ~line()),
-       list(width = 0.55, display = ~forest(), hjust = 0.5, heading = measure),
-       list(width = 0.03, display = ~line()),
+       list(width = 0.03, item = "vline", hjust = 0.5),
+       list(width = 0.55, item = "forest", hjust = 0.5, heading = measure),
+       list(width = 0.03, item = "vline", hjust = 0.5),
        list(width = 0.12,
             display = ~ifelse(reference, "Reference",
                               sprintf("%0.2f (%0.2f-%0.2f)",trans(estimate), trans(conf.low), trans(conf.high))),
