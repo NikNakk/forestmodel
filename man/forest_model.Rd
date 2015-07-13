@@ -5,8 +5,7 @@
 \title{Produce a forest plot based on a regression model}
 \usage{
 forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
-  colour = "black", shape = 15, banded = TRUE, p_formatter = function(x)
-  sprintf("\%0.3f", x))
+  colour = "black", shape = 15, banded = TRUE, funcs = NULL)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -21,6 +20,8 @@ forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
 \item{shape}{shape of the point estimate}
 
 \item{banded}{whether to show light grey bands behind alternate rows}
+
+\item{funcs}{optional list of functions required for formatting \code{panels$display}}
 }
 \value{
 A ggplot ready for display or saving
@@ -41,7 +42,9 @@ This function takes the model output from one of the common model functions in
  \code{variable} (the term in the model, for factors without the level),
  \code{level} (the level of factors),
  \code{reference} (TRUE for the reference level of a factor).
- It can also be a formula using these columns either as a string or as a quoted expression.
+ It can also be a formula using these columns. The function \code{trans} is definded to be the
+ transformation between the coefficients and the scales (e.g. \code{exp}). Other functions not
+ in base R can be provided as a \code{list} with the parameter \code{funcs}.
  \code{display_reference} allows for an alternative display for reference levels of factors
  which typically do not have data within the model output.
 }

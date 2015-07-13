@@ -7,6 +7,7 @@
 #' @param colour colour of the point estimate and error bars
 #' @param shape shape of the point estimate
 #' @param banded whether to show light grey bands behind alternate rows
+#' @param funcs optional list of functions required for formatting \code{panels$display}
 #'
 #' @return A ggplot ready for display or saving
 #'
@@ -22,7 +23,9 @@
 #'  \code{variable} (the term in the model, for factors without the level),
 #'  \code{level} (the level of factors),
 #'  \code{reference} (TRUE for the reference level of a factor).
-#'  It can also be a formula using these columns either as a string or as a quoted expression.
+#'  It can also be a formula using these columns. The function \code{trans} is definded to be the
+#'  transformation between the coefficients and the scales (e.g. \code{exp}). Other functions not
+#'  in base R can be provided as a \code{list} with the parameter \code{funcs}.
 #'  \code{display_reference} allows for an alternative display for reference levels of factors
 #'  which typically do not have data within the model output.
 #'
@@ -60,8 +63,7 @@
 #'   default_forest_panels("Odds ratio")))
 
 forest_model <- function(model, panels = default_forest_panels(), exponentiate = NULL,
-                         colour = "black", shape = 15, banded = TRUE,
-                         p_formatter = function(x) sprintf("%0.3f", x)) {
+                         colour = "black", shape = 15, banded = TRUE, funcs = NULL) {
   data <- model.frame(model)
   if (inherits(model, "coxph")) {
     tidy_model <- broom::tidy(model)
@@ -143,10 +145,10 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
       fontface = "bold"
     )
 
-  ft_for_eval <- c(as.list(forest_terms), trans = trans)
-  forest_text <- panels %>%
-    filter(!is.na(display) & display != "forest") %>%
-    group_by(display) %>%
+  ft_for_eval <- c(as.list(forest_terms), trans = trans, funcs)
+  display_panels <- panels %>%
+    filter(!is.na(display) & display != "forest")
+  forest_text <- rowwise(display_panels) %>%
     do({
       data_frame(x = .$text_x,
                  y = forest_terms$y,
@@ -155,10 +157,8 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
                                              lazyeval::lazy_eval(.$display_reference, ft_for_eval),
                                              lazyeval::lazy_eval(.$display, ft_for_eval))),
                  fontface = "plain")
-    }) %>%
-    ungroup %>%
-    select(-display) %>%
-    rbind(forest_headings)
+    })
+  forest_text <- rbind(forest_text, forest_headings)
 
   forest_rectangles <- data_frame(xmin = min(panels$abs_x),
                                   xmax = max(panels$abs_end_x),
@@ -197,8 +197,9 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
         }
       }
     }
-    forest_breaks <- unlist(lapply(floor(log10(forest_range[1])):ceiling(log10(forest_range[2])),
-                                 make_range, step = 2)) %>%
+    log_range <- floor(log10(forest_range[1])):ceiling(log10(forest_range[2]))
+    step <- if (length(log_range) < 6) 2 else 5
+    forest_breaks <- unlist(lapply(log_range, make_range, step = step)) %>%
       c(1) %>%
       unique %>%
       sort %>%
@@ -242,14 +243,18 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
 #' @export
 #'
 default_forest_panels <- function(measure = "Hazard ratio") {
-  panels <- data.frame(display = c(NA, "variable", "level", "n", NA, "forest", NA,
-                                   'sprintf("%0.2f (%0.2f-%0.2f)", trans(estimate), trans(conf.low), trans(conf.high))',
-                                   'sprintf("%0.3f", p.value)', NA),
-                       display_reference = c(rep(NA, 7), '"Reference\"', '""', NA),
-                       heading = c(NA, "Variable", NA, "N", NA, measure, NA, NA, "p", NA),
-                       hjust = c(NA, 0, 0, 1, NA, 0.5, NA, 0, 1, NA),
-                       width = c(0.03, 0.1, 0.07, 0.05, 0.03, 0.55, 0.03, 0.12, 0.05, 0.03),
-                       stringsAsFactors = FALSE)
+  data.frame(
+    display = c(
+      NA, "variable", "level", "n", NA, "forest", NA,
+      'sprintf("%0.2f (%0.2f-%0.2f)", trans(estimate), trans(conf.low), trans(conf.high))',
+      'sprintf("%0.3f", p.value)', NA
+    ),
+    display_reference = c(rep(NA, 7), '"Reference\"', '""', NA),
+    heading = c(NA, "Variable", NA, "N", NA, measure, NA, NA, "p", NA),
+    hjust = c(NA, 0, 0, 1, NA, 0.5, NA, 0, 1, NA),
+    width = c(0.03, 0.1, 0.07, 0.05, 0.03, 0.55, 0.03, 0.12, 0.05, 0.03),
+    stringsAsFactors = FALSE
+  )
 }
 
 # Work around for R CMD CHECK
@@ -280,5 +285,10 @@ utils::globalVariables(names = c(
   "linetype",
   "group",
   "label",
-  "fontface"
+  "fontface",
+  "panels_display",
+  "reference",
+  "display_reference",
+  "rel_width",
+  "abs_end_x"
 ))
