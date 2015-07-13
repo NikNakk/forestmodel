@@ -8,6 +8,7 @@
 #' @param shape shape of the point estimate
 #' @param banded whether to show light grey bands behind alternate rows
 #' @param funcs optional list of functions required for formatting \code{panels$display}
+#' @param factor_separate_line whether to show the factor variable name on a separate line
 #'
 #' @return A ggplot ready for display or saving
 #'
@@ -17,7 +18,7 @@
 #'
 #'  The \code{panels} parameter is a \code{data.frame} with columns
 #'  \code{display} and \code{width} and, optionally, \code{display_reference},
-#'  \code{heading} and \code{hjust}.
+#'  \code{heading}, \code{hjust} and \code{fontface}.
 #'  \code{display} indicates which column to display as text from the standard ones produced by
 #'  \code{\link[broom]{tidy}} and in addition
 #'  \code{variable} (the term in the model, for factors without the level),
@@ -62,8 +63,11 @@
 #' print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic),
 #'   default_forest_panels("Odds ratio")))
 
-forest_model <- function(model, panels = default_forest_panels(), exponentiate = NULL,
-                         colour = "black", shape = 15, banded = TRUE, funcs = NULL) {
+forest_model <- function(model,
+                         panels = default_forest_panels(factor_separate_line = factor_separate_line),
+                         exponentiate = NULL, colour = "black", shape = 15,
+                         banded = TRUE, funcs = NULL,
+                         factor_separate_line = FALSE) {
   data <- model.frame(model)
   if (inherits(model, "coxph")) {
     tidy_model <- broom::tidy(model)
@@ -81,24 +85,33 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
   if (is.null(panels$hjust)) {
     panels$hjust <- 0
   }
+  if (is.null(panels$fontface)) {
+    panels$fontface <- "plain"
+  }
   if (is.null(panels$heading)) {
     panels$heading <- panels$display
   }
   if (is.null(panels$display_reference)) {
     panels$display_reference <- panels_display
   }
-  forest_terms <- data.frame(variable = names(attr(model$terms, "dataClasses"))[-1],
+  if (is.null(panels$display_na)) {
+    panels$display_na <- panels_display
+  }
+  forest_terms <- data_frame(variable = names(attr(model$terms, "dataClasses"))[-1],
                              term_label = attr(model$terms, "term.labels"),
-                             class = attr(model$terms, "dataClasses")[-1], stringsAsFactors = FALSE,
-                             row.names = NULL) %>%
-    group_by(term_no = row_number()) %>% do({
+                             class = attr(model$terms, "dataClasses")[-1]) %>%
+    rowwise %>% do({
       if (.$class == "factor") {
         tab <- table(data[, .$variable])
-        data.frame(.,
-                   level = names(tab),
+        out <- cbind(.,
+                   data_frame(level = names(tab),
                    level_no = 1:length(tab),
-                   n = as.integer(tab),
-                   stringsAsFactors = FALSE, row.names = NULL)
+                   n = as.integer(tab)))
+        if (factor_separate_line) {
+          out <- rbind(cbind(., data_frame(level = NA, level_no = NA, n = NA)),
+                       out)
+        }
+        out
       } else {
         data.frame(., level = NA, level_no = NA, n = sum(!is.na(data[, .$variable])),
                    stringsAsFactors = FALSE)
@@ -111,13 +124,15 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
     left_join(tidy_model, by = "term") %>%
     mutate(
       reference = ifelse(is.na(level_no), FALSE, level_no == 1),
-      estimate = ifelse(reference, 0, estimate)
+      estimate = ifelse(reference, 0, estimate),
+      variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
     )
 
   forest_min_max <- range(c(forest_terms$conf.low, forest_terms$conf.high), na.rm = TRUE)
 
   panels <- panels %>% mutate(
     display_reference = ifelse(is.na(display_reference), display, display_reference),
+    display_na = ifelse(is.na(display_na), display, display_na),
     rel_width = width / width[which(display == "forest")],
     rel_x = cumsum(c(0, width[-n()])),
     rel_x = (rel_x - rel_x[which(display == "forest")]) / width[which(display == "forest")],
@@ -155,8 +170,10 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
                  hjust = .$hjust,
                  label = as.character(ifelse(forest_terms$reference,
                                              lazyeval::lazy_eval(.$display_reference, ft_for_eval),
-                                             lazyeval::lazy_eval(.$display, ft_for_eval))),
-                 fontface = "plain")
+                                      ifelse(!is.na(forest_terms$estimate),
+                                             lazyeval::lazy_eval(.$display, ft_for_eval),
+                                             lazyeval::lazy_eval(.$display_na, ft_for_eval)))),
+                 fontface = .$fontface)
     })
   forest_text <- rbind(forest_text, forest_headings)
 
@@ -167,12 +184,13 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
                                   ymax = y + 0.5)
 
   forest_theme <- function() {
-    theme_minimal() +
+    theme_bw() +
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             axis.title.y = element_blank(),
             axis.title.x = element_blank(),
-            axis.text.y = element_blank()
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank()
       )
   }
 
@@ -216,7 +234,7 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
                 forest_rectangles, fill = "#EFEFEF")
   }
   main_plot <- main_plot +
-    geom_point(aes(estimate, y), size = 5, shape = shape, colour = colour) +
+    geom_point(aes(estimate, y), size = 5, shape = shape, colour = colour, na.rm = TRUE) +
     geom_errorbarh(aes(estimate,
                        xmin = conf.low,
                        xmax = conf.high,
@@ -231,6 +249,7 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
     scale_x_continuous(breaks = forest_breaks,
                        labels = sprintf("%g", trans(forest_breaks)),
                        expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
     forest_theme()
   main_plot
 }
@@ -238,23 +257,32 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
 #' Default panels for forest_model
 #'
 #' @param measure label for main forest plot
+#' @param factor_separate_line changes defaults for widths of variable depending on whether
+#'   factors have their name on separate line
 #'
 #' @return `data.frame` ready to be passed to `forest_model`
 #' @export
 #'
-default_forest_panels <- function(measure = "Hazard ratio") {
-  data.frame(
+default_forest_panels <- function(measure = "Hazard ratio", factor_separate_line = FALSE) {
+  panels <-
+    data.frame(
     display = c(
       NA, "variable", "level", "n", NA, "forest", NA,
       'sprintf("%0.2f (%0.2f-%0.2f)", trans(estimate), trans(conf.low), trans(conf.high))',
       'sprintf("%0.3f", p.value)', NA
     ),
     display_reference = c(rep(NA, 7), '"Reference\"', '""', NA),
+    display_na = c(rep(NA, 7), '""', '""', NA),
     heading = c(NA, "Variable", NA, "N", NA, measure, NA, NA, "p", NA),
     hjust = c(NA, 0, 0, 1, NA, 0.5, NA, 0, 1, NA),
     width = c(0.03, 0.1, 0.07, 0.05, 0.03, 0.55, 0.03, 0.12, 0.05, 0.03),
+    fontface = c("plain", "bold", rep("plain", 8)),
     stringsAsFactors = FALSE
   )
+  if (factor_separate_line) {
+    panels$width[2:3] <- c(0.02, 0.1)
+  }
+  panels
 }
 
 # Work around for R CMD CHECK
@@ -289,6 +317,7 @@ utils::globalVariables(names = c(
   "panels_display",
   "reference",
   "display_reference",
+  "display_na",
   "rel_width",
   "abs_end_x"
 ))

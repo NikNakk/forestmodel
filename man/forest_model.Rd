@@ -5,7 +5,8 @@
 \title{Produce a forest plot based on a regression model}
 \usage{
 forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
-  colour = "black", shape = 15, banded = TRUE, funcs = NULL)
+  colour = "black", shape = 15, banded = TRUE, funcs = NULL,
+  factor_separate_line = FALSE)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -22,6 +23,8 @@ forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
 \item{banded}{whether to show light grey bands behind alternate rows}
 
 \item{funcs}{optional list of functions required for formatting \code{panels$display}}
+
+\item{factor_separate_line}{whether to show the factor variable name on a separate line}
 }
 \value{
 A ggplot ready for display or saving
