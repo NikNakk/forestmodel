@@ -11,5 +11,6 @@ License: GPL-2
 LazyData: TRUE
 Imports: ggplot2,
     dplyr,
-    broom
+    broom,
+    lazyeval
 Suggests: survival

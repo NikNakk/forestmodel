@@ -9,9 +9,10 @@ forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
   sprintf("\%0.3f", x))
 }
 \arguments{
-\item{model}{regression model produced by `lm`, `glm`, `coxph`}
+\item{model}{regression model produced by \code{\link[stats]{lm}},
+\code{\link[stats]{glm}}, \code{\link[survival]{coxph}}}
 
-\item{panels}{`data.frame` with details of the panels that make up the plot (See Details)}
+\item{panels}{\code{data.frame} with details of the panels that make up the plot (See Details)}
 
 \item{exponentiate}{whether the numbers on the x scale should be exponentiated for plotting}
 
@@ -20,14 +21,29 @@ forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
 \item{shape}{shape of the point estimate}
 
 \item{banded}{whether to show light grey bands behind alternate rows}
-
-\item{p_formatter}{function to format the p values for display}
 }
 \value{
-a ggplot ready for display or saving
+A ggplot ready for display or saving
 }
 \description{
 Produce a forest plot based on a regression model
+}
+\details{
+This function takes the model output from one of the common model functions in
+  R (e.g. \code{\link[stats]{lm}}, \code{\link[stats]{glm}},
+ \code{\link[survival]{coxph}}).
+
+ The \code{panels} parameter is a \code{data.frame} with columns
+ \code{display} and \code{width} and, optionally, \code{display_reference},
+ \code{heading} and \code{hjust}.
+ \code{display} indicates which column to display as text from the standard ones produced by
+ \code{\link[broom]{tidy}} and in addition
+ \code{variable} (the term in the model, for factors without the level),
+ \code{level} (the level of factors),
+ \code{reference} (TRUE for the reference level of a factor).
+ It can also be a formula using these columns either as a string or as a quoted expression.
+ \code{display_reference} allows for an alternative display for reference levels of factors
+ which typically do not have data within the model output.
 }
 \examples{
 library("survival")

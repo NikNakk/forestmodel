@@ -1,14 +1,30 @@
 #' Produce a forest plot based on a regression model
 #'
-#' @param model regression model produced by `lm`, `glm`, `coxph`
-#' @param panels `data.frame` with details of the panels that make up the plot (See Details)
+#' @param model regression model produced by \code{\link[stats]{lm}},
+#'   \code{\link[stats]{glm}}, \code{\link[survival]{coxph}}
+#' @param panels \code{data.frame} with details of the panels that make up the plot (See Details)
 #' @param exponentiate whether the numbers on the x scale should be exponentiated for plotting
 #' @param colour colour of the point estimate and error bars
 #' @param shape shape of the point estimate
 #' @param banded whether to show light grey bands behind alternate rows
-#' @param p_formatter function to format the p values for display
 #'
-#' @return a ggplot ready for display or saving
+#' @return A ggplot ready for display or saving
+#'
+#' @details This function takes the model output from one of the common model functions in
+#'   R (e.g. \code{\link[stats]{lm}}, \code{\link[stats]{glm}},
+#'  \code{\link[survival]{coxph}}).
+#'
+#'  The \code{panels} parameter is a \code{data.frame} with columns
+#'  \code{display} and \code{width} and, optionally, \code{display_reference},
+#'  \code{heading} and \code{hjust}.
+#'  \code{display} indicates which column to display as text from the standard ones produced by
+#'  \code{\link[broom]{tidy}} and in addition
+#'  \code{variable} (the term in the model, for factors without the level),
+#'  \code{level} (the level of factors),
+#'  \code{reference} (TRUE for the reference level of a factor).
+#'  It can also be a formula using these columns either as a string or as a quoted expression.
+#'  \code{display_reference} allows for an alternative display for reference levels of factors
+#'  which typically do not have data within the model output.
 #'
 #' @import dplyr
 #' @import ggplot2
@@ -54,9 +70,21 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
   }
   if (is.null(exponentiate)) {
     exponentiate <- inherits(model, "coxph") ||
-      (inherits(model, "glm") && model$family$family == "logit")
+      (inherits(model, "glm") && model$family$link == "logit")
   }
   if (exponentiate) trans <- exp else trans <- I
+  stopifnot(is.data.frame(panels),
+            c("display", "width") %in% names(panels),
+            "forest" %in% panels$display)
+  if (is.null(panels$hjust)) {
+    panels$hjust <- 0
+  }
+  if (is.null(panels$heading)) {
+    panels$heading <- panels$display
+  }
+  if (is.null(panels$display_reference)) {
+    panels$display_reference <- panels_display
+  }
   forest_terms <- data.frame(variable = names(attr(model$terms, "dataClasses"))[-1],
                              term_label = attr(model$terms, "term.labels"),
                              class = attr(model$terms, "dataClasses")[-1], stringsAsFactors = FALSE,
@@ -80,32 +108,30 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
     ) %>%
     left_join(tidy_model, by = "term") %>%
     mutate(
-      conf_int = ifelse(is.na(level_no) | level_no > 1,
-                        sprintf("%0.2f (%0.2f-%0.2f)", trans(estimate), trans(conf.low), trans(conf.high)),
-                        "Reference"),
-      p_format = ifelse(is.na(level_no) | level_no > 1,
-                        p_formatter(p.value),
-                        ""),
-      estimate = ifelse(is.na(level_no) | level_no > 1, estimate, 0)
+      reference = ifelse(is.na(level_no), FALSE, level_no == 1),
+      estimate = ifelse(reference, 0, estimate)
     )
 
-  panels[nrow(panels) + 1, ] <- data.frame("end", NA, NA, NA, NA, stringsAsFactors = FALSE)
   forest_min_max <- range(c(forest_terms$conf.low, forest_terms$conf.high), na.rm = TRUE)
+
   panels <- panels %>% mutate(
+    display_reference = ifelse(is.na(display_reference), display, display_reference),
+    rel_width = width / width[which(display == "forest")],
     rel_x = cumsum(c(0, width[-n()])),
-    rel_x = (rel_x - rel_x[section == "forest"]) / width[section == "forest"],
+    rel_x = (rel_x - rel_x[which(display == "forest")]) / width[which(display == "forest")],
     abs_x = rel_x * diff(forest_min_max) + forest_min_max[1],
-    abs_width = c(diff(abs_x), NA),
+    abs_width = rel_width * diff(forest_min_max),
+    abs_end_x = abs_x + abs_width,
     text_x = ifelse(hjust == 0, abs_x,
-                    ifelse(hjust == 0.5, abs_x + abs_width / 2, abs_x + abs_width))
+                    ifelse(hjust == 0.5, abs_x + abs_width / 2, abs_end_x))
   )
 
   forest_lines <- panels %>%
-    filter(section %in% c("forest_margin", "forest")) %>%
+    filter(abs(row_number() - which(display == "forest")) <= 1) %>%
     {expand.grid(y = c(0.5, max(forest_terms$y) + 1.5),
                  x = .$abs_x[c(1, 3)] + .$abs_width[c(1, 3)] / 2)} %>%
-    rbind(data.frame(y = max(forest_terms$y) + 0.5, x = range(panels$abs_x))) %>%
-    rbind(data.frame(y = .$y[1:2], x = 0)) %>%
+    rbind(data.frame(y = max(forest_terms$y) + 0.5, x = c(min(panels$abs_x), max(panels$abs_end_x)))) %>%
+    rbind(data.frame(y = c(0.5, max(forest_terms$y) + 0.5), x = 0)) %>%
     cbind(group = rep(1:4, each = 2), linetype = rep(c("solid", "dashed"), c(6, 2)))
 
   forest_headings <- panels %>% filter(!is.na(heading)) %>%
@@ -117,6 +143,7 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
       fontface = "bold"
     )
 
+  ft_for_eval <- c(as.list(forest_terms), trans = trans)
   forest_text <- panels %>%
     filter(!is.na(display) & display != "forest") %>%
     group_by(display) %>%
@@ -124,7 +151,9 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
       data_frame(x = .$text_x,
                  y = forest_terms$y,
                  hjust = .$hjust,
-                 label = as.character(forest_terms[[.$display]]),
+                 label = as.character(ifelse(forest_terms$reference,
+                                             lazyeval::lazy_eval(.$display_reference, ft_for_eval),
+                                             lazyeval::lazy_eval(.$display, ft_for_eval))),
                  fontface = "plain")
     }) %>%
     ungroup %>%
@@ -132,15 +161,14 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
     rbind(forest_headings)
 
   forest_rectangles <- data_frame(xmin = min(panels$abs_x),
-                                  xmax = max(panels$abs_x),
+                                  xmax = max(panels$abs_end_x),
                                   y = seq(max(forest_terms$y), 1, -2),
                                   ymin = y - 0.5,
                                   ymax = y + 0.5)
 
   forest_theme <- function() {
     theme_minimal() +
-      theme(axis.ticks.x = element_blank(),
-            panel.grid.major = element_blank(),
+      theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             axis.title.y = element_blank(),
             axis.title.x = element_blank(),
@@ -150,13 +178,31 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
 
   forest_range <- trans(forest_min_max)
   if (identical(trans, exp)) {
-    forest_breaks <- log(c(
-      if (forest_range[1] < 0.1) seq(max(0.02, ceiling(forest_range[1] / 0.02) * 0.02), 0.1, 0.02),
-      if (forest_range[1] < 0.8) seq(max(0.2, ceiling(forest_range[1] / 0.2) * 0.2), 0.8, 0.2),
-      1,
-      if (forest_range[2] > 2) seq(2, min(10, floor(forest_range[2] / 2) * 2), 2),
-      if (forest_range[2] > 20) seq(20, min(100, floor(forest_range[2] / 20) * 20), 20)
-    ))
+    make_range <- function(log_cut, step) {
+      if (log_cut <= 0) {
+        cut <- 10 ^ log_cut
+        divisor <- cut / 10 * step
+        if (forest_range[1] < cut) {
+          seq(max(divisor, ceiling(forest_range[1] / divisor) * divisor), cut, divisor)
+        } else {
+          NULL
+        }
+      } else {
+        cut <- 10 ^ (log_cut - 1)
+        divisor <- step * cut
+        if (forest_range[2] > divisor) {
+          seq(divisor, min(10 ^ log_cut, floor(forest_range[2] / divisor) * divisor), divisor)
+        } else {
+          NULL
+        }
+      }
+    }
+    forest_breaks <- unlist(lapply(floor(log10(forest_range[1])):ceiling(log10(forest_range[2])),
+                                 make_range, step = 2)) %>%
+      c(1) %>%
+      unique %>%
+      sort %>%
+      log
   } else {
     divisor <- 10 ^ round(log10(diff(forest_range)) - 1)
     forest_breaks <- divisor * ceiling(forest_range[1] / divisor):floor(forest_range[2] / divisor)
@@ -196,9 +242,10 @@ forest_model <- function(model, panels = default_forest_panels(), exponentiate =
 #' @export
 #'
 default_forest_panels <- function(measure = "Hazard ratio") {
-  panels <- data.frame(section = rep(c("left_margin", "left", "forest_margin", "forest", "forest_margin", "right", "right_margin"),
-                                     c(1, 3, 1, 1, 1, 2, 1)),
-                       display = c(NA, "variable", "level", "n", NA, "forest", NA, "conf_int","p_format", NA),
+  panels <- data.frame(display = c(NA, "variable", "level", "n", NA, "forest", NA,
+                                   'sprintf("%0.2f (%0.2f-%0.2f)", trans(estimate), trans(conf.low), trans(conf.high))',
+                                   'sprintf("%0.3f", p.value)', NA),
+                       display_reference = c(rep(NA, 7), '"Reference\"', '""', NA),
                        heading = c(NA, "Variable", NA, "N", NA, measure, NA, NA, "p", NA),
                        hjust = c(NA, 0, 0, 1, NA, 0.5, NA, 0, 1, NA),
                        width = c(0.03, 0.1, 0.07, 0.05, 0.03, 0.55, 0.03, 0.12, 0.05, 0.03),
