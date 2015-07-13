@@ -12,3 +12,9 @@ notifications:
   email:
     on_success: change
     on_failure: change
+
+r_binary_packages:
+ - ggplot2
+ - dplyr
+ - broom
+ - lazyeval
