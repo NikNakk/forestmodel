@@ -9,8 +9,9 @@ Description: Produces forest plots using ggplot2 from models produced by functio
     such as stats::lm, stats::glm and survival::coxph.
 License: GPL-2
 LazyData: TRUE
-Imports: ggplot2,
-    dplyr,
-    broom,
-    lazyeval
+Depends: R (>= 3.2.0)
+Imports: ggplot2 (>= 1.0.1),
+    dplyr (>= 0.4.2),
+    broom (>= 0.3.7),
+    lazyeval (>= 0.1.10)
 Suggests: survival
