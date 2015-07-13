@@ -4,15 +4,16 @@
 \alias{forest_model}
 \title{Produce a forest plot based on a regression model}
 \usage{
-forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
-  colour = "black", shape = 15, banded = TRUE, funcs = NULL,
-  factor_separate_line = FALSE)
+forest_model(model, panels = default_forest_panels(factor_separate_line =
+  factor_separate_line), exponentiate = NULL, colour = "black",
+  shape = 15, banded = TRUE, funcs = NULL, factor_separate_line = FALSE,
+  forest_theme = theme_forest())
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
 \code{\link[stats]{glm}}, \code{\link[survival]{coxph}}}
 
-\item{panels}{\code{data.frame} with details of the panels that make up the plot (See Details)}
+\item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
 
 \item{exponentiate}{whether the numbers on the x scale should be exponentiated for plotting}
 
@@ -25,6 +26,8 @@ forest_model(model, panels = default_forest_panels(), exponentiate = NULL,
 \item{funcs}{optional list of functions required for formatting \code{panels$display}}
 
 \item{factor_separate_line}{whether to show the factor variable name on a separate line}
+
+\item{forest_theme}{theme to apply to the plot}
 }
 \value{
 A ggplot ready for display or saving
@@ -37,9 +40,10 @@ This function takes the model output from one of the common model functions in
   R (e.g. \code{\link[stats]{lm}}, \code{\link[stats]{glm}},
  \code{\link[survival]{coxph}}).
 
- The \code{panels} parameter is a \code{data.frame} with columns
- \code{display} and \code{width} and, optionally, \code{display_reference},
- \code{heading} and \code{hjust}.
+ The \code{panels} parameter is a \code{list} of lists each of which have an element
+ \code{width}
+ and, optionally, \code{display}, \code{display_na},
+ \code{heading}, \code{hjust} and \code{fontface}.
  \code{display} indicates which column to display as text from the standard ones produced by
  \code{\link[broom]{tidy}} and in addition
  \code{variable} (the term in the model, for factors without the level),
@@ -48,8 +52,7 @@ This function takes the model output from one of the common model functions in
  It can also be a formula using these columns. The function \code{trans} is definded to be the
  transformation between the coefficients and the scales (e.g. \code{exp}). Other functions not
  in base R can be provided as a \code{list} with the parameter \code{funcs}.
- \code{display_reference} allows for an alternative display for reference levels of factors
- which typically do not have data within the model output.
+ \code{display_na} allows for an alternative display for NA terms within \code{estimate}.
 }
 \examples{
 library("survival")

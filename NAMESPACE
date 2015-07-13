@@ -2,5 +2,8 @@
 
 export(default_forest_panels)
 export(forest_model)
+export(panel_forest_plot)
+export(theme_forest)
 import(dplyr)
 import(ggplot2)
+importFrom(lazyeval,lazy_eval)

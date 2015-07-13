@@ -4,13 +4,17 @@
 \alias{default_forest_panels}
 \title{Default panels for forest_model}
 \usage{
-default_forest_panels(measure = "Hazard ratio")
+default_forest_panels(measure = "Hazard ratio",
+  factor_separate_line = FALSE)
 }
 \arguments{
 \item{measure}{label for main forest plot}
+
+\item{factor_separate_line}{changes defaults for widths of variable depending on whether
+  factors have their name on separate line}
 }
 \value{
-`data.frame` ready to be passed to `forest_model`
+`list` ready to be passed to `forest_model`
 }
 \description{
 Default panels for forest_model
