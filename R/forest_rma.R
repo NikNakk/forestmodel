@@ -24,10 +24,15 @@
 #'
 #' @examples
 #' if (require("metafor")) {
-#'   data(dat.bcg)
+#'   data("dat.bcg")
 #'   dat <- escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
+#'   model <- rma(yi, vi, data = dat)
 #'
-#'   print(forest_rma(rma(yi, vi, data = dat)))
+#'   panels <- default_forest_panels(model)
+#'   panels[[3]]$width <- 0.2
+#'
+#'   print(forest_rma(model, panels = panels,
+#'     study_labels = paste(dat.bcg$author, dat.bcg$year)))
 #' }
 forest_rma <- function(model, study_labels = NULL,
                        additional_data = NULL,
