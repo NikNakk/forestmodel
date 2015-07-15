@@ -259,7 +259,7 @@ panel_forest_plot <-
 
     forest_hlines <- mutate(forest_hlines, group = (row_number() + 1) %/% 2)
 
-    breaks <- breaks %||% forest_breaks(forest_min_max, trans)
+    breaks <- breaks %||% forest_breaks(forest_min_max, trans, panel_positions$width[forest_panel])
 
     main_plot <- ggplot(forest_data)
     if (format_options$banded) {
