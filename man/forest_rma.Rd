@@ -4,17 +4,20 @@
 \alias{forest_rma}
 \title{Generate a forest plot from a meta-analysis}
 \usage{
-forest_rma(model, study_labels = NULL, additional_data = NULL,
-  point_size = NULL, model_label = NULL,
-  panels = default_forest_panels(model), trans = I, funcs = NULL,
-  forest_theme = theme_forest(), colour = "black", shape = 15,
-  banded = TRUE, limits = NULL, breaks = NULL, return_data = FALSE,
+forest_rma(model, panels = NULL, study_labels = NULL,
+  additional_data = NULL, point_size = NULL, model_label = NULL,
   show_individual_studies = TRUE, show_stats = list(`I^2` =
   ~sprintf("\%0.1f\%\%", I2), p = ~format.pval(QEp, digits = 4, eps = 1e-04,
-  scientific = 1)))
+  scientific = 1)), trans = I, funcs = NULL, format_options = list(colour
+  = "black", shape = 15, text_size = 5, banded = TRUE),
+  theme = theme_forest(), limits = NULL, breaks = NULL,
+  return_data = FALSE, recalculate_width = TRUE,
+  recalculate_height = TRUE)
 }
 \arguments{
 \item{model}{a single \code{\link[metafor]{rma}} object or a \code{list} of them}
+
+\item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
 
 \item{study_labels}{a character vector of study labels or list of character vectors the same length as \code{model}}
 
@@ -26,19 +29,19 @@ all studies, or a list of numeric vectors if more than one model is to be plotte
 
 \item{model_label}{a single model label or character vector of model labels the same length as \code{model}}
 
-\item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
+\item{show_individual_studies}{whether to show the individual studies (the default) or just the summary diamond}
+
+\item{show_stats}{a \code{list} of stats to show at the bottom of the forest plot for e.g. heterogeneity}
 
 \item{trans}{an optional transform function used on the numeric data for plotting the axes}
 
 \item{funcs}{optional list of functions required for formatting \code{panels$display}}
 
-\item{forest_theme}{theme to apply to the plot}
+\item{format_options}{formatting options as a list including \code{colour} of the point estimate and
+error bars, \code{shape} of the point estimate, \code{banded} whether to show light
+grey bands behind alternate rows, \code{text_size} size of text in mm}
 
-\item{colour}{colour of the point estimate and error bars}
-
-\item{shape}{shape of the point estimate}
-
-\item{banded}{whether to show light grey bands behind alternate rows}
+\item{theme}{theme to apply to the plot}
 
 \item{limits}{limits of the forest plot on the X-axis (taken as the range of the data
 by default)}
@@ -48,9 +51,11 @@ if \code{exponentiate == TRUE})}
 
 \item{return_data}{return the data to produce the plot as well as the plot itself}
 
-\item{show_individual_studies}{whether to show the individual studies (the default) or just the summary diamond}
+\item{recalculate_width}{\code{TRUE} to recalculate panel widths using the current device
+or the desired plot width in inches}
 
-\item{show_stats}{a \code{list} of stats to show at the bottom of the forest plot for e.g. heterogeneity}
+\item{recalculate_height}{\code{TRUE} to shrink text size using the current device
+  or the desired plot height in inches}
 }
 \value{
 plot
@@ -67,11 +72,8 @@ if (require("metafor")) {
   dat <- escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
   model <- rma(yi, vi, data = dat)
 
-  panels <- default_forest_panels(model)
-  panels[[3]]$width <- 0.2
-
-  print(forest_rma(model, panels = panels,
-    study_labels = paste(dat.bcg$author, dat.bcg$year)))
+  print(forest_rma(model, study_labels = paste(dat.bcg$author, dat.bcg$year),
+    trans = exp))
 }
 }
 

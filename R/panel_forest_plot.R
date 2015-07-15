@@ -18,10 +18,17 @@ panel_forest_plot <-
   function(forest_data,
            mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
            panels = default_forest_panels(), trans = I, funcs = NULL,
-           forest_theme = theme_forest(),
-           colour = "black", shape = 15, banded = TRUE, limits = NULL, breaks = NULL) {
+           format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
+           theme = theme_forest(),
+           limits = NULL, breaks = NULL,
+           recalculate_width = TRUE, recalculate_height = TRUE) {
 
     stopifnot(is.list(panels), is.data.frame(forest_data))
+
+    format_options$colour <- format_options$colour %||% "black"
+    format_options$shape <- format_options$shape %||% 15
+    format_options$banded <- format_options$banded %||% TRUE
+    format_options$text_size <- format_options$text_size %||% 5
 
     mapping$size <- mapping$size %||% 5
     mapping$whole_row <- mapping$whole_row %||% FALSE
@@ -63,30 +70,56 @@ panel_forest_plot <-
                             lazy_eval(panels[[i]]$display_na, fd_for_eval)))
       } else NULL
     })
+
     max_y <- max(mapped_data$y)
 
     forest_min_max <- limits %||% range(c(mapped_data$xmin, mapped_data$xmax), na.rm = TRUE)
 
     panel_positions <- lapply(panels, function(panel) {
-      if (is.null(panel$width)) stop("All panels must have a width.")
       data_frame(
-        width = panel$width,
+        width = panel$width %||% NA,
         item = panel$item %||% {if (!is.null(panel$display)) "text" else NA},
         display = paste(deparse(panel$display), collapse = "\n"),
-        hjust = panel$hjust %||% 0,
+        hjust = as.numeric(panel$hjust %||% 0),
         heading = panel$heading %||% NA,
         fontface = panel$fontface %||% "plain",
         linetype = panel$linetype %||% {if (!is.na(item) && item == "vline") "solid" else NA},
-        line_x = panel$line_x %||% NA,
-        parse = panel$parse %||% FALSE
+        line_x = as.numeric(panel$line_x %||% NA),
+        parse = as.logical(panel$parse %||% FALSE),
+        width_group = panel$width_group %||% NA
       )
-    }) %>% rbind_all
+    }) %>% bind_rows
+
+    if (any(is.na(panel_positions$width)) && !recalculate_width) {
+      recalculate_width <- TRUE
+      message("Some widths are undefined; defaulting to recalculate_width = TRUE")
+    }
+
 
     if (sum(panel_positions$item == "forest", na.rm = TRUE) != 1) {
       stop("One panel must include item \"forest\".")
     }
 
     forest_panel <- which(panel_positions$item == "forest")
+
+    if (!is.null(recalculate_height) && !(identical(recalculate_height, FALSE))) {
+      if (identical(recalculate_height, TRUE)) {
+        recalculate_height <- par("din")[2]
+      }
+      max_text_size <- recalculate_height / (max_y + 1) / 1.3 * 25.4
+      if (format_options$text_size > max_text_size) {
+        format_options$text_size <- max_text_size
+      }
+    }
+
+    if (!is.null(recalculate_width) && !(identical(recalculate_width, FALSE))) {
+      panel_positions <-
+        recalculate_width_panels(panel_positions, mapped_text = mapped_text,
+                                 mapped_data = mapped_data,
+                                 recalculate_width = recalculate_width,
+                                 format_options = format_options,
+                                 theme = theme)
+    }
 
     panel_positions <- panel_positions %>% mutate(
       rel_width = width / width[forest_panel],
@@ -187,7 +220,7 @@ panel_forest_plot <-
       }
     }) %>% {bind_rows(c(., list(forest_headings)))}
 
-    if (banded) {
+    if (format_options$banded) {
       forest_rectangles <- mapped_data %>%
         filter(band) %>%
         group_by(section) %>%
@@ -229,20 +262,20 @@ panel_forest_plot <-
     breaks <- breaks %||% forest_breaks(forest_min_max, trans)
 
     main_plot <- ggplot(forest_data)
-    if (banded) {
+    if (format_options$banded) {
       main_plot <- main_plot +
         geom_rect(aes(y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
                   forest_rectangles, fill = "#EFEFEF")
     }
     if (any(mapped_data$diamond)) {
       main_plot <- main_plot +
-        geom_polygon(aes(x, y, group = group), forest_diamonds, fill = colour)
+        geom_polygon(aes(x, y, group = group), forest_diamonds, fill = format_options$colour)
     }
     main_plot <- main_plot +
       geom_point(aes(x, y, size = size), filter(mapped_data, !diamond),
-                 colour = colour, shape = shape, na.rm = TRUE) +
+                 colour = format_options$colour, shape = format_options$shape, na.rm = TRUE) +
       geom_errorbarh(aes(x, y, xmin = xmin, xmax = xmax), filter(mapped_data, !diamond),
-                     colour = colour, height = 0.15) +
+                     colour = format_options$colour, height = 0.15) +
       geom_line(aes(x, y, linetype = linetype, group = group),
                 forest_vlines)
     if (any(mapped_data$whole_row)) {
@@ -253,7 +286,8 @@ panel_forest_plot <-
     for (parse_type in unique(forest_text$parse)) {
       main_plot <- main_plot +
         geom_text(aes(x, y, label = label, hjust = hjust, fontface = fontface),
-                  filter(forest_text, parse == parse_type), na.rm = TRUE, parse = parse_type)
+                  filter(forest_text, parse == parse_type), na.rm = TRUE, parse = parse_type,
+                  size = format_options$text_size)
     }
     main_plot <- main_plot +
       geom_line(aes(x, y, linetype = linetype, group = group),
@@ -265,6 +299,6 @@ panel_forest_plot <-
                          labels = sprintf("%g", trans(breaks)),
                          expand = c(0, 0)) +
       scale_y_continuous(expand = c(0, 0)) +
-      forest_theme
+      theme
     main_plot
   }

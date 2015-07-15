@@ -4,12 +4,12 @@
 #'   \code{\link[stats]{glm}}, \code{\link[survival]{coxph}}
 #' @param panels \code{list} with details of the panels that make up the plot (See Details)
 #' @param exponentiate whether the numbers on the x scale should be exponentiated for plotting
-#' @param colour colour of the point estimate and error bars
-#' @param shape shape of the point estimate
-#' @param banded whether to show light grey bands behind alternate rows
+#' @param format_options formatting options as a list including \code{colour} of the point estimate and
+#'   error bars, \code{shape} of the point estimate, \code{banded} whether to show light
+#'   grey bands behind alternate rows, \code{text_size} size of text in mm
 #' @param funcs optional list of functions required for formatting \code{panels$display}
 #' @param factor_separate_line whether to show the factor variable name on a separate line
-#' @param forest_theme theme to apply to the plot
+#' @param theme theme to apply to the plot
 #' @param limits limits of the forest plot on the X-axis (taken as the range of the data
 #'   by default)
 #' @param breaks breaks to appear on the X-axis (note these will be exponentiated
@@ -17,6 +17,10 @@
 #' @param return_data return the data to produce the plot as well as the plot itself
 #' @param covariates a character vector optionally listing the variables to include in the plot
 #'   (defaults to all variables)
+#' @param recalculate_width \code{TRUE} to recalculate panel widths using the current device
+#'   or the desired plot width in inches
+#' @param recalculate_height \code{TRUE} to shrink text size using the current device
+#'   or the desired plot height in inches
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
@@ -75,11 +79,13 @@
 
 forest_model <- function(model,
                          panels = default_forest_panels(model, factor_separate_line = factor_separate_line),
-                         covariates = NULL,
-                         exponentiate = NULL, colour = "black", shape = 15,
-                         banded = TRUE, funcs = NULL,
-                         factor_separate_line = FALSE, forest_theme = theme_forest(),
-                         limits = NULL, breaks = NULL, return_data = FALSE) {
+                         covariates = NULL, exponentiate = NULL, funcs = NULL,
+                         factor_separate_line = FALSE,
+                         format_options = list(colour = "black", shape = 15,
+                           text_size = 5, banded = TRUE),
+                         theme = theme_forest(),
+                         limits = NULL, breaks = NULL, return_data = FALSE,
+                         recalculate_width = TRUE, recalculate_height = TRUE) {
   data <- model.frame(model)
   if (inherits(model, "coxph")) {
     tidy_model <- broom::tidy(model)
@@ -127,9 +133,10 @@ forest_model <- function(model,
       forest_data = forest_terms,
       mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
       panels = panels, trans = trans,
-      funcs = funcs, forest_theme = forest_theme, colour = colour, shape = shape,
-      banded = banded, limits = limits, breaks = breaks
-    )
+      funcs = funcs, format_options = format_options, theme = theme,
+      limits = limits, breaks = breaks, recalculate_width = recalculate_width,
+      recalculate_height = recalculate_height
+  )
   main_plot <- do.call("panel_forest_plot", plot_data)
   if (return_data) {
     list(plot_data = plot_data, plot = main_plot)

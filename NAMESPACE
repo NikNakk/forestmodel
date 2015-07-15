@@ -3,6 +3,7 @@
 export(default_forest_panels)
 export(forest_breaks)
 export(forest_model)
+export(forest_panels)
 export(forest_rma)
 export(panel_forest_plot)
 export(theme_forest)

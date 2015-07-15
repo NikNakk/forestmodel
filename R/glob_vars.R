@@ -42,5 +42,6 @@ utils::globalVariables(names = c(
   "band",
   "section",
   "diamond",
-  "size"
+  "size",
+  "trans_char"
 ))

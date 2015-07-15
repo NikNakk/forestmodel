@@ -4,16 +4,18 @@
 \alias{default_forest_panels}
 \title{Default panels for forest_model}
 \usage{
-default_forest_panels(model, factor_separate_line = FALSE,
-  measure = "Estimate")
+default_forest_panels(model = NULL, factor_separate_line = FALSE,
+  measure = NULL, trans_char = "I")
 }
 \arguments{
 \item{model}{model object to guess label and determine defaults}
 
 \item{factor_separate_line}{changes defaults for widths of variable depending on whether
-  factors have their name on separate line}
+factors have their name on separate line}
 
 \item{measure}{label for main forest plot}
+
+\item{trans_char}{character representation of transform for axes}
 }
 \value{
 `list` ready to be passed to `forest_model`

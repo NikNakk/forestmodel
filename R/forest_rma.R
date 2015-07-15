@@ -28,25 +28,26 @@
 #'   dat <- escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
 #'   model <- rma(yi, vi, data = dat)
 #'
-#'   panels <- default_forest_panels(model)
-#'   panels[[3]]$width <- 0.2
-#'
-#'   print(forest_rma(model, panels = panels,
-#'     study_labels = paste(dat.bcg$author, dat.bcg$year)))
+#'   print(forest_rma(model, study_labels = paste(dat.bcg$author, dat.bcg$year),
+#'     trans = exp))
 #' }
-forest_rma <- function(model, study_labels = NULL,
+forest_rma <- function(model, panels = NULL,
+                       study_labels = NULL,
                        additional_data = NULL,
                        point_size = NULL,
                        model_label = NULL,
-                       panels = default_forest_panels(model),
-                       trans = I, funcs = NULL, forest_theme = theme_forest(),
-                       colour = "black", shape = 15, banded = TRUE, limits = NULL,
-                       breaks = NULL, return_data = FALSE,
                        show_individual_studies = TRUE,
                        show_stats = list("I^2" = ~sprintf("%0.1f%%", I2),
                                          "p" = ~format.pval(QEp, digits = 4, eps = 1e-4,
-                                                            scientific = 1))) {
+                                                            scientific = 1)),
+                       trans = I, funcs = NULL,
+                       format_options = list(colour = "black", shape = 15,
+                                             text_size = 5, banded = TRUE),
+                       theme = theme_forest(),
+                       limits = NULL, breaks = NULL, return_data = FALSE,
+                       recalculate_width = TRUE, recalculate_height = TRUE) {
   stopifnot(is.list(model))
+  panels <- panels %||% default_forest_panels(model, trans_char == deparse(substitute(trans)))
   if (!inherits(model, "rma")) {
     # List of models
     n_model <- length(model)
@@ -93,8 +94,9 @@ forest_rma <- function(model, study_labels = NULL,
                   section = .section, band = .band, diamond = .diamond,
                   whole_row = .whole_row),
     panels = panels, trans = trans,
-    funcs = funcs, forest_theme = forest_theme, colour = colour, shape = shape,
-    banded = banded, limits = limits, breaks = breaks
+    funcs = funcs, format_options = format_options, theme = theme,
+    limits = limits, breaks = breaks, recalculate_width = recalculate_width,
+    recalculate_height = recalculate_height
   )
   main_plot <- do.call("panel_forest_plot", plot_data)
   if (return_data) {
@@ -104,12 +106,12 @@ forest_rma <- function(model, study_labels = NULL,
   }
 }
 
-#' Extract data from individual rma model
-#'
-#' @inheritParams forest_rma
-#'
-#'
-#' @return a data.frame with the extracted data
+# Extract data from individual rma model
+#
+# @inheritParams forest_rma
+#
+#
+# @return a data.frame with the extracted data
 get_data_for_rma <-
   function(model, study_labels = NULL, model_label = NULL, point_size = NULL,
            additional_data = NULL, show_individual_studies = TRUE, show_stats = NULL) {

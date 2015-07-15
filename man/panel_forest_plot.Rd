@@ -6,8 +6,9 @@
 \usage{
 panel_forest_plot(forest_data, mapping = aes(estimate, xmin = conf.low, xmax =
   conf.high), panels = default_forest_panels(), trans = I, funcs = NULL,
-  forest_theme = theme_forest(), colour = "black", shape = 15,
-  banded = TRUE, limits = NULL, breaks = NULL)
+  format_options = list(colour = "black", shape = 15, banded = TRUE, text_size
+  = 5), theme = theme_forest(), limits = NULL, breaks = NULL,
+  recalculate_width = TRUE, recalculate_height = TRUE)
 }
 \arguments{
 \item{forest_data}{\code{data.frame} with the data needed for both the plot and text}
@@ -20,19 +21,23 @@ panel_forest_plot(forest_data, mapping = aes(estimate, xmin = conf.low, xmax =
 
 \item{funcs}{optional list of functions required for formatting \code{panels$display}}
 
-\item{forest_theme}{theme to apply to the plot}
+\item{format_options}{formatting options as a list including \code{colour} of the point estimate and
+error bars, \code{shape} of the point estimate, \code{banded} whether to show light
+grey bands behind alternate rows, \code{text_size} size of text in mm}
 
-\item{colour}{colour of the point estimate and error bars}
-
-\item{shape}{shape of the point estimate}
-
-\item{banded}{whether to show light grey bands behind alternate rows}
+\item{theme}{theme to apply to the plot}
 
 \item{limits}{limits of the forest plot on the X-axis (taken as the range of the data
 by default)}
 
 \item{breaks}{breaks to appear on the X-axis (note these will be exponentiated
 if \code{exponentiate == TRUE})}
+
+\item{recalculate_width}{\code{TRUE} to recalculate panel widths using the current device
+or the desired plot width in inches}
+
+\item{recalculate_height}{\code{TRUE} to shrink text size using the current device
+  or the desired plot height in inches}
 }
 \value{
 A ggplot ready for display or saving

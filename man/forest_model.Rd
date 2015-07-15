@@ -6,9 +6,11 @@
 \usage{
 forest_model(model, panels = default_forest_panels(model, factor_separate_line
   = factor_separate_line), covariates = NULL, exponentiate = NULL,
-  colour = "black", shape = 15, banded = TRUE, funcs = NULL,
-  factor_separate_line = FALSE, forest_theme = theme_forest(),
-  limits = NULL, breaks = NULL, return_data = FALSE)
+  funcs = NULL, factor_separate_line = FALSE, format_options = list(colour
+  = "black", shape = 15, text_size = 5, banded = TRUE),
+  theme = theme_forest(), limits = NULL, breaks = NULL,
+  return_data = FALSE, recalculate_width = TRUE,
+  recalculate_height = TRUE)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -17,21 +19,19 @@ forest_model(model, panels = default_forest_panels(model, factor_separate_line
 \item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
 
 \item{covariates}{a character vector optionally listing the variables to include in the plot
-  (defaults to all variables)}
+(defaults to all variables)}
 
 \item{exponentiate}{whether the numbers on the x scale should be exponentiated for plotting}
-
-\item{colour}{colour of the point estimate and error bars}
-
-\item{shape}{shape of the point estimate}
-
-\item{banded}{whether to show light grey bands behind alternate rows}
 
 \item{funcs}{optional list of functions required for formatting \code{panels$display}}
 
 \item{factor_separate_line}{whether to show the factor variable name on a separate line}
 
-\item{forest_theme}{theme to apply to the plot}
+\item{format_options}{formatting options as a list including \code{colour} of the point estimate and
+error bars, \code{shape} of the point estimate, \code{banded} whether to show light
+grey bands behind alternate rows, \code{text_size} size of text in mm}
+
+\item{theme}{theme to apply to the plot}
 
 \item{limits}{limits of the forest plot on the X-axis (taken as the range of the data
 by default)}
@@ -40,6 +40,12 @@ by default)}
 if \code{exponentiate == TRUE})}
 
 \item{return_data}{return the data to produce the plot as well as the plot itself}
+
+\item{recalculate_width}{\code{TRUE} to recalculate panel widths using the current device
+or the desired plot width in inches}
+
+\item{recalculate_height}{\code{TRUE} to shrink text size using the current device
+  or the desired plot height in inches}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},
