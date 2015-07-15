@@ -4,16 +4,20 @@
 \alias{forest_model}
 \title{Produce a forest plot based on a regression model}
 \usage{
-forest_model(model, panels = default_forest_panels(factor_separate_line =
-  factor_separate_line), exponentiate = NULL, colour = "black",
-  shape = 15, banded = TRUE, funcs = NULL, factor_separate_line = FALSE,
-  forest_theme = theme_forest())
+forest_model(model, panels = default_forest_panels(model, factor_separate_line
+  = factor_separate_line), covariates = NULL, exponentiate = NULL,
+  colour = "black", shape = 15, banded = TRUE, funcs = NULL,
+  factor_separate_line = FALSE, forest_theme = theme_forest(),
+  limits = NULL, breaks = NULL, return_data = FALSE)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
 \code{\link[stats]{glm}}, \code{\link[survival]{coxph}}}
 
 \item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
+
+\item{covariates}{a character vector optionally listing the variables to include in the plot
+  (defaults to all variables)}
 
 \item{exponentiate}{whether the numbers on the x scale should be exponentiated for plotting}
 
@@ -28,9 +32,19 @@ forest_model(model, panels = default_forest_panels(factor_separate_line =
 \item{factor_separate_line}{whether to show the factor variable name on a separate line}
 
 \item{forest_theme}{theme to apply to the plot}
+
+\item{limits}{limits of the forest plot on the X-axis (taken as the range of the data
+by default)}
+
+\item{breaks}{breaks to appear on the X-axis (note these will be exponentiated
+if \code{exponentiate == TRUE})}
+
+\item{return_data}{return the data to produce the plot as well as the plot itself}
 }
 \value{
-A ggplot ready for display or saving
+A ggplot ready for display or saving, or (with \code{return_data == TRUE},
+  a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
+  element \code{plot_data} and the ggplot itself in the element \code{plot})
 }
 \description{
 Produce a forest plot based on a regression model
@@ -73,13 +87,12 @@ data_for_lm <- data_frame(x = rnorm(100, 4),
                           z = rnorm(100, 2, 2),
                           outcome = 3 * x - 2 * y + 4 * z + rnorm(100, 0, 0.1))
 
-print(forest_model(lm(outcome ~ ., data_for_lm), default_forest_panels("Estimate")))
+print(forest_model(lm(outcome ~ ., data_for_lm)))
 
 data_for_logistic <- data_for_lm \%>\% mutate(
   outcome = (0.5 * (x - 4) * (y - 3) * (z - 2) + rnorm(100, 0, 0.05)) > 0.5
 )
 
-print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic),
-  default_forest_panels("Odds ratio")))
+print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic)))
 }
 
