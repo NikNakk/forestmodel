@@ -4,10 +4,10 @@
 \alias{forest_panels}
 \title{Generate panels for forest plots}
 \usage{
-forest_panels(mapping, margin = 0.03)
+forest_panels(..., margin = 0.03)
 }
 \arguments{
-\item{mapping}{mapping of panels to variables in data}
+\item{...}{panels to variables in data}
 
 \item{margin}{margin to leave at left and right edges}
 }

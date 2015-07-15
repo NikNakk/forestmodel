@@ -30,6 +30,14 @@
 #'
 #'   print(forest_rma(model, study_labels = paste(dat.bcg$author, dat.bcg$year),
 #'     trans = exp))
+#'
+#'   print(forest_rma(model, panels = forest_panels(Study = ~study,
+#'     N = ~n, ~vline, `Log Relative Risk` = ~forest(line_x = 0),
+#'     ~spacer(space = 0.10),
+#'     ~sprintf("%0.3f (%0.3f, %0.3f)", estimate, conf.low, conf.high)),
+#'     study_labels = paste(dat.bcg$author, dat.bcg$year),
+#'     trans = exp))
+#'
 #' }
 forest_rma <- function(model, panels = NULL,
                        study_labels = NULL,
