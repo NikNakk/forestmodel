@@ -22,6 +22,13 @@
 #'
 #' @export
 #'
+#' @examples
+#' if (require("metafor")) {
+#'   data(dat.bcg)
+#'   dat <- escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
+#'
+#'   print(forest_rma(rma(yi, vi, data = dat)))
+#' }
 forest_rma <- function(model, study_labels = NULL,
                        additional_data = NULL,
                        point_size = NULL,

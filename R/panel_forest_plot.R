@@ -14,14 +14,6 @@
 #'
 #' @export
 #'
-#' @examples
-#' if (require("metafor")) {
-#'   data(dat.bcg)
-#'   dat <- escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
-#'
-#'   print(forest_rma(rma(yi, vi, data = dat)))
-#' }
-#'
 panel_forest_plot <-
   function(forest_data,
            mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
