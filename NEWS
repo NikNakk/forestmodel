@@ -1,10 +1,17 @@
+forestmodel 0.3.1
+-----------------
+
+* Added option (set as default) to recalcluate panel widths
+* Added function to make custom panels easier to generate (`forest_panels`)
+* Tidied up parameters to make them more consistent between functions
+
 forestmodel 0.3
-===============
+---------------
 
 * Updated panel object to be a list of lists for greater flexibility
 * Added `forest_rma` function to produce forest plots from output of `metafor::rma`
 
 forestmodel 0.1
-===============
+---------------
 
 * Initial release
