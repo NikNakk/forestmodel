@@ -73,8 +73,6 @@ panel_forest_plot <-
 
     max_y <- max(mapped_data$y)
 
-    forest_min_max <- limits %||% range(c(mapped_data$xmin, mapped_data$xmax), na.rm = TRUE)
-
     panel_positions <- lapply(panels, function(panel) {
       data_frame(
         width = panel$width %||% NA,
@@ -95,12 +93,27 @@ panel_forest_plot <-
       message("Some widths are undefined; defaulting to recalculate_width = TRUE")
     }
 
-
     if (sum(panel_positions$item == "forest", na.rm = TRUE) != 1) {
       stop("One panel must include item \"forest\".")
     }
 
     forest_panel <- which(panel_positions$item == "forest")
+
+    if (is.null(limits)) {
+      forest_min_max <- range(c(mapped_data$xmin, mapped_data$xmax), na.rm = TRUE)
+      if (!is.na(forest_line_x <- panel_positions$line_x[forest_panel])) {
+        if (forest_min_max[2] < forest_line_x) {
+          forest_min_max[2] <- forest_line_x
+          message("Resized limits to included dashed line in forest panel")
+        }
+        if (forest_min_max[1] > forest_line_x) {
+          forest_min_max[1] <- forest_line_x
+          message("Resized limits to included dashed line in forest panel")
+        }
+      }
+    } else {
+      forest_min_max <- limits
+    }
 
     if (!is.null(recalculate_height) && !(identical(recalculate_height, FALSE))) {
       if (identical(recalculate_height, TRUE)) {

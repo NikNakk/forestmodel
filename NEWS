@@ -1,3 +1,9 @@
+forestmodel 0.3.2
+-----------------
+
+* Now handles logical covariates appropriately
+* Tweaks to break and limit calculation
+
 forestmodel 0.3.1
 -----------------
 

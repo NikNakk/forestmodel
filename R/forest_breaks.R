@@ -36,7 +36,7 @@ forest_breaks <- function(limits, trans = I, relative_width) {
       sort %>%
       log
   } else {
-    divisor <- 10 ^ round(log10(diff(limits)) - 1)
+    divisor <- 10 ^ round(log10(diff(limits)) - 0.9)
     breaks <- divisor * ceiling(limits[1] / divisor):floor(limits[2] / divisor)
   }
   breaks

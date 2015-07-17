@@ -106,7 +106,7 @@ forest_model <- function(model,
   }
   forest_terms <- forest_terms %>%
     rowwise %>% do({
-      if (.$class %in% c("factor", "logical")) {
+      if (.$class %in% c("factor")) {
         tab <- table(data[, .$variable])
         out <- cbind(as_data_frame(.),
                      data_frame(level = names(tab),
@@ -117,8 +117,12 @@ forest_model <- function(model,
         }
         out
       } else {
-        data.frame(., level = NA, level_no = NA, n = sum(!is.na(data[, .$variable])),
+        out <- data.frame(., level = NA, level_no = NA, n = sum(!is.na(data[, .$variable])),
                    stringsAsFactors = FALSE)
+        if (.$class == "logical") {
+          out$term_label <- paste0(.$term_label, "TRUE")
+        }
+        out
       }
     }) %>%
     ungroup %>%
