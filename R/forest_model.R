@@ -106,7 +106,7 @@ forest_model <- function(model,
   }
   forest_terms <- forest_terms %>%
     rowwise %>% do({
-      if (.$class == "factor") {
+      if (.$class %in% c("factor", "logical")) {
         tab <- table(data[, .$variable])
         out <- cbind(as_data_frame(.),
                      data_frame(level = names(tab),
