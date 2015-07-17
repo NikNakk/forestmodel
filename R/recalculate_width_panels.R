@@ -4,7 +4,7 @@ recalculate_width_panels <-
   function(panel_positions, mapped_text, mapped_data, recalculate_width, format_options,
            theme) {
     # Convert from default pointsize to current text size
-    cex <- 2.845 * format_options$text_size / par("ps") * 1.1
+    cex <- 2.845 * format_options$text_size / par("ps") * 1.2
     if (identical(recalculate_width, TRUE)) {
       recalculate_width <-par("din")[1]
     }
@@ -20,10 +20,10 @@ recalculate_width_panels <-
         mt[is.na(mt)] <- ""
         if (panel_positions$parse[i]) {
           mt <- lapply(mt, function(x) parse(text = x))
+          mt[lengths(mt) == 0] <- ""
         }
         mt[mapped_data$whole_row] <- ""
-        mt <- unlist(mt)
-        widths <- strwidth(mt, "inches", cex = cex,
+        widths <- vapply(mt, strwidth, numeric(1), "inches", cex = cex,
                  family = family, font = fonts[i]) / recalculate_width
       } else {
         widths <- rep(panel_positions$width[i], n_text)

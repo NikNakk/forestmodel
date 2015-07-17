@@ -88,6 +88,10 @@ panel_forest_plot <-
       )
     }) %>% bind_rows
 
+    if (any(panel_positions$parse & panel_positions$fontface != "plain")) {
+      warning("Fontface cannot be applied to parsed text; please use the plotmath functions (e.g. bold())")
+    }
+
     if (any(is.na(panel_positions$width)) && !recalculate_width) {
       recalculate_width <- TRUE
       message("Some widths are undefined; defaulting to recalculate_width = TRUE")
