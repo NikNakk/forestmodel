@@ -29,4 +29,6 @@ Installation
 
 The package can be installed using `install.packages`. It needs Hadley Wickham's `broom`, `dplyr`, `gpplot2` and `lazyeval` packages.
 
+Development takes place on the github repository <https://github.com/NikNakk/forestmodel/>.
+
 [![Build Status](https://travis-ci.org/NikNakk/forestmodel.svg?branch=master)](https://travis-ci.org/NikNakk/forestmodel)
