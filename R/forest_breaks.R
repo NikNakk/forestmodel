@@ -6,7 +6,7 @@
 #' @return a vector with breaks ready to pass to \code{\link{panel_forest_plot}}
 #' @export
 #'
-forest_breaks <- function(limits, trans = I, relative_width) {
+forest_breaks <- function(limits, trans = I) {
   if (identical(trans, exp)) {
     limits <- exp(limits)
     make_range <- function(log_cut, step) {
