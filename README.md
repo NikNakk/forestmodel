@@ -24,8 +24,6 @@ pretty_lung <- lung %>%
 print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
 ```
 
-![](README-example-1.png)
-
 Installation
 ------------
 

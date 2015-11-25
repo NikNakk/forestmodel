@@ -24,7 +24,7 @@ the necessary `panels` `data.frame`.
 
 ## Example
 
-```{r example, message = FALSE, fig.width = 10, fig.height = 7}
+```{r example, message = FALSE, fig.keep = "none"}
 library("forestmodel")
 library("survival")
 library("dplyr")
@@ -41,6 +41,7 @@ print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
 
 ## Installation
 
-The package can be installed using `install.packages`. It needs Hadley Wickham's `broom`, `dplyr`, `gpplot2` and `lazyeval` packages.
+The package can be installed using `install.packages`. It needs Hadley Wickham's
+`broom`, `dplyr`, `gpplot2` and `lazyeval` packages.
 
 [![Build Status](https://travis-ci.org/NikNakk/forestmodel.svg?branch=master)](https://travis-ci.org/NikNakk/forestmodel)
