@@ -1,15 +1,30 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-forestmodel
-===========
 
-This is an R package to generate forest plots of the coefficients of models produced by `lm`, `glm`, `survival::coxph`, etc.
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
 
-The main function is `forest_model`, with a helper function `default_forest_panels` to produce the necessary `panels` `data.frame`.
+# forestmodel
 
-Example
--------
+This is an R package to generate forest plots of the coefficients of models produced
+by `lm`, `glm`, `survival::coxph`, etc.
 
-``` r
+The main function is `forest_model`, with a helper function `default_forest_panels` to produce
+the necessary `panels` `data.frame`.
+
+## Example
+
+```{r example, message = FALSE, fig.width = 10, fig.height = 7}
 library("forestmodel")
 library("survival")
 library("dplyr")
@@ -24,10 +39,7 @@ pretty_lung <- lung %>%
 print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
 ```
 
-![](README-example-1.png)
-
-Installation
-------------
+## Installation
 
 The package can be installed using `install.packages`. It needs Hadley Wickham's `broom`, `dplyr`, `gpplot2` and `lazyeval` packages.
 
