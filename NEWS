@@ -1,3 +1,9 @@
+forestmodel 0.3.3
+-----------------
+
+* Added `n_events` and `person_time` variables to data for display when using a
+  `coxph` model
+
 forestmodel 0.3.2
 -----------------
 

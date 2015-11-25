@@ -1,9 +1,32 @@
-# forestmodel
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+forestmodel
+===========
 
-This is an R package to generate forest plots of the coefficients of models produced
-by `lm`, `glm`, `survival::coxph`, etc.
+This is an R package to generate forest plots of the coefficients of models produced by `lm`, `glm`, `survival::coxph`, etc.
 
-The main function is `forest_model`, with a helper function `default_forest_panels` to produce
-the necessary `panels` `data.frame`.
+The main function is `forest_model`, with a helper function `default_forest_panels` to produce the necessary `panels` `data.frame`.
+
+Example
+-------
+
+``` r
+library("forestmodel")
+library("survival")
+library("dplyr")
+pretty_lung <- lung %>%
+  transmute(time,
+            status,
+            Age = age,
+            Sex = factor(sex, labels = c("Male", "Female")),
+            ECOG = factor(lung$ph.ecog),
+            `Meal Cal` = meal.cal)
+
+print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
+```
+
+Installation
+------------
+
+The package can be installed using `install.packages`. It needs Hadley Wickham's `broom`, `dplyr`, `gpplot2` and `lazyeval` packages.
 
 [![Build Status](https://travis-ci.org/NikNakk/forestmodel.svg?branch=master)](https://travis-ci.org/NikNakk/forestmodel)

@@ -35,12 +35,15 @@
 #'  and, optionally, \code{item}, \code{display}, \code{display_na},
 #'  \code{heading}, \code{hjust} and \code{fontface}. \code{item} can be \code{"forest"} for the forest
 #'  plot (exactly one required) or \code{"vline"} for a vertical line.
-#'  \code{display} indicates which column to display as text from the standard ones produced by
+#'  \code{display} indicates which column to display as text. It can be a quoted variable name
+#'  or a formula. The column display can include the standard ones produced by
 #'  \code{\link[broom]{tidy}} and in addition
-#'  \code{variable} (the term in the model, for factors without the level),
+#'  \code{variable} (the term in the model; for factors this is the bare variable without the  level),
 #'  \code{level} (the level of factors),
-#'  \code{reference} (TRUE for the reference level of a factor).
-#'  It can also be a formula using these columns. The function \code{trans} is definded to be the
+#'  \code{reference} (TRUE for the reference level of a factor). For \code{\link[survival]{coxph}}
+#'  models, there will also be \code{n_events} for the number of events in the group with
+#'  that level of the factor and \code{person_time} for the person-time in that group.
+#'  The function \code{trans} is definded to be the
 #'  transformation between the coefficients and the scales (e.g. \code{exp}). Other functions not
 #'  in base R can be provided as a \code{list} with the parameter \code{funcs}.
 #'  \code{display_na} allows for an alternative display for NA terms within \code{estimate}.
@@ -63,6 +66,29 @@
 #'             `Meal Cal` = meal.cal)
 #'
 #' print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
+#'
+#' # Example with custom panels
+#'
+#' panels <- list(list(width = 0.03),
+#'   list(width = 0.1, display = ~variable, fontface = "bold", heading = "Variable"),
+#'   list(width = 0.1, display = ~level),
+#'   list(width = 0.05, display = ~n, hjust = 1, heading = "N"),
+#'   list(width = 0.05, display = ~n_events, width = 0.05, hjust = 1, heading = "Events"),
+#'   list(width = 0.05,
+#'     display = ~replace(sprintf("%0.1f", person_time/365.25), is.na(person_time), ""),
+#'     heading = "Person-\nYears", hjust = 1),
+#'   list(width = 0.03, item = "vline", hjust = 0.5),
+#'   list(width = 0.55, item = "forest", hjust = 0.5, heading = "Hazard ratio", linetype = "dashed",
+#'     line_x = 0),
+#'   list(width = 0.03, item = "vline", hjust = 0.5),
+#'   list(width = 0.12, display = ~ifelse(reference, "Reference", sprintf("%0.2f (%0.2f, %0.2f)",
+#'     trans(estimate), trans(conf.low), trans(conf.high))), display_na = NA),
+#'   list(width = 0.05,
+#'     display = ~ifelse(reference, "", format.pval(p.value, digits = 1, eps = 0.001)),
+#'     display_na = NA, hjust = 1, heading = "p"),
+#'   list(width = 0.03)
+#' )
+#' forest_model(coxph(Surv(time, status) ~ ., pretty_lung), panels)
 #'
 #' data_for_lm <- data_frame(x = rnorm(100, 4),
 #'                           y = rnorm(100, 3, 0.5),
@@ -107,13 +133,24 @@ forest_model <- function(model,
   forest_terms <- forest_terms %>%
     rowwise %>% do({
       if (.$class %in% c("factor")) {
-        tab <- table(data[, .$variable])
+        var <- .$variable
+        tab <- table(data[, var])
         out <- cbind(as_data_frame(.),
                      data_frame(level = names(tab),
                                 level_no = 1:length(tab),
                                 n = as.integer(tab)))
         if (factor_separate_line) {
           out <- bind_rows(as_data_frame(.), out)
+        }
+        if (inherits(model, "coxph")) {
+          data_event <- cbind(data[, -1], data_frame(.event_time = data[, 1][, "time"], .event_status = data[, 1][, "status"]))
+          event_detail_tab <- data_event %>%
+            group_by_(var) %>%
+            summarise(person_time = sum(.event_time),
+                      n_events = sum(.event_status))
+          colnames(event_detail_tab)[1] <- "level"
+          event_detail_tab$level <- as.character(event_detail_tab$level)
+          out <- out %>% left_join(event_detail_tab, by = "level")
         }
         out
       } else {

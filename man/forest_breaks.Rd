@@ -4,7 +4,7 @@
 \alias{forest_breaks}
 \title{Calculate default breaks for limits}
 \usage{
-forest_breaks(limits, trans = I, relative_width)
+forest_breaks(limits, trans = I)
 }
 \arguments{
 \item{limits}{limits of plot}
