@@ -40,7 +40,7 @@
 #'  \code{\link[broom]{tidy}} and in addition
 #'  \code{variable} (the term in the model; for factors this is the bare variable without the  level),
 #'  \code{level} (the level of factors),
-#'  \code{reference} (TRUE for the reference level of a factor). For \code{\link[survival]{coxph}
+#'  \code{reference} (TRUE for the reference level of a factor). For \code{\link[survival]{coxph}}
 #'  models, there will also be \code{n_events} for the number of events in the group with
 #'  that level of the factor and \code{person_time} for the person-time in that group.
 #'  The function \code{trans} is definded to be the
@@ -66,6 +66,25 @@
 #'             `Meal Cal` = meal.cal)
 #'
 #' print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
+#'
+#' # Example with custom panels
+#'
+#' panels <- list(list(width = 0.03),
+#'   list(width = 0.1, display = ~variable, fontface = "bold", heading = "Variable"),
+#'   list(width = 0.1, display = ~level),
+#'   list(width = 0.05, display = ~n, hjust = 1, heading = "N"),
+#'   list(width = 0.05, display = ~n_events, width = 0.05, hjust = 1, heading = "Events"),
+#'   list(width = 0.05, display = ~replace(sprintf("%0.1f", person_time/365.25), is.na(person_time), ""), heading = "Person-\nYears", hjust = 1),
+#'   list(width = 0.03, item = "vline", hjust = 0.5),
+#'   list(width = 0.55, item = "forest", hjust = 0.5, heading = "Hazard ratio", linetype = "dashed", line_x = 0),
+#'   list(width = 0.03, item = "vline", hjust = 0.5),
+#'   list(width = 0.12, display = ~ifelse(reference, "Reference", sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate),
+#'     trans(conf.low), trans(conf.high))), display_na = NA),
+#'   list(width = 0.05, display = ~ifelse(reference, "", format.pval(p.value, digits = 1, eps = 0.001)),
+#'     display_na = NA, hjust = 1, heading = "p"),
+#'   list(width = 0.03)
+#' )
+#' forest_model(coxph(Surv(time, status) ~ ., pretty_lung), panels)
 #'
 #' data_for_lm <- data_frame(x = rnorm(100, 4),
 #'                           y = rnorm(100, 3, 0.5),
