@@ -33,6 +33,7 @@ utils::globalVariables(names = c(
   ".band",
   ".diamond",
   ".whole_row",
+  "vi",
   "yi",
   "ni",
   "se",

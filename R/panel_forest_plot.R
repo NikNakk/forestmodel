@@ -121,7 +121,7 @@ panel_forest_plot <-
 
     if (!is.null(recalculate_height) && !(identical(recalculate_height, FALSE))) {
       if (identical(recalculate_height, TRUE)) {
-        recalculate_height <- par("din")[2]
+        recalculate_height <- graphics::par("din")[2]
       }
       max_text_size <- recalculate_height / (max_y + 1) / 1.3 * 25.4
       if (format_options$text_size > max_text_size) {

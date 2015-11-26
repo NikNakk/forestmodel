@@ -112,7 +112,7 @@ forest_model <- function(model,
                          theme = theme_forest(),
                          limits = NULL, breaks = NULL, return_data = FALSE,
                          recalculate_width = TRUE, recalculate_height = TRUE) {
-  data <- model.frame(model)
+  data <- stats::model.frame(model)
   if (inherits(model, "coxph")) {
     tidy_model <- broom::tidy(model)
   } else {

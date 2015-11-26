@@ -4,9 +4,9 @@ recalculate_width_panels <-
   function(panel_positions, mapped_text, mapped_data, recalculate_width, format_options,
            theme) {
     # Convert from default pointsize to current text size
-    cex <- 2.845 * format_options$text_size / par("ps") * 1.2
+    cex <- 2.845 * format_options$text_size / graphics::par("ps") * 1.2
     if (identical(recalculate_width, TRUE)) {
-      recalculate_width <-par("din")[1]
+      recalculate_width <- graphics::par("din")[1]
     }
     n_text <- max(lengths(mapped_text))
 
@@ -23,13 +23,13 @@ recalculate_width_panels <-
           mt[lengths(mt) == 0] <- ""
         }
         mt[mapped_data$whole_row] <- ""
-        widths <- vapply(mt, strwidth, numeric(1), "inches", cex = cex,
+        widths <- vapply(mt, graphics::strwidth, numeric(1), "inches", cex = cex,
                  family = family, font = fonts[i]) / recalculate_width
       } else {
         widths <- rep(panel_positions$width[i], n_text)
       }
       if (!is.na(panel_positions$heading[i])) {
-        widths <- c(strwidth(panel_positions$heading[i], "inches", cex = cex,
+        widths <- c(graphics::strwidth(panel_positions$heading[i], "inches", cex = cex,
                              family = family, font = 2) / recalculate_width,
                     widths)
       } else {
@@ -41,7 +41,7 @@ recalculate_width_panels <-
     measured_widths <- do.call("cbind", measured_widths)
 
     if (any(!is.na(panel_positions$width_group))) {
-      for (i in unique(na.omit(panel_positions$width_group))) {
+      for (i in unique(stats::na.omit(panel_positions$width_group))) {
         in_group <- which(panel_positions$width_group == i)
         cum_fixed_width <- cumsum(c(0, panel_positions$width[in_group[-length(in_group)]]))
         effective_width <- apply(measured_widths[, in_group, drop = FALSE], 1, function(x)
