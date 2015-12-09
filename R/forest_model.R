@@ -127,42 +127,50 @@ forest_model <- function(model,
   forest_terms <- data_frame(variable = names(attr(model$terms, "dataClasses"))[-1],
                              term_label = attr(model$terms, "term.labels"),
                              class = attr(model$terms, "dataClasses")[-1])
+
   if (!is.null(covariates)) {
     forest_terms <- filter(forest_terms, variable %in% covariates)
   }
-  forest_terms <- forest_terms %>%
-    rowwise %>% do({
-      if (.$class %in% c("factor")) {
-        var <- .$variable
-        tab <- table(data[, var])
-        out <- cbind(as_data_frame(.),
+  create_term_data <- function(term_row) {
+    var <- term_row$variable
+    if (term_row$class == "factor") {
+      tab <- table(data[, var])
+      if (!any(paste0(var, names(tab)) %in% tidy_model$term)) {
+        # Filter out terms not in final model summary (e.g. strata)
+        out <- data.frame(variable = NA)
+      } else {
+        out <- cbind(as_data_frame(term_row),
                      data_frame(level = names(tab),
                                 level_no = 1:length(tab),
                                 n = as.integer(tab)))
         if (factor_separate_line) {
-          out <- bind_rows(as_data_frame(.), out)
+          out <- bind_rows(as_data_frame(term_row), out)
         }
         if (inherits(model, "coxph")) {
           data_event <- cbind(data[, -1], data_frame(.event_time = data[, 1][, "time"], .event_status = data[, 1][, "status"]))
           event_detail_tab <- data_event %>%
-            group_by_(var) %>%
+            group_by_(as.name(var)) %>%
             summarise(person_time = sum(.event_time),
                       n_events = sum(.event_status))
           colnames(event_detail_tab)[1] <- "level"
           event_detail_tab$level <- as.character(event_detail_tab$level)
           out <- out %>% left_join(event_detail_tab, by = "level")
         }
-        out
-      } else {
-        out <- data.frame(., level = NA, level_no = NA, n = sum(!is.na(data[, .$variable])),
-                   stringsAsFactors = FALSE)
-        if (.$class == "logical") {
-          out$term_label <- paste0(.$term_label, "TRUE")
-        }
-        out
       }
-    }) %>%
+    } else {
+      out <- data.frame(term_row, level = NA, level_no = NA, n = sum(!is.na(data[, var])),
+                        stringsAsFactors = FALSE)
+      if (term_row$class == "logical") {
+        out$term_label <- paste0(term_row$term_label, "TRUE")
+      }
+    }
+    out
+  }
+  forest_terms <- forest_terms %>%
+    rowwise %>%
+    do(create_term_data(.)) %>%
     ungroup %>%
+    filter(!is.na(variable)) %>%
     mutate(term = paste0(term_label, replace(level, is.na(level), ""))) %>%
     left_join(tidy_model, by = "term") %>%
     mutate(
