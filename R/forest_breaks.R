@@ -1,5 +1,8 @@
 #' Calculate default breaks for limits
 #'
+#' This function does not work as well as grDevices::axisTicks and so that should
+#' be used instead.
+#'
 #' @param limits limits of plot
 #' @param trans transformation that will be used on the limits
 #'
@@ -7,6 +10,7 @@
 #' @export
 #'
 forest_breaks <- function(limits, trans = I) {
+  .Deprecated("grDevices::axisTicks")
   if (identical(trans, exp)) {
     limits <- exp(limits)
     make_range <- function(log_cut, step) {

@@ -15,6 +15,7 @@ forest_breaks(limits, trans = I)
 a vector with breaks ready to pass to \code{\link{panel_forest_plot}}
 }
 \description{
-Calculate default breaks for limits
+This function does not work as well as grDevices::axisTicks and so that should
+be used instead.
 }
 

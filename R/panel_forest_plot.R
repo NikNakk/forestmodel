@@ -276,7 +276,14 @@ panel_forest_plot <-
 
     forest_hlines <- mutate(forest_hlines, group = (row_number() + 1) %/% 2)
 
-    breaks <- breaks %||% forest_breaks(forest_min_max, trans)
+    if (is.null(breaks)) {
+      if (identical(trans, exp)) {
+        breaks <- log(grDevices::axisTicks(log10(exp(forest_min_max)), TRUE))
+      } else {
+        breaks <- grDevices::axisTicks(forest_min_max, FALSE)
+      }
+      breaks <- breaks[breaks >= forest_min_max[1] & breaks <= forest_min_max[2]]
+    }
 
     main_plot <- ggplot(forest_data)
     if (format_options$banded) {
