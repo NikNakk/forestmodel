@@ -1,4 +1,4 @@
-forestmodel 0.4.4
+forestmodel 0.4.0
 -----------------
 * Fixed problem with `coxph` models that used special functions.
 * Changed from `forest_breaks` to `graphics::axisTicks` for break calculation.
