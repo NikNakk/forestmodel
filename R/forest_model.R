@@ -21,6 +21,7 @@
 #'   or the desired plot width in inches
 #' @param recalculate_height \code{TRUE} to shrink text size using the current device
 #'   or the desired plot height in inches
+#' @param show_reference whether to show the reference level for factors
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
@@ -111,7 +112,8 @@ forest_model <- function(model,
                            text_size = 5, banded = TRUE),
                          theme = theme_forest(),
                          limits = NULL, breaks = NULL, return_data = FALSE,
-                         recalculate_width = TRUE, recalculate_height = TRUE) {
+                         recalculate_width = TRUE, recalculate_height = TRUE,
+                         show_reference = TRUE) {
   data <- stats::model.frame(model)
   if (inherits(model, "coxph")) {
     tidy_model <- broom::tidy(model)
@@ -176,8 +178,15 @@ forest_model <- function(model,
     mutate(
       reference = ifelse(is.na(level_no), FALSE, level_no == 1),
       estimate = ifelse(reference, 0, estimate),
-      variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
+      # Show variable name for non-factors and for the first line of factors where
+      # factor_separate_line is not set
+      variable = ifelse(is.na(level_no) |
+                          ((level_no == 1 | (level_no == 2 & !show_reference)) &
+                             !factor_separate_line), variable, NA)
     )
+  if (!show_reference) {
+    forest_terms <- forest_terms %>% filter(!reference)
+  }
   plot_data <- list(
       forest_data = forest_terms,
       mapping = aes(estimate, xmin = conf.low, xmax = conf.high),

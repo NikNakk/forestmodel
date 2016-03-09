@@ -37,7 +37,7 @@ if \code{exponentiate == TRUE})}
 or the desired plot width in inches}
 
 \item{recalculate_height}{\code{TRUE} to shrink text size using the current device
-  or the desired plot height in inches}
+or the desired plot height in inches}
 }
 \value{
 A ggplot ready for display or saving

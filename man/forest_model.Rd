@@ -10,7 +10,7 @@ forest_model(model, panels = default_forest_panels(model, factor_separate_line
   = "black", shape = 15, text_size = 5, banded = TRUE),
   theme = theme_forest(), limits = NULL, breaks = NULL,
   return_data = FALSE, recalculate_width = TRUE,
-  recalculate_height = TRUE)
+  recalculate_height = TRUE, show_reference = TRUE)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -45,7 +45,9 @@ if \code{exponentiate == TRUE})}
 or the desired plot width in inches}
 
 \item{recalculate_height}{\code{TRUE} to shrink text size using the current device
-  or the desired plot height in inches}
+or the desired plot height in inches}
+
+\item{show_reference}{whether to show the reference level for factors}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},
