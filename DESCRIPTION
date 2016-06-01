@@ -1,7 +1,7 @@
 Package: forestmodel
 Type: Package
 Title: Forest Plots from Regression Models
-Version: 0.4.0
+Version: 0.4.1
 Date: 2015-12-10
 Author: Nick Kennedy <r@nick-kennedy.com>
 Maintainer: Nick Kennedy <r@nick-kennedy.com>

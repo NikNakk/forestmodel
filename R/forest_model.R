@@ -147,7 +147,7 @@ forest_model <- function(model,
           out <- bind_rows(as_data_frame(term_row), out)
         }
         if (inherits(model, "coxph")) {
-          data_event <- cbind(data[, -1], data_frame(.event_time = data[, 1][, "time"], .event_status = data[, 1][, "status"]))
+          data_event <- cbind(data[, -1, drop = FALSE], data_frame(.event_time = data[, 1][, "time"], .event_status = data[, 1][, "status"]))
           event_detail_tab <- data_event %>%
             group_by_(as.name(var)) %>%
             summarise(person_time = sum(.event_time),
