@@ -1,3 +1,7 @@
+forestmodel 0.4.1
+-----------------
+* Fixed #5 issue regarding `coxph` models with a single predictor
+
 forestmodel 0.4.0
 -----------------
 * Fixed problem with `coxph` models that used special functions.
