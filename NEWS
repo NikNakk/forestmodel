@@ -1,5 +1,11 @@
-forestmodel 0.4.0
------------------
+forestmodel 0.4.1 (2017-04-04)
+------------------------------
+* Fixed a couple of issues in `panel_forest_plot` that produced warnings.
+* Fixed a missing `drop = FALSE` in `forest_model` which made it fail if there was
+  a `coxph` model with only one stratification variable.
+
+forestmodel 0.4.0 (2015-12-10)
+------------------------------
 * Fixed problem with `coxph` models that used special functions.
 * Changed from `forest_breaks` to `graphics::axisTicks` for break calculation.
 
