@@ -288,7 +288,7 @@ panel_forest_plot <-
     main_plot <- ggplot(forest_data)
     if (format_options$banded) {
       main_plot <- main_plot +
-        geom_rect(aes(y = y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+        geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
                   forest_rectangles, fill = "#EFEFEF")
     }
     if (any(mapped_data$diamond)) {
@@ -298,13 +298,14 @@ panel_forest_plot <-
     main_plot <- main_plot +
       geom_point(aes(x, y, size = size), filter(mapped_data, !diamond),
                  colour = format_options$colour, shape = format_options$shape, na.rm = TRUE) +
-      geom_errorbarh(aes(x, y, xmin = xmin, xmax = xmax), filter(mapped_data, !diamond),
+      geom_errorbarh(aes(x, y, xmin = xmin, xmax = xmax),
+                     filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
                      colour = format_options$colour, height = 0.15) +
       geom_line(aes(x, y, linetype = linetype, group = group),
                 forest_vlines)
     if (any(mapped_data$whole_row)) {
       main_plot <- main_plot +
-        geom_rect(aes(y = y, xmin = xmin, xmax = xmax, ymin =ymin, ymax = ymax),
+        geom_rect(aes(xmin = xmin, xmax = xmax, ymin =ymin, ymax = ymax),
                   forest_whole_row_back, fill = "#FFFFFF")
     }
     for (parse_type in unique(forest_text$parse)) {
