@@ -1,3 +1,9 @@
+forestmodel 0.4.3 (2017-04-11)
+------------------------------
+* Fixed a bug in `forest_model` which meant that non-synatic variable names (e.g. with
+  spaces in the title) were dropped from the plot.
+* Now handles character columns as factors.
+
 forestmodel 0.4.2 (2017-04-04)
 ------------------------------
 * Fixed a couple of issues in `panel_forest_plot` that produced warnings.

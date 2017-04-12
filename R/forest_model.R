@@ -133,9 +133,9 @@ forest_model <- function(model,
   }
   create_term_data <- function(term_row) {
     var <- term_row$variable
-    if (term_row$class == "factor") {
+    if (term_row$class %in% c("factor", "character")) {
       tab <- table(data[, var])
-      if (!any(paste0(var, names(tab)) %in% tidy_model$term)) {
+      if (!any(paste0(term_row$term_label, names(tab)) %in% tidy_model$term)) {
         # Filter out terms not in final model summary (e.g. strata)
         out <- data.frame(variable = NA)
       } else {
