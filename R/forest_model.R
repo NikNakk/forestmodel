@@ -139,15 +139,21 @@ forest_model <- function(model,
         # Filter out terms not in final model summary (e.g. strata)
         out <- data.frame(variable = NA)
       } else {
-        out <- cbind(as_data_frame(term_row),
-                     data_frame(level = names(tab),
-                                level_no = 1:length(tab),
-                                n = as.integer(tab)))
+        out <- data.frame(
+          term_row,
+          level = names(tab),
+          level_no = 1:length(tab),
+          n = as.integer(tab),
+          stringsAsFactors = FALSE
+        )
         if (factor_separate_line) {
           out <- bind_rows(as_data_frame(term_row), out)
         }
         if (inherits(model, "coxph")) {
-          data_event <- cbind(data[, -1, drop = FALSE], data_frame(.event_time = data[, 1][, "time"], .event_status = data[, 1][, "status"]))
+          data_event <- data.frame(data[, -1, drop = FALSE],
+                                   .event_time = data[, 1][, "time"],
+                                   .event_status = data[, 1][, "status"],
+                                   stringsAsFactors = FALSE)
           event_detail_tab <- data_event %>%
             group_by_(as.name(var)) %>%
             summarise(person_time = sum(.event_time),
