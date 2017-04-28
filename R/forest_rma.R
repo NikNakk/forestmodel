@@ -55,7 +55,7 @@ forest_rma <- function(model, panels = NULL,
                        limits = NULL, breaks = NULL, return_data = FALSE,
                        recalculate_width = TRUE, recalculate_height = TRUE) {
   stopifnot(is.list(model))
-  panels <- panels %||% default_forest_panels(model, trans_char == deparse(substitute(trans)))
+  panels <- panels %||% default_forest_panels(model, trans_char = deparse(substitute(trans)))
   if (!inherits(model, "rma")) {
     # List of models
     n_model <- length(model)
