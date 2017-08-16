@@ -124,11 +124,14 @@ forest_model <- function(model,
   }
   if (exponentiate) trans <- exp else trans <- I
   stopifnot(is.list(panels))
+  remove_backticks <- function(x) {
+    gsub("^`|`$|\\\\(?=`)|`(?=:)|(?<=:)`", "", x, perl = TRUE)
+  }
   forest_terms <- tibble::tibble(
     term_label = attr(model$terms, "term.labels"),
-    variable = gsub("^`|`$|\\\\(?=`)", "", term_label, perl = TRUE)
+    variable = remove_backticks(term_label)
     ) %>%
-    left_join(
+    inner_join(
       tibble::tibble(
         variable = names(attr(model$terms, "dataClasses"))[-1],
         class = attr(model$terms, "dataClasses")[-1]
@@ -189,10 +192,13 @@ forest_model <- function(model,
     ungroup %>%
     filter(!is.na(variable)) %>%
     mutate(term = paste0(term_label, replace(level, is.na(level), ""))) %>%
-    left_join(tidy_model, by = "term") %>%
+    full_join(tidy_model, by = "term") %>%
     mutate(
       reference = ifelse(is.na(level_no), FALSE, level_no == 1),
       estimate = ifelse(reference, 0, estimate),
+      variable = ifelse(is.na(variable), remove_backticks(term), variable)
+    ) %>%
+    mutate(
       variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
     )
   plot_data <- list(
