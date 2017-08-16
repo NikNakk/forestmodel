@@ -124,51 +124,62 @@ forest_model <- function(model,
   }
   if (exponentiate) trans <- exp else trans <- I
   stopifnot(is.list(panels))
-  forest_terms <- data_frame(variable = names(attr(model$terms, "dataClasses"))[-1],
-                             term_label = attr(model$terms, "term.labels"),
-                             class = attr(model$terms, "dataClasses")[-1])
+  forest_terms <- tibble::tibble(
+    term_label = attr(model$terms, "term.labels"),
+    variable = gsub("^`|`$|\\\\(?=`)", "", term_label, perl = TRUE)
+    ) %>%
+    left_join(
+      tibble::tibble(
+        variable = names(attr(model$terms, "dataClasses"))[-1],
+        class = attr(model$terms, "dataClasses")[-1]
+        ),
+      by = "variable"
+    )
 
   if (!is.null(covariates)) {
     forest_terms <- filter(forest_terms, variable %in% covariates)
   }
   create_term_data <- function(term_row) {
-    var <- term_row$variable
-    if (term_row$class %in% c("factor", "character")) {
-      tab <- table(data[, var])
-      if (!any(paste0(term_row$term_label, names(tab)) %in% tidy_model$term)) {
-        # Filter out terms not in final model summary (e.g. strata)
-        out <- data.frame(variable = NA)
-      } else {
-        out <- data.frame(
-          term_row,
-          level = names(tab),
-          level_no = 1:length(tab),
-          n = as.integer(tab),
-          stringsAsFactors = FALSE
-        )
-        if (factor_separate_line) {
-          out <- bind_rows(as_data_frame(term_row), out)
+    if (!is.na(term_row$class)) {
+      var <- term_row$variable
+      if (term_row$class %in% c("factor", "character")) {
+        tab <- table(data[, var])
+        if (!any(paste0(term_row$term_label, names(tab)) %in% tidy_model$term)) {
+          # Filter out terms not in final model summary (e.g. strata)
+          out <- data.frame(variable = NA)
+        } else {
+          out <- data.frame(
+            term_row,
+            level = names(tab),
+            level_no = 1:length(tab),
+            n = as.integer(tab),
+            stringsAsFactors = FALSE
+          )
+          if (factor_separate_line) {
+            out <- bind_rows(tibble::as_tibble(term_row), out)
+          }
+          if (inherits(model, "coxph")) {
+            data_event <- bind_cols(data[, -1, drop = FALSE],
+                                     .event_time = data[, 1][, "time"],
+                                     .event_status = data[, 1][, "status"])
+            event_detail_tab <- data_event %>%
+              group_by(!!as.name(var)) %>%
+              summarise(person_time = sum(.event_time),
+                        n_events = sum(.event_status))
+            colnames(event_detail_tab)[1] <- "level"
+            event_detail_tab$level <- as.character(event_detail_tab$level)
+            out <- out %>% left_join(event_detail_tab, by = "level")
+          }
         }
-        if (inherits(model, "coxph")) {
-          data_event <- data.frame(data[, -1, drop = FALSE],
-                                   .event_time = data[, 1][, "time"],
-                                   .event_status = data[, 1][, "status"],
-                                   stringsAsFactors = FALSE)
-          event_detail_tab <- data_event %>%
-            group_by_(as.name(var)) %>%
-            summarise(person_time = sum(.event_time),
-                      n_events = sum(.event_status))
-          colnames(event_detail_tab)[1] <- "level"
-          event_detail_tab$level <- as.character(event_detail_tab$level)
-          out <- out %>% left_join(event_detail_tab, by = "level")
+      } else {
+        out <- data.frame(term_row, level = NA, level_no = NA, n = sum(!is.na(data[, var])),
+                          stringsAsFactors = FALSE)
+        if (term_row$class == "logical") {
+          out$term_label <- paste0(term_row$term_label, "TRUE")
         }
       }
     } else {
-      out <- data.frame(term_row, level = NA, level_no = NA, n = sum(!is.na(data[, var])),
-                        stringsAsFactors = FALSE)
-      if (term_row$class == "logical") {
-        out$term_label <- paste0(term_row$term_label, "TRUE")
-      }
+      out <- data.frame(term_row, level = NA, level_no = NA, n = NA, stringsAsFactors = FALSE)
     }
     out
   }
