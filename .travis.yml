@@ -13,3 +13,6 @@ notifications:
   email:
     on_success: change
     on_failure: change
+
+after_failure:
+    - cat /home/travis/build/NikNakk/forestmodel/forestmodel.Rcheck/00install.out
