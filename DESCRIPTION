@@ -9,7 +9,7 @@ Description: Produces forest plots using 'ggplot2' from models produced by funct
     such as stats::lm(), stats::glm() and survival::coxph().
 License: GPL-2
 LazyData: TRUE
-Depends: R (>= 3.4.0),
+Depends: R (>= 3.3.0),
     ggplot2 (>= 2.2.1)
 Imports: dplyr (>= 0.7.4),
     broom (>= 0.4.4),
