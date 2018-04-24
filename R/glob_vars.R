@@ -46,5 +46,6 @@ utils::globalVariables(names = c(
   "size",
   "trans_char",
   ".event_time",
-  ".event_status"
+  ".event_status",
+  "term"
 ))
