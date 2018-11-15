@@ -139,9 +139,6 @@ forest_model <- function(model,
       by = "variable"
     )
 
-  if (!is.null(covariates)) {
-    forest_terms <- filter(forest_terms, variable %in% covariates)
-  }
   create_term_data <- function(term_row) {
     if (!is.na(term_row$class)) {
       var <- term_row$variable
@@ -201,6 +198,9 @@ forest_model <- function(model,
     mutate(
       variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
     )
+  if (!is.null(covariates)) {
+    forest_terms <- filter(forest_terms, variable %in% covariates)
+  }
   plot_data <- list(
       forest_data = forest_terms,
       mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
