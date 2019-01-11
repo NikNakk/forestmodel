@@ -1,3 +1,9 @@
+forestmodel 0.6.0 (2019-01-11)
+------------------------------
+
+* Updated package to use `rlang::tidy_eval`
+
+
 forestmodel 0.5.1 (2018-11-15)
 ------------------------------
 * Fixed covariates option (fixes #14, thanks Mattia for pointing this out)

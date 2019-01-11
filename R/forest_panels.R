@@ -33,7 +33,7 @@ forest_panels <- function(..., margin = 0.03) {
       }
     } else {
       panel$display <- mapping[[i]]
-      panel$display_na <- '""'
+      panel$display_na <- ""
     }
     panel$heading <- names(mapping)[i]
     panel

@@ -160,7 +160,7 @@ get_data_for_rma <-
         conf.high = estimate - stats::qnorm(alpha / 2) * se,
         study = study_labels,
         point_size = point_size,
-        stat = '""',
+        stat = "",
         .section = NA,
         .diamond = FALSE,
         .band = TRUE
@@ -176,7 +176,7 @@ get_data_for_rma <-
     study = model_label,
     n = sum(model$ni),
     point_size = NA,
-    stat = '""',
+    stat = "",
     .section = NA,
     .diamond = TRUE,
     .band = FALSE
