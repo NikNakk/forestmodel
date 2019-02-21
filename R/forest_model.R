@@ -226,7 +226,7 @@ forest_model <- function(model,
         variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
       )
     if (!is.null(covariates)) {
-      forest_terms <- filter(forest_terms, variable %in% covariates)
+      forest_terms <- filter(forest_terms, term_label %in% covariates)
     }
 
     forest_terms
