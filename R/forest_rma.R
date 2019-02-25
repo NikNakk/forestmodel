@@ -123,7 +123,11 @@ get_data_for_rma <-
   function(model, study_labels = NULL, model_label = NULL, point_size = NULL,
            additional_data = NULL, show_individual_studies = TRUE, show_stats = NULL) {
 
-  alpha <- (100 - model$level) / 100
+  if (model$level > 1) { # Has changed at some point in rma.uni
+    alpha <- (100 - model$level) / 100
+  } else {
+    alpha = model$level
+  }
   k <- length(model$vi)
 
   model_label <- model_label %||% if(model$method == "FE") "FE Model" else "RE Model"
