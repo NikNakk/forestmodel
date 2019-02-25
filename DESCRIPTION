@@ -18,3 +18,4 @@ Imports: dplyr (>= 0.7.4),
 Suggests: survival,
     metafor
 RoxygenNote: 6.1.1
+Encoding: UTF-8

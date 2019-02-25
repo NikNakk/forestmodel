@@ -18,7 +18,6 @@
 #' @return plot
 #'
 #' @import dplyr
-#' @importFrom lazyeval lazy_eval
 #'
 #' @export
 #'
@@ -118,7 +117,7 @@ forest_rma <- function(model, panels = NULL,
 #
 # @inheritParams forest_rma
 #
-#
+# @importFrom rlang eval_tidy
 # @return a data.frame with the extracted data
 get_data_for_rma <-
   function(model, study_labels = NULL, model_label = NULL, point_size = NULL,
@@ -189,7 +188,7 @@ get_data_for_rma <-
 
   if (!is.null(show_stats)) {
     forest_data <- lapply(seq(show_stats), function(i) {
-      stat_result <- lazyeval::lazy_eval(show_stats[[i]], model)
+      stat_result <- rlang::eval_tidy(show_stats[[i]], model)
       stat_sign <- regmatches(stat_result, regexec("^[=<>]=?", stat_result))[[1]]
       if (length(stat_sign) == 0) {
         stat_result <- paste0("= ", stat_result)
