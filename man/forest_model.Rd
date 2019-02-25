@@ -10,7 +10,8 @@ forest_model(model, panels = default_forest_panels(model,
   format_options = forest_model_format_options(),
   theme = theme_forest(), limits = NULL, breaks = NULL,
   return_data = FALSE, recalculate_width = TRUE,
-  recalculate_height = TRUE, model_list = NULL)
+  recalculate_height = TRUE, model_list = NULL,
+  exclude_infinite_cis = TRUE)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -46,6 +47,10 @@ or the desired plot width in inches}
 or the desired plot height in inches}
 
 \item{model_list}{list of models to incorporate into a single forest plot}
+
+\item{exclude_infinite_cis}{whether to exclude points and confidence intervals
+that go to positive or negative infinity from plotting. They will still be
+displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},

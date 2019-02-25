@@ -8,7 +8,8 @@ panel_forest_plot(forest_data, mapping = aes(estimate, xmin = conf.low,
   xmax = conf.high), panels = default_forest_panels(), trans = I,
   funcs = NULL, format_options = list(colour = "black", shape = 15,
   banded = TRUE, text_size = 5), theme = theme_forest(), limits = NULL,
-  breaks = NULL, recalculate_width = TRUE, recalculate_height = TRUE)
+  breaks = NULL, recalculate_width = TRUE, recalculate_height = TRUE,
+  exclude_infinite_cis = TRUE)
 }
 \arguments{
 \item{forest_data}{\code{data.frame} with the data needed for both the plot and text}
@@ -36,6 +37,10 @@ or the desired plot width in inches}
 
 \item{recalculate_height}{\code{TRUE} to shrink text size using the current device
 or the desired plot height in inches}
+
+\item{exclude_infinite_cis}{whether to exclude points and confidence intervals
+that go to positive or negative infinity from plotting. They will still be
+displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed}
 }
 \value{
 A ggplot ready for display or saving

@@ -20,6 +20,9 @@
 #' @param recalculate_height \code{TRUE} to shrink text size using the current device
 #'   or the desired plot height in inches
 #' @param model_list list of models to incorporate into a single forest plot
+#' @param exclude_infinite_cis whether to exclude points and confidence intervals
+#'   that go to positive or negative infinity from plotting. They will still be
+#'   displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
@@ -111,7 +114,7 @@ forest_model <- function(model,
                          theme = theme_forest(),
                          limits = NULL, breaks = NULL, return_data = FALSE,
                          recalculate_width = TRUE, recalculate_height = TRUE,
-                         model_list = NULL) {
+                         model_list = NULL, exclude_infinite_cis = TRUE) {
   mapping <- aes(estimate, xmin = conf.low, xmax = conf.high)
   if (!is.null(model_list)) {
     if (!is.list(model_list)) {
@@ -248,7 +251,7 @@ forest_model <- function(model,
       panels = panels, trans = trans,
       funcs = funcs, format_options = format_options, theme = theme,
       limits = limits, breaks = breaks, recalculate_width = recalculate_width,
-      recalculate_height = recalculate_height
+      recalculate_height = recalculate_height, exclude_infinite_cis = exclude_infinite_cis
   )
   main_plot <- do.call("panel_forest_plot", plot_data)
   if (return_data) {

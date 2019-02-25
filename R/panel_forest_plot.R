@@ -20,7 +20,8 @@ panel_forest_plot <- function(forest_data,
            format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
            theme = theme_forest(),
            limits = NULL, breaks = NULL,
-           recalculate_width = TRUE, recalculate_height = TRUE) {
+           recalculate_width = TRUE, recalculate_height = TRUE,
+           exclude_infinite_cis = TRUE) {
 
   stopifnot(is.list(panels), is.data.frame(forest_data))
 
@@ -125,7 +126,9 @@ panel_forest_plot <- function(forest_data,
   forest_panel <- which(panel_positions$item == "forest")
 
   if (is.null(limits)) {
-    forest_min_max <- range(c(mapped_data$xmin, mapped_data$xmax), na.rm = TRUE)
+    x_min_max <- c(mapped_data$xmin, mapped_data$xmax)
+    x_min_max <- x_min_max[is.finite(x_min_max)]
+    forest_min_max <- range(x_min_max)
     if (!is.na(forest_line_x <- panel_positions$line_x[forest_panel])) {
       if (forest_min_max[2] < forest_line_x) {
         forest_min_max[2] <- forest_line_x
@@ -304,6 +307,18 @@ panel_forest_plot <- function(forest_data,
       breaks <- grDevices::axisTicks(forest_min_max, FALSE)
     }
     breaks <- breaks[breaks >= forest_min_max[1] & breaks <= forest_min_max[2]]
+  }
+
+  if (exclude_infinite_cis) {
+    mapped_data <- mapped_data %>%
+      mutate_at(
+        vars(x, xmin, xmax),
+        funs(if_else(
+          is.infinite(x) | is.infinite(xmin) | is.infinite(xmax),
+          NA_real_,
+          .
+          ))
+      )
   }
 
   main_plot <- ggplot(forest_data)
