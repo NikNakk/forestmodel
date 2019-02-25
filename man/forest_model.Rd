@@ -10,7 +10,7 @@ forest_model(model, panels = default_forest_panels(model,
   format_options = forest_model_format_options(),
   theme = theme_forest(), limits = NULL, breaks = NULL,
   return_data = FALSE, recalculate_width = TRUE,
-  recalculate_height = TRUE)
+  recalculate_height = TRUE, model_list = NULL)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -44,6 +44,8 @@ or the desired plot width in inches}
 
 \item{recalculate_height}{\code{TRUE} to shrink text size using the current device
 or the desired plot height in inches}
+
+\item{model_list}{}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},
