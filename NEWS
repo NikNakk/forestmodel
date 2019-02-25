@@ -1,4 +1,4 @@
-forestmodel 0.6.0 (2019-01-11)
+forestmodel 0.6.0 (2019-02-25)
 ------------------------------
 * Updated package to use `rlang::tidy_eval`
 * Added `model_list` option as suggested by Natasha Purington

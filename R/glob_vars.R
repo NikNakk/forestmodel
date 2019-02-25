@@ -47,5 +47,13 @@ utils::globalVariables(names = c(
   "trans_char",
   ".event_time",
   ".event_status",
-  "term"
+  "term",
+  "study",
+  "trans",
+  "p.value",
+  "model_name",
+  ".subheading",
+  "line_x",
+  "xend",
+  "yend"
 ))

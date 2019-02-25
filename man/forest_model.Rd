@@ -45,7 +45,7 @@ or the desired plot width in inches}
 \item{recalculate_height}{\code{TRUE} to shrink text size using the current device
 or the desired plot height in inches}
 
-\item{model_list}{}
+\item{model_list}{list of models to incorporate into a single forest plot}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},

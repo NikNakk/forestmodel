@@ -19,7 +19,7 @@
 #'   or the desired plot width in inches
 #' @param recalculate_height \code{TRUE} to shrink text size using the current device
 #'   or the desired plot height in inches
-#' @param model_list
+#' @param model_list list of models to incorporate into a single forest plot
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
