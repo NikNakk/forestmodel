@@ -2,7 +2,7 @@
 # Works using either the current device width or a user-specified width
 recalculate_width_panels <-
   function(panel_positions, mapped_text, mapped_data, recalculate_width, format_options,
-           theme) {
+             theme) {
     # Convert from default pointsize to current text size
     cex <- 2.845 * format_options$text_size / graphics::par("ps") * 1.2
     if (identical(recalculate_width, TRUE)) {
@@ -23,15 +23,21 @@ recalculate_width_panels <-
           mt[lengths(mt) == 0] <- ""
         }
         mt[mapped_data$whole_row] <- ""
-        widths <- vapply(mt, graphics::strwidth, numeric(1), "inches", cex = cex,
-                 family = family, font = fonts[i]) / recalculate_width
+        widths <- vapply(mt, graphics::strwidth, numeric(1), "inches",
+          cex = cex,
+          family = family, font = fonts[i]
+        ) / recalculate_width
       } else {
         widths <- rep(panel_positions$width[i], n_text)
       }
       if (!is.na(panel_positions$heading[i])) {
-        widths <- c(graphics::strwidth(panel_positions$heading[i], "inches", cex = cex,
-                             family = family, font = 2) / recalculate_width,
-                    widths)
+        widths <- c(
+          graphics::strwidth(panel_positions$heading[i], "inches",
+            cex = cex,
+            family = family, font = 2
+          ) / recalculate_width,
+          widths
+        )
       } else {
         widths <- c(0, widths)
       }
@@ -59,7 +65,6 @@ recalculate_width_panels <-
     if (panel_positions$width[forest_panel] < measured_widths[1, forest_panel]) {
       panel_positions$width[forest_panel] <- measured_widths[1, forest_panel]
       warning("Unable to resize forest panel to be smaller than its heading; consider a smaller text size")
-
     } else if (panel_positions$width[forest_panel] < 0.1) {
       panel_positions$width[forest_panel] <- 0.1
       warning("Unable to resize forest panel to be smaller than 10% of width")

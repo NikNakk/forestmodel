@@ -9,11 +9,13 @@
 # @param gentype type of outcome
 #
 # @return name of estimate
-rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
-  if (gentype == 1)
+rma_setlab <- function(measure, transf.char, atransf.char, gentype) {
+  if (gentype == 1) {
     lab <- "Observed Outcome"
-  if (gentype == 2)
+  }
+  if (gentype == 2) {
     lab <- "Overall Estimate"
+  }
   if (!is.null(measure)) {
     if (measure == "RR") {
       if (transf.char == "FALSE" && atransf.char == "FALSE") {
@@ -22,24 +24,30 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Relative Risk"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Relative Risk (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Relative Risk"
+        }
       }
     }
-    if (is.element(measure, c("OR", "PETO", "D2OR", "D2ORN",
-                              "D2ORL"))) {
+    if (is.element(measure, c(
+      "OR", "PETO", "D2OR", "D2ORN",
+      "D2ORL"
+    ))) {
       if (transf.char == "FALSE" && atransf.char == "FALSE") {
         lab <- "Log Odds Ratio"
       }
       else {
         lab <- "Transformed Log Odds Ratio"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Odds Ratio (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Odds Ratio"
+        }
       }
     }
     if (measure == "RD") {
@@ -89,10 +97,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Incidence Relative Risk"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Incidence Rate Ratio (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Incidence Rate Ratio"
+        }
       }
     }
     if (measure == "IRD") {
@@ -119,8 +129,10 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
         lab <- "Transformed Mean Difference"
       }
     }
-    if (is.element(measure, c("SMD", "SMDH", "PBIT", "OR2D",
-                              "OR2DN", "OR2DL"))) {
+    if (is.element(measure, c(
+      "SMD", "SMDH", "PBIT", "OR2D",
+      "OR2DN", "OR2DL"
+    ))) {
       if (transf.char == "FALSE" && atransf.char == "FALSE") {
         lab <- "Standardized Mean Difference"
       }
@@ -135,10 +147,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Ratio of Means"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Ratio of Means (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Ratio of Means"
+        }
       }
     }
     if (measure == "RPB") {
@@ -164,11 +178,13 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Fisher's z Transformed Correlation Coefficient"
         if (atransf.char == "transf.ztor" || atransf.char ==
-            "transf.ztor.int")
+          "transf.ztor.int") {
           lab <- "Correlation Coefficient"
+        }
         if (transf.char == "transf.ztor" || transf.char ==
-            "transf.ztor.int")
+          "transf.ztor.int") {
           lab <- "Correlation Coefficient"
+        }
       }
     }
     if (measure == "PR") {
@@ -186,10 +202,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Proportion"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Proportion (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Proportion"
+        }
       }
     }
     if (measure == "PLO") {
@@ -199,16 +217,20 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Odds"
         if (atransf.char == "transf.ilogit" || atransf.char ==
-            "transf.ilogit.int" || atransf.char == "plogis")
+          "transf.ilogit.int" || atransf.char == "plogis") {
           lab <- "Proportion (logit scale)"
+        }
         if (transf.char == "transf.ilogit" || transf.char ==
-            "transf.ilogit.int" || transf.char == "plogis")
+          "transf.ilogit.int" || transf.char == "plogis") {
           lab <- "Proportion"
+        }
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Odds (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Odds"
+        }
       }
     }
     if (measure == "PAS") {
@@ -218,11 +240,13 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Arcsine Transformed Proportion"
         if (atransf.char == "transf.iarcsin" || atransf.char ==
-            "transf.iarcsin.int")
+          "transf.iarcsin.int") {
           lab <- "Proportion (arcsine scale)"
+        }
         if (transf.char == "transf.iarcsin" || transf.char ==
-            "transf.iarcsin.int")
+          "transf.iarcsin.int") {
           lab <- "Proportion"
+        }
       }
     }
     if (measure == "PFT") {
@@ -231,10 +255,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       }
       else {
         lab <- "Transformed Double Arcsine Transformed Proportion"
-        if (atransf.char == "transf.ift.hm")
+        if (atransf.char == "transf.ift.hm") {
           lab <- "Proportion"
-        if (transf.char == "transf.ift.hm")
+        }
+        if (transf.char == "transf.ift.hm") {
           lab <- "Proportion"
+        }
       }
     }
     if (measure == "IR") {
@@ -252,10 +278,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Incidence Rate"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Incidence Rate (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Incidence Rate"
+        }
       }
     }
     if (measure == "IRS") {
@@ -265,11 +293,13 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Square-Root Transformed Incidence Rate"
         if (atransf.char == "transf.isqrt" || atransf.char ==
-            "transf.isqrt.int")
+          "transf.isqrt.int") {
           lab <- "Incidence Rate (square-root scale)"
+        }
         if (transf.char == "transf.isqrt" || transf.char ==
-            "transf.isqrt.int")
+          "transf.isqrt.int") {
           lab <- "Incidence Rate"
+        }
       }
     }
     if (measure == "IRFT") {
@@ -311,10 +341,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       else {
         lab <- "Transformed Log Ratio of Means"
         if (atransf.char == "exp" || atransf.char ==
-            "transf.exp.int")
+          "transf.exp.int") {
           lab <- "Ratio of Means (log scale)"
-        if (transf.char == "exp" || transf.char == "transf.exp.int")
+        }
+        if (transf.char == "exp" || transf.char == "transf.exp.int") {
           lab <- "Ratio of Means"
+        }
       }
     }
     if (measure == "ARAW") {
@@ -331,10 +363,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       }
       else {
         lab <- "Transformed Coefficient alpha"
-        if (atransf.char == "transf.iahw")
+        if (atransf.char == "transf.iahw") {
           lab <- "Coefficient alpha"
-        if (transf.char == "transf.iahw")
+        }
+        if (transf.char == "transf.iahw") {
           lab <- "Coefficient alpha"
+        }
       }
     }
     if (measure == "ABT") {
@@ -343,10 +377,12 @@ rma_setlab <- function (measure, transf.char, atransf.char, gentype) {
       }
       else {
         lab <- "Transformed Coefficient alpha"
-        if (atransf.char == "transf.iabt")
+        if (atransf.char == "transf.iabt") {
           lab <- "Coefficient alpha"
-        if (transf.char == "transf.iabt")
+        }
+        if (transf.char == "transf.iabt") {
           lab <- "Coefficient alpha"
+        }
       }
     }
   }

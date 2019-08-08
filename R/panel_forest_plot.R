@@ -15,14 +15,13 @@
 #' @export
 #'
 panel_forest_plot <- function(forest_data,
-           mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
-           panels = default_forest_panels(), trans = I, funcs = NULL,
-           format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
-           theme = theme_forest(),
-           limits = NULL, breaks = NULL,
-           recalculate_width = TRUE, recalculate_height = TRUE,
-           exclude_infinite_cis = TRUE) {
-
+                              mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
+                              panels = default_forest_panels(), trans = I, funcs = NULL,
+                              format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
+                              theme = theme_forest(),
+                              limits = NULL, breaks = NULL,
+                              recalculate_width = TRUE, recalculate_height = TRUE,
+                              exclude_infinite_cis = TRUE) {
   stopifnot(is.list(panels), is.data.frame(forest_data))
 
   # Update older style panels to quosures
@@ -85,11 +84,13 @@ panel_forest_plot <- function(forest_data,
 
   mapped_text <- lapply(seq(panels), function(i) {
     if (!is.null(panels[[i]]$display)) {
-
       as.character(ifelse(!is.na(mapped_data$x),
-                          eval_tidy(panels[[i]]$display, fd_for_eval),
-                          eval_tidy(panels[[i]]$display_na, fd_for_eval)))
-    } else NULL
+        eval_tidy(panels[[i]]$display, fd_for_eval),
+        eval_tidy(panels[[i]]$display_na, fd_for_eval)
+      ))
+    } else {
+      NULL
+    }
   })
 
   max_y <- max(mapped_data$y)
@@ -97,12 +98,16 @@ panel_forest_plot <- function(forest_data,
   panel_positions <- lapply(panels, function(panel) {
     tibble(
       width = panel$width %||% NA,
-      item = panel$item %||% {if (!is.null(panel$display)) "text" else NA},
+      item = panel$item %||% {
+        if (!is.null(panel$display)) "text" else NA
+      },
       display = quo_text(panel$display),
       hjust = as.numeric(panel$hjust %||% 0),
       heading = panel$heading %||% NA,
       fontface = panel$fontface %||% "plain",
-      linetype = panel$linetype %||% {if (!is.na(item) && item == "vline") "solid" else NA},
+      linetype = panel$linetype %||% {
+        if (!is.na(item) && item == "vline") "solid" else NA
+      },
       line_x = as.numeric(panel$line_x %||% NA),
       parse = as.logical(panel$parse %||% FALSE),
       width_group = panel$width_group %||% NA
@@ -155,11 +160,13 @@ panel_forest_plot <- function(forest_data,
 
   if (!is.null(recalculate_width) && !(identical(recalculate_width, FALSE))) {
     panel_positions <-
-      recalculate_width_panels(panel_positions, mapped_text = mapped_text,
-                               mapped_data = mapped_data,
-                               recalculate_width = recalculate_width,
-                               format_options = format_options,
-                               theme = theme)
+      recalculate_width_panels(panel_positions,
+        mapped_text = mapped_text,
+        mapped_data = mapped_data,
+        recalculate_width = recalculate_width,
+        format_options = format_options,
+        theme = theme
+      )
   }
 
   panel_positions <- panel_positions %>%
@@ -171,8 +178,9 @@ panel_forest_plot <- function(forest_data,
       abs_width = rel_width * diff(forest_min_max),
       abs_end_x = abs_x + abs_width,
       text_x = ifelse(hjust == 0, abs_x,
-                      ifelse(hjust == 0.5, abs_x + abs_width / 2, abs_end_x))
-  )
+        ifelse(hjust == 0.5, abs_x + abs_width / 2, abs_end_x)
+      )
+    )
 
   forest_vlines <- panel_positions %>%
     filter(item == "vline" | !is.na(linetype)) %>%
@@ -232,13 +240,14 @@ panel_forest_plot <- function(forest_data,
     forest_hlines <- bind_rows(
       forest_hlines,
       forest_whole_row_back %>%
-      rowwise %>% do({
-        data_frame(
-          x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
-          y = rep(.$y + c(-0.5, 0.5), each = 2),
-          linetype = "solid"
-        )
-      })
+        rowwise() %>%
+        do({
+          data_frame(
+            x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
+            y = rep(.$y + c(-0.5, 0.5), each = 2),
+            linetype = "solid"
+          )
+        })
     )
   }
 
@@ -252,7 +261,8 @@ panel_forest_plot <- function(forest_data,
           hjust = hjust,
           label = mapped_text[[i]],
           fontface = fontface,
-          parse = parse)
+          parse = parse
+        )
       )
     }
   }) %>%
@@ -276,19 +286,22 @@ panel_forest_plot <- function(forest_data,
   if (any(mapped_data$diamond)) {
     forest_diamonds <- mapped_data %>%
       filter(diamond == TRUE) %>%
-      rowwise %>% do({
-        data_frame(x = c(.$xmin, .$x, .$xmax, .$x, .$xmin),
-                   y = .$y + c(0, 0.15, 0, -0.15, 0)
+      rowwise() %>%
+      do({
+        data_frame(
+          x = c(.$xmin, .$x, .$xmax, .$x, .$xmin),
+          y = .$y + c(0, 0.15, 0, -0.15, 0)
         )
       }) %>%
-      ungroup %>%
+      ungroup() %>%
       mutate(group = (row_number() + 4) %/% 5)
 
     forest_hlines <- bind_rows(
       forest_hlines,
       mapped_data %>%
         filter(diamond) %>%
-        rowwise %>% do({
+        rowwise() %>%
+        do({
           data_frame(
             x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
             y = rep(.$y + c(-0.5, 0.5), each = 2),
@@ -317,7 +330,7 @@ panel_forest_plot <- function(forest_data,
           is.infinite(x) | is.infinite(xmin) | is.infinite(xmax),
           NA_real_,
           .
-          ))
+        ))
       )
   }
 
@@ -325,7 +338,9 @@ panel_forest_plot <- function(forest_data,
   if (format_options$banded) {
     main_plot <- main_plot +
       geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-                forest_rectangles, fill = "#EFEFEF")
+        forest_rectangles,
+        fill = "#EFEFEF"
+      )
   }
   if (any(mapped_data$diamond)) {
     main_plot <- main_plot +
@@ -333,58 +348,86 @@ panel_forest_plot <- function(forest_data,
   }
   main_plot <- main_plot +
     geom_point(aes(x, y, size = size), filter(mapped_data, !diamond),
-               colour = format_options$colour, shape = format_options$shape, na.rm = TRUE)
+      colour = format_options$colour, shape = format_options$shape, na.rm = TRUE
+    )
 
   # Add arrow here
   if ("arrow_tag.r" %in% colnames(forest_data)) {
-    main_plot <- main_plot +
-      geom_errorbarh(aes(y = y, xmin = xmin, xmax = xmax),
-                     filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
-                     colour = format_options$colour, height = 0)
+    mapped_data <- mapped_data %>%
+      mutate(
+        arrow_tag.l = forest_data$arrow_tag.l,
+        arrow_tag.r = forest_data$arrow_tag.r,
+        xmin2 = forest_data$plot_range.low,
+        xmax2 = forest_data$plot_range.high
+      )
 
-    mapped_data = mapped_data %>%
-      mutate(arrow_tag.l = forest_data$arrow_tag.l,
-             arrow_tag.r = forest_data$arrow_tag.r,
-             xmax2 = xmax + (xmax - xmin)/20,
-             xmin2 = xmin - (xmax - xmin)/20)
     main_plot <- main_plot +
-      geom_segment(aes(xmin, y, xend=xmax2, yend=y),
-                   filter(mapped_data, arrow_tag.r),
-                   arrow = arrow(length = unit(0.08, "inches")))
+      geom_errorbarh(aes(y = y, xmin = xmin2, xmax = xmax2),
+        filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
+        colour = format_options$colour, height = 0
+      )
+
     main_plot <- main_plot +
-      geom_segment(aes(xmin2, y, xend=xmax, yend=y),
-                   filter(mapped_data, arrow_tag.l),
-                   arrow = arrow(length = unit(0.08, "inches"), ends = "first"))
+      geom_segment(aes(xmin2, y, xend = xmax2, yend = y),
+        filter(mapped_data, arrow_tag.r),
+        arrow = arrow(length = unit(0.08, "inches"))
+      )
+    main_plot <- main_plot +
+      geom_segment(aes(xmin2, y, xend = xmax2, yend = y),
+        filter(mapped_data, arrow_tag.l),
+        arrow = arrow(length = unit(0.08, "inches"), ends = "first")
+      )
+    main_plot <- main_plot +
+      geom_segment(
+        aes(xmax2, y - 0.075, xend = xmax2, yend = y + 0.075),
+        filter(mapped_data, !arrow_tag.r)
+      )
+    main_plot <- main_plot +
+      geom_segment(
+        aes(xmin2, y - 0.075, xend = xmin2, yend = y + 0.075),
+        filter(mapped_data, !arrow_tag.l)
+      )
   } else {
     main_plot <- main_plot +
       geom_errorbarh(aes(y = y, xmin = xmin, xmax = xmax),
-                     filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
-                     colour = format_options$colour, height = 0.15)
+        filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
+        colour = format_options$colour, height = 0.15
+      )
   }
 
   main_plot <- main_plot +
-    geom_segment(aes(x, y, xend = xend, yend = yend, linetype = linetype),
-              forest_vlines)
+    geom_segment(
+      aes(x, y, xend = xend, yend = yend, linetype = linetype),
+      forest_vlines
+    )
   if (any(mapped_data$whole_row)) {
     main_plot <- main_plot +
       geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-                forest_whole_row_back, fill = "#FFFFFF")
+        forest_whole_row_back,
+        fill = "#FFFFFF"
+      )
   }
   for (parse_type in unique(forest_text$parse)) {
     main_plot <- main_plot +
       geom_text(aes(x, y, label = label, hjust = hjust, fontface = fontface),
-                filter(forest_text, parse == parse_type), na.rm = TRUE, parse = parse_type,
-                size = format_options$text_size)
+        filter(forest_text, parse == parse_type),
+        na.rm = TRUE, parse = parse_type,
+        size = format_options$text_size
+      )
   }
   main_plot <- main_plot +
-    geom_line(aes(x, y, linetype = linetype, group = group),
-              forest_hlines) +
+    geom_line(
+      aes(x, y, linetype = linetype, group = group),
+      forest_hlines
+    ) +
     scale_linetype_identity() +
     scale_alpha_identity() +
     guides(size = "none") +
-    scale_x_continuous(breaks = breaks,
-                       labels = sprintf("%g", trans(breaks)),
-                       expand = c(0, 0)) +
+    scale_x_continuous(
+      breaks = breaks,
+      labels = sprintf("%g", trans(breaks)),
+      expand = c(0, 0)
+    ) +
     scale_y_continuous(expand = c(0, 0)) +
     theme
   main_plot

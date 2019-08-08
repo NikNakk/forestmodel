@@ -17,23 +17,33 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
     if (trans_char == "I") {
       trans_char <- "FALSE"
     }
-    measure <- measure %||% rma_setlab(model$measure, transf.char = "FALSE",
-                                       atransf.char = trans_char,
-                                       gentype = 1)
+    measure <- measure %||% rma_setlab(model$measure,
+      transf.char = "FALSE",
+      atransf.char = trans_char,
+      gentype = 1
+    )
     panels <- list(
       forest_panel(width = 0.03),
-      forest_panel(width = 0.01, display = study, fontface = "bold", heading = "Study",
-           width_group = 1),
-      forest_panel(width = 0.18, display = stat, parse = TRUE,
-           width_group = 1),
+      forest_panel(
+        width = 0.01, display = study, fontface = "bold", heading = "Study",
+        width_group = 1
+      ),
+      forest_panel(
+        width = 0.18, display = stat, parse = TRUE,
+        width_group = 1
+      ),
       forest_panel(width = 0.05, display = n, hjust = 1, heading = "N"),
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
-      forest_panel(width = 0.55, item = "forest", hjust = 0.5, heading = measure,
-           linetype = "dashed", line_x = 0),
+      forest_panel(
+        width = 0.55, item = "forest", hjust = 0.5, heading = measure,
+        linetype = "dashed", line_x = 0
+      ),
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
-      forest_panel(width = 0.12,
-           display = sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high)),
-           display_na = NA),
+      forest_panel(
+        width = 0.12,
+        display = sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high)),
+        display_na = NA
+      ),
       forest_panel(width = 0.03)
     )
   } else {
@@ -52,15 +62,22 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       forest_panel(width = 0.1, display = level),
       forest_panel(width = 0.05, display = n, hjust = 1, heading = "N"),
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
-      forest_panel(width = 0.55, item = "forest", hjust = 0.5, heading = measure,
-           linetype = "dashed", line_x = 0),
+      forest_panel(
+        width = 0.55, item = "forest", hjust = 0.5, heading = measure,
+        linetype = "dashed", line_x = 0
+      ),
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
-      forest_panel(width = 0.12,
-           display = if_else(reference, "Reference",
-                             sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high))),
-           display_na = NA),
-      forest_panel(width = 0.05, display = if_else(reference, "", format.pval(p.value, digits = 1, eps = 1e-3)), display_na = NA,
-           hjust = 1, heading = "p"),
+      forest_panel(
+        width = 0.12,
+        display = if_else(reference, "Reference",
+          sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high))
+        ),
+        display_na = NA
+      ),
+      forest_panel(
+        width = 0.05, display = if_else(reference, "", format.pval(p.value, digits = 1, eps = 1e-3)), display_na = NA,
+        hjust = 1, heading = "p"
+      ),
       forest_panel(width = 0.03)
     )
     if (factor_separate_line) {
