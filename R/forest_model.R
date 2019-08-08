@@ -245,6 +245,20 @@ forest_model <- function(model,
     forest_terms <- make_forest_terms(model)
   }
 
+  # #use_exp <- grepl("exp", deparse(trans))
+  if (!is.null(limits)) {
+    forest_terms <- forest_terms %>%
+      mutate(arrow_tag.l = limits[1],
+             arrow_tag.r = limits[2],
+             arrow_tag.l = ifelse(conf.low < arrow_tag.l, TRUE, FALSE),
+             arrow_tag.r = ifelse(conf.high > arrow_tag.r, TRUE, FALSE)) %>%
+      mutate(conf.low = ifelse(arrow_tag.l, limits[1], conf.low),
+             conf.high = ifelse(arrow_tag.r, limits[2], conf.high))
+
+  }
+
+
+
   plot_data <- list(
       forest_data = forest_terms,
       mapping = mapping,

@@ -333,10 +333,36 @@ panel_forest_plot <- function(forest_data,
   }
   main_plot <- main_plot +
     geom_point(aes(x, y, size = size), filter(mapped_data, !diamond),
-               colour = format_options$colour, shape = format_options$shape, na.rm = TRUE) +
-    geom_errorbarh(aes(y = y, xmin = xmin, xmax = xmax),
-                   filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
-                   colour = format_options$colour, height = 0.15) +
+               colour = format_options$colour, shape = format_options$shape, na.rm = TRUE)
+
+  # Add arrow here
+  if ("arrow_tag.r" %in% colnames(forest_data)) {
+    main_plot <- main_plot +
+      geom_errorbarh(aes(y = y, xmin = xmin, xmax = xmax),
+                     filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
+                     colour = format_options$colour, height = 0)
+
+    mapped_data = mapped_data %>%
+      mutate(arrow_tag.l = forest_data$arrow_tag.l,
+             arrow_tag.r = forest_data$arrow_tag.r,
+             xmax2 = xmax + (xmax - xmin)/20,
+             xmin2 = xmin - (xmax - xmin)/20)
+    main_plot <- main_plot +
+      geom_segment(aes(xmin, y, xend=xmax2, yend=y),
+                   filter(mapped_data, arrow_tag.r),
+                   arrow = arrow(length = unit(0.08, "inches")))
+    main_plot <- main_plot +
+      geom_segment(aes(xmin2, y, xend=xmax, yend=y),
+                   filter(mapped_data, arrow_tag.l),
+                   arrow = arrow(length = unit(0.08, "inches"), ends = "first"))
+  } else {
+    main_plot <- main_plot +
+      geom_errorbarh(aes(y = y, xmin = xmin, xmax = xmax),
+                     filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
+                     colour = format_options$colour, height = 0.15)
+  }
+
+  main_plot <- main_plot +
     geom_segment(aes(x, y, xend = xend, yend = yend, linetype = linetype),
               forest_vlines)
   if (any(mapped_data$whole_row)) {
