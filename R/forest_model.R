@@ -57,7 +57,7 @@
 #' @export
 #'
 #' @examples
-#' 
+#'
 #' library("survival")
 #' library("dplyr")
 #' pretty_lung <- lung %>%
@@ -68,11 +68,11 @@
 #'     ECOG = factor(lung$ph.ecog),
 #'     `Meal Cal` = meal.cal
 #'   )
-#' 
+#'
 #' print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
-#' 
+#'
 #' # Example with custom panels
-#' 
+#'
 #' panels <- list(
 #'   list(width = 0.03),
 #'   list(width = 0.1, display = ~variable, fontface = "bold", heading = "Variable"),
@@ -102,20 +102,20 @@
 #'   list(width = 0.03)
 #' )
 #' forest_model(coxph(Surv(time, status) ~ ., pretty_lung), panels)
-#' 
+#'
 #' data_for_lm <- data_frame(
 #'   x = rnorm(100, 4),
 #'   y = rnorm(100, 3, 0.5),
 #'   z = rnorm(100, 2, 2),
 #'   outcome = 3 * x - 2 * y + 4 * z + rnorm(100, 0, 0.1)
 #' )
-#' 
+#'
 #' print(forest_model(lm(outcome ~ ., data_for_lm)))
-#' 
+#'
 #' data_for_logistic <- data_for_lm %>% mutate(
 #'   outcome = (0.5 * (x - 4) * (y - 3) * (z - 2) + rnorm(100, 0, 0.05)) > 0.5
 #' )
-#' 
+#'
 #' print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic)))
 forest_model <- function(model,
                          panels = default_forest_panels(model, factor_separate_line = factor_separate_line),
@@ -267,12 +267,12 @@ forest_model <- function(model,
       mutate(
         arrow_tag.l = limits[1],
         arrow_tag.r = limits[2],
-        arrow_tag.l = ifelse(conf.low < arrow_tag.l, TRUE, FALSE),
-        arrow_tag.r = ifelse(conf.high > arrow_tag.r, TRUE, FALSE)
+        arrow_tag.l = ifelse(conf.low < .data$arrow_tag.l, TRUE, FALSE),
+        arrow_tag.r = ifelse(conf.high > .data$arrow_tag.r, TRUE, FALSE)
       ) %>%
       mutate(
-        plot_range.low = ifelse(arrow_tag.l, limits[1], conf.low),
-        plot_range.high = ifelse(arrow_tag.r, limits[2], conf.high)
+        plot_range.low = ifelse(.data$arrow_tag.l, limits[1], conf.low),
+        plot_range.high = ifelse(.data$arrow_tag.r, limits[2], conf.high)
       )
   }
 

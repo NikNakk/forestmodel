@@ -362,30 +362,30 @@ panel_forest_plot <- function(forest_data,
       )
 
     main_plot <- main_plot +
-      geom_errorbarh(aes(y = y, xmin = xmin2, xmax = xmax2),
+      geom_errorbarh(aes(y = y, xmin = .data$xmin2, xmax = .data$xmax2),
         filter(mapped_data, !diamond & !(is.na(xmin) & is.na(xmax))),
         colour = format_options$colour, height = 0
       )
 
     main_plot <- main_plot +
-      geom_segment(aes(xmin2, y, xend = xmax2, yend = y),
-        filter(mapped_data, arrow_tag.r),
+      geom_segment(aes(.data$xmin2, y, xend = .data$xmax2, yend = y),
+        filter(mapped_data, .data$arrow_tag.r),
         arrow = arrow(length = unit(0.08, "inches"))
       )
     main_plot <- main_plot +
-      geom_segment(aes(xmin2, y, xend = xmax2, yend = y),
-        filter(mapped_data, arrow_tag.l),
+      geom_segment(aes(.data$xmin2, y, xend = .data$xmax2, yend = y),
+        filter(mapped_data, .data$arrow_tag.l),
         arrow = arrow(length = unit(0.08, "inches"), ends = "first")
       )
     main_plot <- main_plot +
       geom_segment(
-        aes(xmax2, y - 0.075, xend = xmax2, yend = y + 0.075),
-        filter(mapped_data, !arrow_tag.r)
+        aes(.data$xmax2, y - 0.075, xend = .data$xmax2, yend = y + 0.075),
+        filter(mapped_data, !.data$arrow_tag.r)
       )
     main_plot <- main_plot +
       geom_segment(
-        aes(xmin2, y - 0.075, xend = xmin2, yend = y + 0.075),
-        filter(mapped_data, !arrow_tag.l)
+        aes(.data$xmin2, y - 0.075, xend = .data$xmin2, yend = y + 0.075),
+        filter(mapped_data, !.data$arrow_tag.l)
       )
   } else {
     main_plot <- main_plot +
