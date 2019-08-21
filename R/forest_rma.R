@@ -26,12 +26,12 @@
 #'   data("dat.bcg")
 #'   dat <- escalc(measure = "RR", ai = tpos, bi = tneg, ci = cpos, di = cneg, data = dat.bcg)
 #'   model <- rma(yi, vi, data = dat)
-#' 
+#'
 #'   print(forest_rma(model,
 #'     study_labels = paste(dat.bcg$author, dat.bcg$year),
 #'     trans = exp
 #'   ))
-#' 
+#'
 #'   print(forest_rma(model,
 #'     panels = forest_panels(
 #'       Study = ~study,
@@ -50,11 +50,11 @@ forest_rma <- function(model, panels = NULL,
                        model_label = NULL,
                        show_individual_studies = TRUE,
                        show_stats = list(
-                         "I^2" = ~ sprintf("%0.1f%%", I2),
-                         "p" = ~ format.pval(QEp,
+                         "I^2" = rlang::quo(sprintf("%0.1f%%", I2)),
+                         "p" = rlang::quo(format.pval(QEp,
                            digits = 4, eps = 1e-4,
                            scientific = 1
-                         )
+                         ))
                        ),
                        trans = I, funcs = NULL,
                        format_options = list(
@@ -228,3 +228,7 @@ get_data_for_rma <-
     }
     forest_data
   }
+
+utils::globalVariables(
+  c("I2", "QEp")
+)

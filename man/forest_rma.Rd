@@ -7,8 +7,8 @@
 forest_rma(model, panels = NULL, study_labels = NULL,
   additional_data = NULL, point_size = NULL, model_label = NULL,
   show_individual_studies = TRUE, show_stats = list(`I^2` =
-  ~sprintf("\%0.1f\%\%", I2), p = ~format.pval(QEp, digits = 4, eps =
-  1e-04, scientific = 1)), trans = I, funcs = NULL,
+  rlang::quo(sprintf("\%0.1f\%\%", I2)), p = rlang::quo(format.pval(QEp,
+  digits = 4, eps = 1e-04, scientific = 1))), trans = I, funcs = NULL,
   format_options = list(colour = "black", shape = 15, text_size = 5,
   banded = TRUE), theme = theme_forest(), limits = NULL,
   breaks = NULL, return_data = FALSE, recalculate_width = TRUE,
