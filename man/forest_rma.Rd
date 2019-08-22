@@ -6,13 +6,13 @@
 \usage{
 forest_rma(model, panels = NULL, study_labels = NULL,
   additional_data = NULL, point_size = NULL, model_label = NULL,
-  show_individual_studies = TRUE, show_stats = list(`I^2` =
-  rlang::quo(sprintf("\%0.1f\%\%", I2)), p = rlang::quo(format.pval(QEp,
-  digits = 4, eps = 1e-04, scientific = 1))), trans = I, funcs = NULL,
-  format_options = list(colour = "black", shape = 15, text_size = 5,
-  banded = TRUE), theme = theme_forest(), limits = NULL,
-  breaks = NULL, return_data = FALSE, recalculate_width = TRUE,
-  recalculate_height = TRUE)
+  show_individual_studies = TRUE, show_model = TRUE,
+  show_stats = list(`I^2` = rlang::quo(sprintf("\%0.1f\%\%", I2)), p =
+  rlang::quo(format.pval(QEp, digits = 4, eps = 1e-04, scientific = 1))),
+  trans = I, funcs = NULL, format_options = list(colour = "black",
+  shape = 15, text_size = 5, banded = TRUE), theme = theme_forest(),
+  limits = NULL, breaks = NULL, return_data = FALSE,
+  recalculate_width = TRUE, recalculate_height = TRUE)
 }
 \arguments{
 \item{model}{a single \code{\link[metafor]{rma}} object or a \code{list} of them}
@@ -30,6 +30,8 @@ all studies, or a list of numeric vectors if more than one model is to be plotte
 \item{model_label}{a single model label or character vector of model labels the same length as \code{model}}
 
 \item{show_individual_studies}{whether to show the individual studies (the default) or just the summary diamond}
+
+\item{show_model}{a logical value, if `TRUE`, show model result, otherwise only show forest plots for studies}
 
 \item{show_stats}{a \code{list} of stats to show at the bottom of the forest plot for e.g. heterogeneity}
 

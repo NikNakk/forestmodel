@@ -10,7 +10,7 @@
 #'   all studies, or a list of numeric vectors if more than one model is to be plotted
 #' @param trans an optional transform function used on the numeric data for plotting the axes
 #' @param show_individual_studies whether to show the individual studies (the default) or just the summary diamond
-#'
+#' @param show_model a logical value, if `TRUE`, show model result, otherwise only show forest plots for studies
 #' @inheritParams forest_model
 #'
 #' @details This produces a forest plot using the \code{\link[metafor]{rma}}
@@ -49,6 +49,7 @@ forest_rma <- function(model, panels = NULL,
                        point_size = NULL,
                        model_label = NULL,
                        show_individual_studies = TRUE,
+                       show_model = TRUE,
                        show_stats = list(
                          "I^2" = rlang::quo(sprintf("%0.1f%%", I2)),
                          "p" = rlang::quo(format.pval(QEp,
@@ -110,6 +111,10 @@ forest_rma <- function(model, panels = NULL,
         show_individual_studies = show_individual_studies,
         show_stats = show_stats
       )
+    if (!show_model) {
+      forest_data = forest_data %>%
+        dplyr::slice(1:(nrow(forest_data)-2))
+    }
   }
 
   plot_data <- list(
