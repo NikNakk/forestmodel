@@ -117,6 +117,20 @@ forest_rma <- function(model, panels = NULL,
     }
   }
 
+  if (!is.null(limits)) {
+    forest_data <- forest_data %>%
+      mutate(
+        arrow_tag.l = limits[1],
+        arrow_tag.r = limits[2],
+        arrow_tag.l = ifelse(conf.low < .data$arrow_tag.l, TRUE, FALSE),
+        arrow_tag.r = ifelse(conf.high > .data$arrow_tag.r, TRUE, FALSE)
+      ) %>%
+      mutate(
+        plot_range.low = ifelse(.data$arrow_tag.l, limits[1], conf.low),
+        plot_range.high = ifelse(.data$arrow_tag.r, limits[2], conf.high)
+      )
+  }
+
   plot_data <- list(
     forest_data = forest_data,
     mapping = aes(estimate,
