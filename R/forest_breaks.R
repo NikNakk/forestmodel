@@ -15,7 +15,7 @@ forest_breaks <- function(limits, trans = I) {
     limits <- exp(limits)
     make_range <- function(log_cut, step) {
       if (log_cut <= 0) {
-        cut <- 10 ^ log_cut
+        cut <- 10^log_cut
         divisor <- cut / 10 * step
         if (limits[1] < cut) {
           seq(max(divisor, ceiling(limits[1] / divisor) * divisor), cut, divisor)
@@ -23,10 +23,10 @@ forest_breaks <- function(limits, trans = I) {
           NULL
         }
       } else {
-        cut <- 10 ^ (log_cut - 1)
+        cut <- 10^(log_cut - 1)
         divisor <- step * cut
         if (limits[2] > divisor) {
-          seq(divisor, min(10 ^ log_cut, floor(limits[2] / divisor) * divisor), divisor)
+          seq(divisor, min(10^log_cut, floor(limits[2] / divisor) * divisor), divisor)
         } else {
           NULL
         }
@@ -36,13 +36,12 @@ forest_breaks <- function(limits, trans = I) {
     step <- if (length(log_range) < 6) 2 else 5
     breaks <- unlist(lapply(log_range, make_range, step = step)) %>%
       c(1) %>%
-      unique %>%
-      sort %>%
-      log
+      unique() %>%
+      sort() %>%
+      log()
   } else {
-    divisor <- 10 ^ round(log10(diff(limits)) - 0.9)
+    divisor <- 10^round(log10(diff(limits)) - 0.9)
     breaks <- divisor * ceiling(limits[1] / divisor):floor(limits[2] / divisor)
   }
   breaks
 }
-

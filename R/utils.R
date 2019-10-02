@@ -1,4 +1,4 @@
-`%||%` <- function(x, y) if(is.null(x)) y else x
+`%||%` <- function(x, y) if (is.null(x)) y else x
 
 #' @import rlang
 default_cols <- function(.data, ...) {
