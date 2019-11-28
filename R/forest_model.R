@@ -235,7 +235,7 @@ forest_model <- function(model,
       ungroup() %>%
       filter(!is.na(variable)) %>%
       mutate(term = paste0(term_label, replace(level, is.na(level), ""))) %>%
-      full_join(tidy_model, by = "term") %>%
+      left_join(tidy_model, by = "term") %>%
       mutate(
         reference = ifelse(is.na(level_no), FALSE, level_no == 1),
         estimate = ifelse(reference, 0, estimate),

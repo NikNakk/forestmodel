@@ -4,8 +4,12 @@
 \alias{default_forest_panels}
 \title{Default panels for forest_model}
 \usage{
-default_forest_panels(model = NULL, factor_separate_line = FALSE,
-  measure = NULL, trans_char = "I")
+default_forest_panels(
+  model = NULL,
+  factor_separate_line = FALSE,
+  measure = NULL,
+  trans_char = "I"
+)
 }
 \arguments{
 \item{model}{model object to guess label and determine defaults}
