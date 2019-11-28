@@ -20,6 +20,7 @@
 #' @param recalculate_height \code{TRUE} to shrink text size using the current device
 #'   or the desired plot height in inches
 #' @param model_list list of models to incorporate into a single forest plot
+#' @param merge_models if `TRUE`, merge all models in one section.
 #' @param exclude_infinite_cis whether to exclude points and confidence intervals
 #'   that go to positive or negative infinity from plotting. They will still be
 #'   displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed
@@ -125,7 +126,7 @@ forest_model <- function(model,
                          theme = theme_forest(),
                          limits = NULL, breaks = NULL, return_data = FALSE,
                          recalculate_width = TRUE, recalculate_height = TRUE,
-                         model_list = NULL, exclude_infinite_cis = TRUE) {
+                         model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE) {
   mapping <- aes(estimate, xmin = conf.low, xmax = conf.high)
   if (!is.null(model_list)) {
     if (!is.list(model_list)) {
@@ -141,7 +142,9 @@ forest_model <- function(model,
       model_names_needed <- vapply(model_list[need_names], function(x) quo_name(x$call), character(1))
       model_names[need_names] <- model_names_needed
     }
-    mapping <- c(mapping, aes(section = model_name))
+    if (!merge_models) {
+      mapping <- c(mapping, aes(section = model_name))
+    }
     if (is.null(exponentiate)) {
       exponentiate <- inherits(model_list[[1]], "coxph") ||
         (inherits(model_list[[1]], "glm") && model_list[[1]]$family$link == "logit")
@@ -257,6 +260,9 @@ forest_model <- function(model,
         mutate(model_name = model_names[i])
     }) %>%
       bind_rows()
+    if (merge_models) {
+      forest_terms$model_name = NULL
+    }
   } else {
     forest_terms <- make_forest_terms(model)
   }

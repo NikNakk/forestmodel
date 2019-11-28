@@ -19,6 +19,7 @@ forest_model(
   recalculate_width = TRUE,
   recalculate_height = TRUE,
   model_list = NULL,
+  merge_models = FALSE,
   exclude_infinite_cis = TRUE
 )
 }
@@ -56,6 +57,8 @@ or the desired plot width in inches}
 or the desired plot height in inches}
 
 \item{model_list}{list of models to incorporate into a single forest plot}
+
+\item{merge_models}{if `TRUE`, merge all models in one section.}
 
 \item{exclude_infinite_cis}{whether to exclude points and confidence intervals
 that go to positive or negative infinity from plotting. They will still be
