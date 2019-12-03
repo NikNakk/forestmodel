@@ -4,8 +4,13 @@
 \alias{forest_model_format_options}
 \title{Create format options for \code{forest_model}}
 \usage{
-forest_model_format_options(colour = "black", color = NULL,
-  shape = 15, text_size = 5, banded = TRUE)
+forest_model_format_options(
+  colour = "black",
+  color = NULL,
+  shape = 15,
+  text_size = 5,
+  banded = TRUE
+)
 }
 \arguments{
 \item{colour}{colour of the point estimate and error bars}

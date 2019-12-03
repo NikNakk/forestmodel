@@ -4,12 +4,20 @@
 \alias{panel_forest_plot}
 \title{Plot a forest plot with panels of text}
 \usage{
-panel_forest_plot(forest_data, mapping = aes(estimate, xmin = conf.low,
-  xmax = conf.high), panels = default_forest_panels(), trans = I,
-  funcs = NULL, format_options = list(colour = "black", shape = 15,
-  banded = TRUE, text_size = 5), theme = theme_forest(), limits = NULL,
-  breaks = NULL, recalculate_width = TRUE, recalculate_height = TRUE,
-  exclude_infinite_cis = TRUE)
+panel_forest_plot(
+  forest_data,
+  mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
+  panels = default_forest_panels(),
+  trans = I,
+  funcs = NULL,
+  format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
+  theme = theme_forest(),
+  limits = NULL,
+  breaks = NULL,
+  recalculate_width = TRUE,
+  recalculate_height = TRUE,
+  exclude_infinite_cis = TRUE
+)
 }
 \arguments{
 \item{forest_data}{\code{data.frame} with the data needed for both the plot and text}

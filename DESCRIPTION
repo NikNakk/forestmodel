@@ -18,4 +18,4 @@ Imports: dplyr (>= 0.7.4),
     tibble (>= 1.4.2)
 Suggests: survival,
     metafor
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0

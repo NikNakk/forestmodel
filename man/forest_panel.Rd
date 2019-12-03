@@ -4,9 +4,19 @@
 \alias{forest_panel}
 \title{Create definition of a panel for \code{forest_model}}
 \usage{
-forest_panel(width, item = c("", "forest", "vline"), display = NULL,
-  display_na = NULL, hjust = NULL, heading = NULL, fontface = NULL,
-  linetype = NULL, line_x = NULL, parse = NULL, width_group = NULL)
+forest_panel(
+  width,
+  item = c("", "forest", "vline"),
+  display = NULL,
+  display_na = NULL,
+  hjust = NULL,
+  heading = NULL,
+  fontface = NULL,
+  linetype = NULL,
+  line_x = NULL,
+  parse = NULL,
+  width_group = NULL
+)
 }
 \arguments{
 \item{width}{relative width of the panel}
