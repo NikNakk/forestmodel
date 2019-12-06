@@ -2,8 +2,10 @@ forestmodel 0.6.1 (2019-10-02)
 ------------------------------
 * `limits` option now uses arrows where the confidence intervals extend beyond
   the limits (fixes #16, thanks to @ShixiangWang for raising this and providing code!)
-* Fix in `forest_rma` needed because of change to `rlang::tidy_eval` , thanks to
+* Fix in `forest_rma` needed because of change to `rlang::tidy_eval`, thanks to
   @ShixiangWang (fixes #18).
+* Fix for selection of covariates, thanks to @ShixiangWang (fixes #20).
+* New merge_models parameter, thanks to @ShixiangWang.
 
 forestmodel 0.6.0 (2019-02-25)
 ------------------------------
