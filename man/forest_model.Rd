@@ -121,7 +121,7 @@ panels <- list(
   list(
     width = 0.05,
     display = ~ replace(sprintf("\%0.1f", person_time / 365.25), is.na(person_time), ""),
-    heading = "Person-\\nYears", hjust = 1
+    heading = "Person-\nYears", hjust = 1
   ),
   list(width = 0.03, item = "vline", hjust = 0.5),
   list(

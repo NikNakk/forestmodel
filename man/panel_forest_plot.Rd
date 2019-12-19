@@ -22,7 +22,7 @@ panel_forest_plot(
 \arguments{
 \item{forest_data}{\code{data.frame} with the data needed for both the plot and text}
 
-\item{mapping}{mapping aesthetic created using \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}}
+\item{mapping}{mapping aesthetic created using \code{\link[ggplot2]{aes}}}
 
 \item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
 
