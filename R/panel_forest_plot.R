@@ -17,7 +17,7 @@
 panel_forest_plot <- function(forest_data,
                               mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
                               panels = default_forest_panels(), trans = I, funcs = NULL,
-                              format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
+                              format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5, point_size = 5),
                               theme = theme_forest(),
                               limits = NULL, breaks = NULL,
                               recalculate_width = TRUE, recalculate_height = TRUE,
@@ -41,7 +41,8 @@ panel_forest_plot <- function(forest_data,
   format_options$banded <- format_options$banded %||% TRUE
   format_options$text_size <- format_options$text_size %||% 5
 
-  mapping$size <- mapping$size %||% 5
+  ## Modify the square size
+  ## mapping$size <- mapping$size %||% 5
   mapping$whole_row <- mapping$whole_row %||% FALSE
 
   if (!is.null(mapping$section) && !all(is.na(eval_tidy(mapping$section, forest_data)))) {
@@ -347,7 +348,7 @@ panel_forest_plot <- function(forest_data,
       geom_polygon(aes(x, y, group = group), forest_diamonds, fill = format_options$colour)
   }
   main_plot <- main_plot +
-    geom_point(aes(x, y, size = size), filter(mapped_data, !diamond),
+    geom_point(aes(x, y), size = format_options$point_size, filter(mapped_data, !diamond),
       colour = format_options$colour, shape = format_options$shape, na.rm = TRUE
     )
 

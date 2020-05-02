@@ -121,7 +121,7 @@ panels <- list(
   list(
     width = 0.05,
     display = ~ replace(sprintf("\%0.1f", person_time / 365.25), is.na(person_time), ""),
-    heading = "Person-\\nYears", hjust = 1
+    heading = "Person-\nYears", hjust = 1
   ),
   list(width = 0.03, item = "vline", hjust = 0.5),
   list(
@@ -142,7 +142,7 @@ panels <- list(
 )
 forest_model(coxph(Surv(time, status) ~ ., pretty_lung), panels)
 
-data_for_lm <- data_frame(
+data_for_lm <- tibble(
   x = rnorm(100, 4),
   y = rnorm(100, 3, 0.5),
   z = rnorm(100, 2, 2),
