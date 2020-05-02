@@ -191,7 +191,7 @@ get_data_for_rma <-
     }
 
     if (show_individual_studies) {
-      forest_data <- as_data_frame(model[c("yi", "ni", "vi")]) %>%
+      forest_data <- as_tibble(model[c("yi", "ni", "vi")]) %>%
         transmute(
           estimate = yi,
           se = sqrt(vi),
@@ -206,9 +206,9 @@ get_data_for_rma <-
           .band = TRUE
         )
     } else {
-      forest_data <- data_frame()
+      forest_data <- tibble()
     }
-    forest_data <- data_frame(
+    forest_data <- tibble(
       estimate = model$b[1],
       se = model$se[1],
       conf.low = model$ci.lb[1],
@@ -236,7 +236,7 @@ get_data_for_rma <-
         }
         sprintf('%s ~ "%s"', names(show_stats)[i], stat_result)
       }) %>% {
-        data_frame(
+        tibble(
           stat = paste0("paste(", paste(., collapse = ', "; ", '), ")"),
           .band = FALSE,
           .whole_row = TRUE

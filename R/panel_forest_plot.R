@@ -242,7 +242,7 @@ panel_forest_plot <- function(forest_data,
       forest_whole_row_back %>%
         rowwise() %>%
         do({
-          data_frame(
+          tibble(
             x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
             y = rep(.$y + c(-0.5, 0.5), each = 2),
             linetype = "solid"
@@ -288,7 +288,7 @@ panel_forest_plot <- function(forest_data,
       filter(diamond == TRUE) %>%
       rowwise() %>%
       do({
-        data_frame(
+        tibble(
           x = c(.$xmin, .$x, .$xmax, .$x, .$xmin),
           y = .$y + c(0, 0.15, 0, -0.15, 0)
         )
@@ -302,7 +302,7 @@ panel_forest_plot <- function(forest_data,
         filter(diamond) %>%
         rowwise() %>%
         do({
-          data_frame(
+          tibble(
             x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
             y = rep(.$y + c(-0.5, 0.5), each = 2),
             linetype = "solid"
