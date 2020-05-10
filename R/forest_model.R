@@ -261,7 +261,7 @@ forest_model <- function(model,
     }) %>%
       bind_rows()
     if (merge_models) {
-      forest_terms$model_name = NULL
+      forest_terms$model_name <- NULL
     }
   } else {
     forest_terms <- make_forest_terms(model)

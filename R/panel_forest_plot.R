@@ -348,7 +348,8 @@ panel_forest_plot <- function(forest_data,
       geom_polygon(aes(x, y, group = group), forest_diamonds, fill = format_options$colour)
   }
   main_plot <- main_plot +
-    geom_point(aes(x, y), size = format_options$point_size, filter(mapped_data, !diamond),
+    geom_point(aes(x, y),
+      size = format_options$point_size, filter(mapped_data, !diamond),
       colour = format_options$colour, shape = format_options$shape, na.rm = TRUE
     )
 

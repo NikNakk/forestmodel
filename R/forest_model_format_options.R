@@ -12,7 +12,7 @@
 #' @export
 #'
 forest_model_format_options <- function(colour = "black", color = NULL, shape = 15,
-                                        text_size = 5, point_size = 5,  banded = TRUE) {
+                                        text_size = 5, point_size = 5, banded = TRUE) {
   structure(
     list(
       colour = colour %||% color,
