@@ -4,14 +4,23 @@
 \alias{forest_model}
 \title{Produce a forest plot based on a regression model}
 \usage{
-forest_model(model, panels = default_forest_panels(model,
-  factor_separate_line = factor_separate_line), covariates = NULL,
-  exponentiate = NULL, funcs = NULL, factor_separate_line = FALSE,
+forest_model(
+  model,
+  panels = default_forest_panels(model, factor_separate_line = factor_separate_line),
+  covariates = NULL,
+  exponentiate = NULL,
+  funcs = NULL,
+  factor_separate_line = FALSE,
   format_options = forest_model_format_options(),
-  theme = theme_forest(), limits = NULL, breaks = NULL,
-  return_data = FALSE, recalculate_width = TRUE,
-  recalculate_height = TRUE, model_list = NULL,
-  exclude_infinite_cis = TRUE)
+  theme = theme_forest(),
+  limits = NULL,
+  breaks = NULL,
+  return_data = FALSE,
+  recalculate_width = TRUE,
+  recalculate_height = TRUE,
+  model_list = NULL,
+  exclude_infinite_cis = TRUE
+)
 }
 \arguments{
 \item{model}{regression model produced by \code{\link[stats]{lm}},
@@ -109,7 +118,7 @@ panels <- list(
   list(
     width = 0.05,
     display = ~ replace(sprintf("\%0.1f", person_time / 365.25), is.na(person_time), ""),
-    heading = "Person-\\nYears", hjust = 1
+    heading = "Person-\nYears", hjust = 1
   ),
   list(width = 0.03, item = "vline", hjust = 0.5),
   list(
