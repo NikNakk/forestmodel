@@ -104,7 +104,7 @@
 #' )
 #' forest_model(coxph(Surv(time, status) ~ ., pretty_lung), panels)
 #'
-#' data_for_lm <- data_frame(
+#' data_for_lm <- tibble(
 #'   x = rnorm(100, 4),
 #'   y = rnorm(100, 3, 0.5),
 #'   z = rnorm(100, 2, 2),
@@ -261,7 +261,7 @@ forest_model <- function(model,
     }) %>%
       bind_rows()
     if (merge_models) {
-      forest_terms$model_name = NULL
+      forest_terms$model_name <- NULL
     }
   } else {
     forest_terms <- make_forest_terms(model)

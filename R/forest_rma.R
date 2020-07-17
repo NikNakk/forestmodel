@@ -58,10 +58,7 @@ forest_rma <- function(model, panels = NULL,
                          ))
                        ),
                        trans = I, funcs = NULL,
-                       format_options = list(
-                         colour = "black", shape = 15,
-                         text_size = 5, banded = TRUE
-                       ),
+                       format_options = forest_model_format_options(),
                        theme = theme_forest(),
                        limits = NULL, breaks = NULL, return_data = FALSE,
                        recalculate_width = TRUE, recalculate_height = TRUE) {
@@ -112,8 +109,8 @@ forest_rma <- function(model, panels = NULL,
         show_stats = show_stats
       )
     if (!show_model) {
-      forest_data = forest_data %>%
-        dplyr::slice(1:(nrow(forest_data)-2))
+      forest_data <- forest_data %>%
+        dplyr::slice(1:(nrow(forest_data) - 2))
     }
   }
 
@@ -159,7 +156,7 @@ forest_rma <- function(model, panels = NULL,
 # @return a data.frame with the extracted data
 get_data_for_rma <-
   function(model, study_labels = NULL, model_label = NULL, point_size = NULL,
-             additional_data = NULL, show_individual_studies = TRUE, show_stats = NULL) {
+           additional_data = NULL, show_individual_studies = TRUE, show_stats = NULL) {
     if (model$level > 1) { # Has changed at some point in rma.uni
       alpha <- (100 - model$level) / 100
     } else {
@@ -191,7 +188,7 @@ get_data_for_rma <-
     }
 
     if (show_individual_studies) {
-      forest_data <- as_data_frame(model[c("yi", "ni", "vi")]) %>%
+      forest_data <- as_tibble(model[c("yi", "ni", "vi")]) %>%
         transmute(
           estimate = yi,
           se = sqrt(vi),
@@ -206,9 +203,9 @@ get_data_for_rma <-
           .band = TRUE
         )
     } else {
-      forest_data <- data_frame()
+      forest_data <- tibble()
     }
-    forest_data <- data_frame(
+    forest_data <- tibble(
       estimate = model$b[1],
       se = model$se[1],
       conf.low = model$ci.lb[1],
@@ -235,15 +232,17 @@ get_data_for_rma <-
           stat_result <- paste0("= ", stat_result)
         }
         sprintf('%s ~ "%s"', names(show_stats)[i], stat_result)
-      }) %>% {
-        data_frame(
-          stat = paste0("paste(", paste(., collapse = ', "; ", '), ")"),
-          .band = FALSE,
-          .whole_row = TRUE
-        )
-      } %>% {
-        bind_rows(list(forest_data, .))
-      }
+      }) %>%
+        {
+          tibble(
+            stat = paste0("paste(", paste(., collapse = ', "; ", '), ")"),
+            .band = FALSE,
+            .whole_row = TRUE
+          )
+        } %>%
+        {
+          bind_rows(list(forest_data, .))
+        }
     }
     forest_data
   }

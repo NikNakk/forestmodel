@@ -17,7 +17,7 @@ forest_rma(
     rlang::quo(format.pval(QEp, digits = 4, eps = 1e-04, scientific = 1))),
   trans = I,
   funcs = NULL,
-  format_options = list(colour = "black", shape = 15, text_size = 5, banded = TRUE),
+  format_options = forest_model_format_options(),
   theme = theme_forest(),
   limits = NULL,
   breaks = NULL,

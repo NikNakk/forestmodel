@@ -17,7 +17,7 @@
 panel_forest_plot <- function(forest_data,
                               mapping = aes(estimate, xmin = conf.low, xmax = conf.high),
                               panels = default_forest_panels(), trans = I, funcs = NULL,
-                              format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
+                              format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5, point_size = 5),
                               theme = theme_forest(),
                               limits = NULL, breaks = NULL,
                               recalculate_width = TRUE, recalculate_height = TRUE,
@@ -41,7 +41,8 @@ panel_forest_plot <- function(forest_data,
   format_options$banded <- format_options$banded %||% TRUE
   format_options$text_size <- format_options$text_size %||% 5
 
-  mapping$size <- mapping$size %||% 5
+  ## Modify the square size
+  ## mapping$size <- mapping$size %||% 5
   mapping$whole_row <- mapping$whole_row %||% FALSE
 
   if (!is.null(mapping$section) && !all(is.na(eval_tidy(mapping$section, forest_data)))) {
@@ -242,7 +243,7 @@ panel_forest_plot <- function(forest_data,
       forest_whole_row_back %>%
         rowwise() %>%
         do({
-          data_frame(
+          tibble(
             x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
             y = rep(.$y + c(-0.5, 0.5), each = 2),
             linetype = "solid"
@@ -288,7 +289,7 @@ panel_forest_plot <- function(forest_data,
       filter(diamond == TRUE) %>%
       rowwise() %>%
       do({
-        data_frame(
+        tibble(
           x = c(.$xmin, .$x, .$xmax, .$x, .$xmin),
           y = .$y + c(0, 0.15, 0, -0.15, 0)
         )
@@ -302,7 +303,7 @@ panel_forest_plot <- function(forest_data,
         filter(diamond) %>%
         rowwise() %>%
         do({
-          data_frame(
+          tibble(
             x = rep(range(c(panel_positions$abs_x, panel_positions$abs_end_x)), 2),
             y = rep(.$y + c(-0.5, 0.5), each = 2),
             linetype = "solid"
@@ -326,11 +327,7 @@ panel_forest_plot <- function(forest_data,
     mapped_data <- mapped_data %>%
       mutate_at(
         vars(x, xmin, xmax),
-        funs(if_else(
-          is.infinite(x) | is.infinite(xmin) | is.infinite(xmax),
-          NA_real_,
-          .
-        ))
+        ~if_else(is.infinite(.), NA_real_, .)
       )
   }
 
@@ -347,7 +344,8 @@ panel_forest_plot <- function(forest_data,
       geom_polygon(aes(x, y, group = group), forest_diamonds, fill = format_options$colour)
   }
   main_plot <- main_plot +
-    geom_point(aes(x, y, size = size), filter(mapped_data, !diamond),
+    geom_point(aes(x, y),
+      size = format_options$point_size, filter(mapped_data, !diamond),
       colour = format_options$colour, shape = format_options$shape, na.rm = TRUE
     )
 
