@@ -1,7 +1,7 @@
 #' Plot a forest plot with panels of text
 #'
 #' @param forest_data \code{data.frame} with the data needed for both the plot and text
-#' @param mapping mapping aesthetic created using \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}
+#' @param mapping mapping aesthetic created using \code{\link[ggplot2]{aes}}
 #' @param trans transform for scales
 #'
 #' @inheritParams forest_model

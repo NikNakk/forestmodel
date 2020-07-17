@@ -1,4 +1,4 @@
-forestmodel 0.6.1 (2019-10-02)
+forestmodel 0.6.1 (2019-12-03)
 ------------------------------
 * `limits` option now uses arrows where the confidence intervals extend beyond
   the limits (fixes #16, thanks to @ShixiangWang for raising this and providing code!)
