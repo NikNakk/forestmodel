@@ -1,3 +1,9 @@
+forestmodel 0.6.2 (2020-07-17)
+------------------------------
+* Improvements to code by @ShixiangWang to use `tibble` rather than `data_frame` (fixes #23).
+* Addition of point_size option by @ShixiangWang.
+* Use of label attribute in data where available, as suggested by @larmarange (fixes #24).
+
 forestmodel 0.6.1 (2019-12-03)
 ------------------------------
 * `limits` option now uses arrows where the confidence intervals extend beyond
