@@ -5,6 +5,13 @@
 
 <!-- badges: start -->
 
+[![Build
+Status](https://travis-ci.org/NikNakk/forestmodel.svg?branch=master)](https://travis-ci.org/NikNakk/forestmodel)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/NikNakk/forestmodel?branch=master&svg=true)](https://ci.appveyor.com/project/NikNakk/forestmodel)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/forestmodel?color=blue)](https://cran.r-project.org/package=forestmodel)
+[![R build
+status](https://github.com/NikNakk/forestmodel/workflows/R-CMD-check/badge.svg)](https://github.com/NikNakk/forestmodel/actions)
 <!-- badges: end -->
 
 This is an R package to generate forest plots of the coefficients of
@@ -55,3 +62,12 @@ print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung)))
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
+
+Specifying the covariates to show:
+
+``` r
+print(forest_model(coxph(Surv(time, status) ~ ., pretty_lung), 
+                   covariates = c("Age", "Sex")))
+```
+
+<img src="man/figures/README-select_variables-1.png" width="100%" />

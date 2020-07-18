@@ -10,7 +10,8 @@ panel_forest_plot(
   panels = default_forest_panels(),
   trans = I,
   funcs = NULL,
-  format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5),
+  format_options = list(colour = "black", shape = 15, banded = TRUE, text_size = 5,
+    point_size = 5),
   theme = theme_forest(),
   limits = NULL,
   breaks = NULL,
@@ -22,7 +23,7 @@ panel_forest_plot(
 \arguments{
 \item{forest_data}{\code{data.frame} with the data needed for both the plot and text}
 
-\item{mapping}{mapping aesthetic created using \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}}
+\item{mapping}{mapping aesthetic created using \code{\link[ggplot2]{aes}}}
 
 \item{panels}{\code{list} with details of the panels that make up the plot (See Details)}
 

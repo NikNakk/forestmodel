@@ -9,6 +9,7 @@ forest_model_format_options(
   color = NULL,
   shape = 15,
   text_size = 5,
+  point_size = 5,
   banded = TRUE
 )
 }
@@ -20,6 +21,8 @@ forest_model_format_options(
 \item{shape}{shape of the point estimate}
 
 \item{text_size}{text size in mm}
+
+\item{point_size}{point size}
 
 \item{banded}{whether to show light grey bands behind alternate rows}
 }
