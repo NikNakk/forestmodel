@@ -12,6 +12,8 @@ Status](https://ci.appveyor.com/api/projects/status/github/NikNakk/forestmodel?b
 [![](http://cranlogs.r-pkg.org/badges/grand-total/forestmodel?color=blue)](https://cran.r-project.org/package=forestmodel)
 [![R build
 status](https://github.com/NikNakk/forestmodel/workflows/R-CMD-check/badge.svg)](https://github.com/NikNakk/forestmodel/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/forestmodel)](https://CRAN.R-project.org/package=forestmodel)
 <!-- badges: end -->
 
 This is an R package to generate forest plots of the coefficients of
