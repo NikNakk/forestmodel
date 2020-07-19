@@ -32,7 +32,7 @@
 #' @details This function takes the model output from one of the common model functions in
 #'   R (e.g. \code{\link[stats]{lm}}, \code{\link[stats]{glm}},
 #'  \code{\link[survival]{coxph}}). If a \code{label} attribute was present on any of the
-#'  columns in the original data (e.g. from the \code{\link{labelled}} package),
+#'  columns in the original data (e.g. from the \code{labelled} package),
 #'  this label is used in preference to the column name.
 #'
 #'  The \code{panels} parameter is a \code{list} of lists each of which have an element
