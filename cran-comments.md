@@ -12,4 +12,4 @@ live
 ezcox
 metawho
 
-All were tested using the `revdepcheck` package.
+All were tested using the `revdepcheck` package. Sorry for previous failed submit - I had failed to put revdep in .Rbuildignore.
