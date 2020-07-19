@@ -327,7 +327,11 @@ panel_forest_plot <- function(forest_data,
     mapped_data <- mapped_data %>%
       mutate_at(
         vars(x, xmin, xmax),
-        ~if_else(is.infinite(.), NA_real_, .)
+        list(~if_else(
+          is.infinite(x) | is.infinite(xmin) | is.infinite(xmax),
+          NA_real_,
+          .
+        ))
       )
   }
 

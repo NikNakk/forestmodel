@@ -5,4 +5,5 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^appveyor\.yml$
-^docs/
+^docs$
+^\.github$
