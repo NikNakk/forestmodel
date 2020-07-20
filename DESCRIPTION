@@ -22,5 +22,5 @@ Suggests:
     labelled,
     covr,
     testthat,
-    vdifr
+    vdiffr
 RoxygenNote: 7.1.0
