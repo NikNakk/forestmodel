@@ -16,3 +16,6 @@ notifications:
 
 after_failure:
     - cat /home/travis/build/NikNakk/forestmodel/forestmodel.Rcheck/00install.out
+
+after_success:
+    - Rscript -e 'covr::codecov()'

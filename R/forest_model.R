@@ -61,8 +61,8 @@
 #'
 #' @examples
 #'
-#' library("survival")
-#' library("dplyr")
+#' library(survival)
+#' library(dplyr)
 #' pretty_lung <- lung %>%
 #'   transmute(time,
 #'     status,

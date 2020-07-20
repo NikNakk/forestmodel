@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![](http://cranlogs.r-pkg.org/badges/grand-total/forestmodel?color=blue)](https://cran.r-project.org/package=forestmodel)
 [![R build status](https://github.com/NikNakk/forestmodel/workflows/R-CMD-check/badge.svg)](https://github.com/NikNakk/forestmodel/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/forestmodel)](https://CRAN.R-project.org/package=forestmodel)
+[![Codecov test coverage](https://codecov.io/gh/NikNakk/forestmodel/branch/master/graph/badge.svg)](https://codecov.io/gh/NikNakk/forestmodel?branch=master)
 <!-- badges: end -->
 
 This is an R package to generate forest plots of the coefficients of models produced

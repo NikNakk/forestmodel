@@ -16,7 +16,11 @@ Imports: dplyr (>= 0.8.0),
     broom (>= 0.5.0),
     rlang (>= 0.3.0),
     tibble (>= 1.4.2)
-Suggests: survival,
+Suggests: 
+    survival,
     metafor,
-    labelled
+    labelled,
+    covr,
+    testthat,
+    vdifr
 RoxygenNote: 7.1.0
