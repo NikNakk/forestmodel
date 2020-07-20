@@ -8,7 +8,13 @@ test_that("forest_model function returns expected output", {
               `Meal Cal` = meal.cal
     )
 
-  fm <- forest_model(coxph(Surv(time, status) ~ ., pretty_lung), return_data = TRUE)
+  fm <-
+    forest_model(
+      coxph(Surv(time, status) ~ ., pretty_lung),
+      return_data = TRUE,
+      recalculate_width = 10,
+      recalculate_height = 7
+    )
 
   vdiffr::expect_doppelganger("Sample forest_model plot for lung", fm$plot)
 })
