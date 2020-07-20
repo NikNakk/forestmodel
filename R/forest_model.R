@@ -31,7 +31,9 @@
 #'
 #' @details This function takes the model output from one of the common model functions in
 #'   R (e.g. \code{\link[stats]{lm}}, \code{\link[stats]{glm}},
-#'  \code{\link[survival]{coxph}}).
+#'  \code{\link[survival]{coxph}}). If a \code{label} attribute was present on any of the
+#'  columns in the original data (e.g. from the \code{labelled} package),
+#'  this label is used in preference to the column name.
 #'
 #'  The \code{panels} parameter is a \code{list} of lists each of which have an element
 #'  \code{width}
@@ -183,6 +185,16 @@ forest_model <- function(model,
         by = "variable"
       )
 
+    forest_labels <- tibble::tibble(
+      variable = names(data),
+      label = vapply(
+        data,
+        function(x) attr(x, "label", exact = TRUE) %||% NA_character_,
+        character(1)
+      ) %>%
+        coalesce(variable)
+    )
+
     create_term_data <- function(term_row) {
       if (!is.na(term_row$class)) {
         var <- term_row$variable
@@ -246,6 +258,13 @@ forest_model <- function(model,
       ) %>%
       mutate(
         variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
+      ) %>%
+      left_join(
+        forest_labels,
+        by = "variable"
+      ) %>%
+      mutate(
+        variable = coalesce(label, variable)
       )
     if (!is.null(covariates)) {
       forest_terms <- filter(forest_terms, term_label %in% covariates)
