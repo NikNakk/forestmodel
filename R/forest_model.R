@@ -288,8 +288,8 @@ forest_model <- function(model,
         } else if (show_global_p == "aside") {
           if (length(unique(forest_terms$term_label)) > 1) {
             warning("It's not recommended to show global p value aside to 'reference' when there are more than 1 variable.\nThey are sharing the same p value.", immediate. = TRUE)
-            forest_terms$p.value[forest_terms$reference] <- p_val
           }
+          forest_terms$p.value[forest_terms$reference] <- p_val
         }
       }
     }
