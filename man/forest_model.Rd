@@ -20,7 +20,8 @@ forest_model(
   recalculate_height = TRUE,
   model_list = NULL,
   merge_models = FALSE,
-  exclude_infinite_cis = TRUE
+  exclude_infinite_cis = TRUE,
+  show_global_p = c("none", "bottom", "aside")
 )
 }
 \arguments{
@@ -63,6 +64,11 @@ or the desired plot height in inches}
 \item{exclude_infinite_cis}{whether to exclude points and confidence intervals
 that go to positive or negative infinity from plotting. They will still be
 displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed}
+
+\item{show_global_p}{Show model global p value, only works for Cox model.
+- 'none', don't show.
+- 'bottom', show global p value in the bottom.
+- 'aside', show global p value along with 'Reference', this is useful when you plot a list of models.}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},

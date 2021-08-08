@@ -2,8 +2,8 @@ Package: forestmodel
 Encoding: UTF-8
 Type: Package
 Title: Forest Plots from Regression Models
-Version: 0.6.2
-Date: 2020-07-19
+Version: 0.6.3
+Date: 2020-08-08
 Author: Nick Kennedy <r@nick-kennedy.com>
 Maintainer: Nick Kennedy <r@nick-kennedy.com>
 Description: Produces forest plots using 'ggplot2' from models produced by functions
@@ -19,4 +19,4 @@ Imports: dplyr (>= 0.8.0),
 Suggests: survival,
     metafor,
     labelled
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

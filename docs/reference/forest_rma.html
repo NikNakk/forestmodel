@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Generate a forest plot from a meta-analysis — forest_rma" />
 <meta property="og:description" content="Generate a forest plot from a meta-analysis" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">forestmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -77,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -109,22 +112,34 @@
     <p>Generate a forest plot from a meta-analysis</p>
     </div>
 
-    <pre class="usage"><span class='fu'>forest_rma</span>(<span class='no'>model</span>, <span class='kw'>panels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>study_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>additional_data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>model_label</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>show_individual_studies</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_model</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>show_stats</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>`I^2`</span> <span class='kw'>=</span> <span class='kw pkg'>rlang</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rlang/man/quotation.html'>quo</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"%0.1f%%"</span>, <span class='no'>I2</span>)), <span class='kw'>p</span> <span class='kw'>=</span>
-  <span class='kw pkg'>rlang</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/rlang/man/quotation.html'>quo</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/format.pval.html'>format.pval</a></span>(<span class='no'>QEp</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>, <span class='kw'>scientific</span> <span class='kw'>=</span> <span class='fl'>1</span>))),
-  <span class='kw'>trans</span> <span class='kw'>=</span> <span class='no'>I</span>, <span class='kw'>funcs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>format_options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>colour</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
-  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>banded</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fu'><a href='theme_forest.html'>theme_forest</a></span>(),
-  <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>return_data</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>recalculate_width</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>recalculate_height</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>forest_rma</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  panels <span class='op'>=</span> <span class='cn'>NULL</span>,
+  study_labels <span class='op'>=</span> <span class='cn'>NULL</span>,
+  additional_data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  point_size <span class='op'>=</span> <span class='cn'>NULL</span>,
+  model_label <span class='op'>=</span> <span class='cn'>NULL</span>,
+  show_individual_studies <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  show_model <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  show_stats <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>`I^2` <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span><span class='st'>"%0.1f%%"</span>, <span class='va'>I2</span><span class='op'>)</span><span class='op'>)</span>, p <span class='op'>=</span>
+    <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/format.pval.html'>format.pval</a></span><span class='op'>(</span><span class='va'>QEp</span>, digits <span class='op'>=</span> <span class='fl'>4</span>, eps <span class='op'>=</span> <span class='fl'>1e-04</span>, scientific <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+  trans <span class='op'>=</span> <span class='va'>I</span>,
+  funcs <span class='op'>=</span> <span class='cn'>NULL</span>,
+  format_options <span class='op'>=</span> <span class='fu'><a href='forest_model_format_options.html'>forest_model_format_options</a></span><span class='op'>(</span><span class='op'>)</span>,
+  theme <span class='op'>=</span> <span class='fu'><a href='theme_forest.html'>theme_forest</a></span><span class='op'>(</span><span class='op'>)</span>,
+  limits <span class='op'>=</span> <span class='cn'>NULL</span>,
+  breaks <span class='op'>=</span> <span class='cn'>NULL</span>,
+  return_data <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  recalculate_width <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  recalculate_height <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>model</th>
-      <td><p>a single <code><a href='https://rdrr.io/pkg/metafor/man/rma.uni.html'>rma</a></code> object or a <code>list</code> of them</p></td>
+      <td><p>a single <code><a href='https://wviechtb.github.io/metafor/reference/rma.uni.html'>rma</a></code> object or a <code>list</code> of them</p></td>
     </tr>
     <tr>
       <th>panels</th>
@@ -207,41 +222,38 @@ or the desired plot height in inches</p></td>
     <p>plot</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This produces a forest plot using the <code><a href='https://rdrr.io/pkg/metafor/man/rma.uni.html'>rma</a></code></p>
+    <p>This produces a forest plot using the <code><a href='https://wviechtb.github.io/metafor/reference/rma.uni.html'>rma</a></code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='st'>"metafor"</span>)) {
-  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"dat.bcg"</span>)
-  <span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/metafor/man/escalc.html'>escalc</a></span>(<span class='kw'>measure</span> <span class='kw'>=</span> <span class='st'>"RR"</span>, <span class='kw'>ai</span> <span class='kw'>=</span> <span class='no'>tpos</span>, <span class='kw'>bi</span> <span class='kw'>=</span> <span class='no'>tneg</span>, <span class='kw'>ci</span> <span class='kw'>=</span> <span class='no'>cpos</span>, <span class='kw'>di</span> <span class='kw'>=</span> <span class='no'>cneg</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dat.bcg</span>)
-  <span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/metafor/man/rma.uni.html'>rma</a></span>(<span class='no'>yi</span>, <span class='no'>vi</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dat</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='st'><a href='https://www.metafor-project.org'>"metafor"</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"dat.bcg"</span><span class='op'>)</span>
+  <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://wviechtb.github.io/metafor/reference/escalc.html'>escalc</a></span><span class='op'>(</span>measure <span class='op'>=</span> <span class='st'>"RR"</span>, ai <span class='op'>=</span> <span class='va'>tpos</span>, bi <span class='op'>=</span> <span class='va'>tneg</span>, ci <span class='op'>=</span> <span class='va'>cpos</span>, di <span class='op'>=</span> <span class='va'>cneg</span>, data <span class='op'>=</span> <span class='va'>dat.bcg</span><span class='op'>)</span>
+  <span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://wviechtb.github.io/metafor/reference/rma.uni.html'>rma</a></span><span class='op'>(</span><span class='va'>yi</span>, <span class='va'>vi</span>, data <span class='op'>=</span> <span class='va'>dat</span><span class='op'>)</span>
 
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>forest_rma</span>(<span class='no'>model</span>,
-    <span class='kw'>study_labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>dat.bcg</span>$<span class='no'>author</span>, <span class='no'>dat.bcg</span>$<span class='no'>year</span>),
-    <span class='kw'>trans</span> <span class='kw'>=</span> <span class='no'>exp</span>
-  ))
+  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>forest_rma</span><span class='op'>(</span><span class='va'>model</span>,
+    study_labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>dat.bcg</span><span class='op'>$</span><span class='va'>author</span>, <span class='va'>dat.bcg</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>,
+    trans <span class='op'>=</span> <span class='va'>exp</span>
+  <span class='op'>)</span><span class='op'>)</span>
 
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>forest_rma</span>(<span class='no'>model</span>,
-    <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'><a href='forest_panels.html'>forest_panels</a></span>(
-      <span class='kw'>Study</span> <span class='kw'>=</span> ~<span class='no'>study</span>,
-      <span class='kw'>N</span> <span class='kw'>=</span> ~<span class='no'>n</span>, ~<span class='no'>vline</span>, <span class='kw'>`Log Relative Risk`</span> <span class='kw'>=</span> ~ <span class='fu'><a href='https://rdrr.io/pkg/metafor/man/forest.html'>forest</a></span>(<span class='kw'>line_x</span> <span class='kw'>=</span> <span class='fl'>0</span>),
-      ~ <span class='fu'>spacer</span>(<span class='kw'>space</span> <span class='kw'>=</span> <span class='fl'>0.10</span>),
-      ~ <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"%0.3f (%0.3f, %0.3f)"</span>, <span class='no'>estimate</span>, <span class='no'>conf.low</span>, <span class='no'>conf.high</span>)
-    ),
-    <span class='kw'>study_labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>dat.bcg</span>$<span class='no'>author</span>, <span class='no'>dat.bcg</span>$<span class='no'>year</span>),
-    <span class='kw'>trans</span> <span class='kw'>=</span> <span class='no'>exp</span>
-  ))
-}</div><div class='output co'>#&gt; <span class='message'>载入需要的程辑包：metafor</span></div><div class='output co'>#&gt; <span class='message'>载入需要的程辑包：Matrix</span></div><div class='output co'>#&gt; <span class='message'>Loading 'metafor' package (version 2.1-0). For an overview </span>
-#&gt; <span class='message'>and introduction to the package please type: help(metafor).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='img'><img src='forest_rma-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='forest_rma-2.png' alt='' width='700' height='433' /></div></pre>
+  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>forest_rma</span><span class='op'>(</span><span class='va'>model</span>,
+    panels <span class='op'>=</span> <span class='fu'><a href='forest_panels.html'>forest_panels</a></span><span class='op'>(</span>
+      Study <span class='op'>=</span> <span class='op'>~</span><span class='va'>study</span>,
+      N <span class='op'>=</span> <span class='op'>~</span><span class='va'>n</span>, <span class='op'>~</span><span class='va'>vline</span>, `Log Relative Risk` <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://wviechtb.github.io/metafor/reference/forest.html'>forest</a></span><span class='op'>(</span>line_x <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>,
+      <span class='op'>~</span> <span class='fu'>spacer</span><span class='op'>(</span>space <span class='op'>=</span> <span class='fl'>0.10</span><span class='op'>)</span>,
+      <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span><span class='st'>"%0.3f (%0.3f, %0.3f)"</span>, <span class='va'>estimate</span>, <span class='va'>conf.low</span>, <span class='va'>conf.high</span><span class='op'>)</span>
+    <span class='op'>)</span>,
+    study_labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>dat.bcg</span><span class='op'>$</span><span class='va'>author</span>, <span class='va'>dat.bcg</span><span class='op'>$</span><span class='va'>year</span><span class='op'>)</span>,
+    trans <span class='op'>=</span> <span class='va'>exp</span>
+  <span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: metafor</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: Matrix</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Loading the 'metafor' package (version 3.0-2). For an</span>
+#&gt; <span class='message'>introduction to the package please type: help(metafor)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='img'><img src='forest_rma-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='forest_rma-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -252,7 +264,7 @@ or the desired plot height in inches</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

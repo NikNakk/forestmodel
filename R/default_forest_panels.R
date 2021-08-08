@@ -69,13 +69,13 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
       forest_panel(
         width = 0.12,
-        display = if_else(reference, "Reference",
+        display = if_else(reference, if_else(!is.numeric(p.value), "Reference", "Reference;  Variable logrank:"),
           sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high))
         ),
         display_na = NA
       ),
       forest_panel(
-        width = 0.05, display = if_else(reference, "", format.pval(p.value, digits = 1, eps = 1e-3)), display_na = NA,
+        width = 0.05, display = if_else(reference & !is.numeric(p.value), "", format.pval(p.value, digits = 1, eps = 1e-3)), display_na = NA,
         hjust = 1, heading = "p"
       ),
       forest_panel(width = 0.03)

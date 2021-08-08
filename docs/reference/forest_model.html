@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Produce a forest plot based on a regression model — forest_model" />
 <meta property="og:description" content="Produce a forest plot based on a regression model" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">forestmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -77,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -109,14 +112,25 @@
     <p>Produce a forest plot based on a regression model</p>
     </div>
 
-    <pre class="usage"><span class='fu'>forest_model</span>(<span class='no'>model</span>, <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'><a href='default_forest_panels.html'>default_forest_panels</a></span>(<span class='no'>model</span>,
-  <span class='kw'>factor_separate_line</span> <span class='kw'>=</span> <span class='no'>factor_separate_line</span>), <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>exponentiate</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>funcs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>factor_separate_line</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>format_options</span> <span class='kw'>=</span> <span class='fu'><a href='forest_model_format_options.html'>forest_model_format_options</a></span>(),
-  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fu'><a href='theme_forest.html'>theme_forest</a></span>(), <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>return_data</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>recalculate_width</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>recalculate_height</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>model_list</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>exclude_infinite_cis</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>forest_model</span><span class='op'>(</span>
+  <span class='va'>model</span>,
+  panels <span class='op'>=</span> <span class='fu'><a href='default_forest_panels.html'>default_forest_panels</a></span><span class='op'>(</span><span class='va'>model</span>, factor_separate_line <span class='op'>=</span> <span class='va'>factor_separate_line</span><span class='op'>)</span>,
+  covariates <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exponentiate <span class='op'>=</span> <span class='cn'>NULL</span>,
+  funcs <span class='op'>=</span> <span class='cn'>NULL</span>,
+  factor_separate_line <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  format_options <span class='op'>=</span> <span class='fu'><a href='forest_model_format_options.html'>forest_model_format_options</a></span><span class='op'>(</span><span class='op'>)</span>,
+  theme <span class='op'>=</span> <span class='fu'><a href='theme_forest.html'>theme_forest</a></span><span class='op'>(</span><span class='op'>)</span>,
+  limits <span class='op'>=</span> <span class='cn'>NULL</span>,
+  breaks <span class='op'>=</span> <span class='cn'>NULL</span>,
+  return_data <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  recalculate_width <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  recalculate_height <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  model_list <span class='op'>=</span> <span class='cn'>NULL</span>,
+  merge_models <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  exclude_infinite_cis <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  show_global_p <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"none"</span>, <span class='st'>"bottom"</span>, <span class='st'>"aside"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,10 +198,21 @@ or the desired plot height in inches</p></td>
       <td><p>list of models to incorporate into a single forest plot</p></td>
     </tr>
     <tr>
+      <th>merge_models</th>
+      <td><p>if `TRUE`, merge all models in one section.</p></td>
+    </tr>
+    <tr>
       <th>exclude_infinite_cis</th>
       <td><p>whether to exclude points and confidence intervals
 that go to positive or negative infinity from plotting. They will still be
 displayed as text. Defaults to <code>TRUE</code>, since otherwise plot is malformed</p></td>
+    </tr>
+    <tr>
+      <th>show_global_p</th>
+      <td><p>Show model global p value, only works for Cox model.
+- 'none', don't show.
+- 'bottom', show global p value in the bottom.
+- 'aside', show global p value along with 'Reference', this is useful when you plot a list of models.</p></td>
     </tr>
     </table>
 
@@ -200,7 +225,9 @@ displayed as text. Defaults to <code>TRUE</code>, since otherwise plot is malfor
 
     <p>This function takes the model output from one of the common model functions in
   R (e.g. <code><a href='https://rdrr.io/r/stats/lm.html'>lm</a></code>, <code><a href='https://rdrr.io/r/stats/glm.html'>glm</a></code>,
- <code><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></code>).</p>
+ <code><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></code>). If a <code>label</code> attribute was present on any of the
+ columns in the original data (e.g. from the <code>labelled</code> package),
+ this label is used in preference to the column name.</p>
 <p>The <code>panels</code> parameter is a <code>list</code> of lists each of which have an element
  <code>width</code>
  and, optionally, <code>item</code>, <code>display</code>, <code>display_na</code>,
@@ -208,7 +235,7 @@ displayed as text. Defaults to <code>TRUE</code>, since otherwise plot is malfor
  plot (exactly one required) or <code>"vline"</code> for a vertical line.
  <code>display</code> indicates which column to display as text. It can be a quoted variable name
  or a formula. The column display can include the standard ones produced by
- <code><a href='https://rdrr.io/pkg/broom/man/reexports.html'>tidy</a></code> and in addition
+ <code><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code> and in addition
  <code>variable</code> (the term in the model; for factors this is the bare variable without the  level),
  <code>level</code> (the level of factors),
  <code>reference</code> (TRUE for the reference level of a factor). For <code><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></code>
@@ -221,76 +248,76 @@ displayed as text. Defaults to <code>TRUE</code>, since otherwise plot is malfor
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"survival"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"dplyr"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>载入程辑包：‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://github.com/therneau/survival'>"survival"</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'><a href='https://dplyr.tidyverse.org'>"dplyr"</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>pretty_lung</span> <span class='kw'>&lt;-</span> <span class='no'>lung</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span>(<span class='no'>time</span>,
-    <span class='no'>status</span>,
-    <span class='kw'>Age</span> <span class='kw'>=</span> <span class='no'>age</span>,
-    <span class='kw'>Sex</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>sex</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Male"</span>, <span class='st'>"Female"</span>)),
-    <span class='kw'>ECOG</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='no'>lung</span>$<span class='no'>ph.ecog</span>),
-    <span class='kw'>`Meal Cal`</span> <span class='kw'>=</span> <span class='no'>meal.cal</span>
-  )
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>pretty_lung</span> <span class='op'>&lt;-</span> <span class='va'>lung</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>transmute</a></span><span class='op'>(</span><span class='va'>time</span>,
+    <span class='va'>status</span>,
+    Age <span class='op'>=</span> <span class='va'>age</span>,
+    Sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>sex</span>, labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Male"</span>, <span class='st'>"Female"</span><span class='op'>)</span><span class='op'>)</span>,
+    ECOG <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>lung</span><span class='op'>$</span><span class='va'>ph.ecog</span><span class='op'>)</span>,
+    `Meal Cal` <span class='op'>=</span> <span class='va'>meal.cal</span>
+  <span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>forest_model</span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>time</span>, <span class='no'>status</span>) ~ <span class='no'>.</span>, <span class='no'>pretty_lung</span>)))</div><div class='img'><img src='forest_model-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>forest_model</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='va'>status</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>.</span>, <span class='va'>pretty_lung</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='img'><img src='forest_model-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Example with custom panels</span>
 
-<span class='no'>panels</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.03</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>display</span> <span class='kw'>=</span> ~<span class='no'>variable</span>, <span class='kw'>fontface</span> <span class='kw'>=</span> <span class='st'>"bold"</span>, <span class='kw'>heading</span> <span class='kw'>=</span> <span class='st'>"Variable"</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>display</span> <span class='kw'>=</span> ~<span class='no'>level</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>display</span> <span class='kw'>=</span> ~<span class='no'>n</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>heading</span> <span class='kw'>=</span> <span class='st'>"N"</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>display</span> <span class='kw'>=</span> ~<span class='no'>n_events</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>heading</span> <span class='kw'>=</span> <span class='st'>"Events"</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-    <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-    <span class='kw'>display</span> <span class='kw'>=</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/replace.html'>replace</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"%0.1f"</span>, <span class='no'>person_time</span> / <span class='fl'>365.25</span>), <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>person_time</span>), <span class='st'>""</span>),
-    <span class='kw'>heading</span> <span class='kw'>=</span> <span class='st'>"Person-\nYears"</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>
-  ),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>item</span> <span class='kw'>=</span> <span class='st'>"vline"</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-    <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.55</span>, <span class='kw'>item</span> <span class='kw'>=</span> <span class='st'>"forest"</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heading</span> <span class='kw'>=</span> <span class='st'>"Hazard ratio"</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='st'>"dashed"</span>,
-    <span class='kw'>line_x</span> <span class='kw'>=</span> <span class='fl'>0</span>
-  ),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.03</span>, <span class='kw'>item</span> <span class='kw'>=</span> <span class='st'>"vline"</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>0.5</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.12</span>, <span class='kw'>display</span> <span class='kw'>=</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>reference</span>, <span class='st'>"Reference"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(
+<span class='va'>panels</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.03</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.1</span>, display <span class='op'>=</span> <span class='op'>~</span><span class='va'>variable</span>, fontface <span class='op'>=</span> <span class='st'>"bold"</span>, heading <span class='op'>=</span> <span class='st'>"Variable"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.1</span>, display <span class='op'>=</span> <span class='op'>~</span><span class='va'>level</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.05</span>, display <span class='op'>=</span> <span class='op'>~</span><span class='va'>n</span>, hjust <span class='op'>=</span> <span class='fl'>1</span>, heading <span class='op'>=</span> <span class='st'>"N"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.05</span>, display <span class='op'>=</span> <span class='op'>~</span><span class='va'>n_events</span>, width <span class='op'>=</span> <span class='fl'>0.05</span>, hjust <span class='op'>=</span> <span class='fl'>1</span>, heading <span class='op'>=</span> <span class='st'>"Events"</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    width <span class='op'>=</span> <span class='fl'>0.05</span>,
+    display <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/replace.html'>replace</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span><span class='st'>"%0.1f"</span>, <span class='va'>person_time</span> <span class='op'>/</span> <span class='fl'>365.25</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>person_time</span><span class='op'>)</span>, <span class='st'>""</span><span class='op'>)</span>,
+    heading <span class='op'>=</span> <span class='st'>"Person-\nYears"</span>, hjust <span class='op'>=</span> <span class='fl'>1</span>
+  <span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.03</span>, item <span class='op'>=</span> <span class='st'>"vline"</span>, hjust <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    width <span class='op'>=</span> <span class='fl'>0.55</span>, item <span class='op'>=</span> <span class='st'>"forest"</span>, hjust <span class='op'>=</span> <span class='fl'>0.5</span>, heading <span class='op'>=</span> <span class='st'>"Hazard ratio"</span>, linetype <span class='op'>=</span> <span class='st'>"dashed"</span>,
+    line_x <span class='op'>=</span> <span class='fl'>0</span>
+  <span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.03</span>, item <span class='op'>=</span> <span class='st'>"vline"</span>, hjust <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.12</span>, display <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>reference</span>, <span class='st'>"Reference"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span>
     <span class='st'>"%0.2f (%0.2f, %0.2f)"</span>,
-    <span class='fu'>trans</span>(<span class='no'>estimate</span>), <span class='fu'>trans</span>(<span class='no'>conf.low</span>), <span class='fu'>trans</span>(<span class='no'>conf.high</span>)
-  )), <span class='kw'>display_na</span> <span class='kw'>=</span> <span class='fl'>NA</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-    <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-    <span class='kw'>display</span> <span class='kw'>=</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>reference</span>, <span class='st'>""</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.pval.html'>format.pval</a></span>(<span class='no'>p.value</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)),
-    <span class='kw'>display_na</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>hjust</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>heading</span> <span class='kw'>=</span> <span class='st'>"p"</span>
-  ),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.03</span>)
-)
-<span class='fu'>forest_model</span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>time</span>, <span class='no'>status</span>) ~ <span class='no'>.</span>, <span class='no'>pretty_lung</span>), <span class='no'>panels</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='img'><img src='forest_model-2.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>data_for_lm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>data_frame</a></span>(
-  <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>4</span>),
-  <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>3</span>, <span class='fl'>0.5</span>),
-  <span class='kw'>z</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>2</span>, <span class='fl'>2</span>),
-  <span class='kw'>outcome</span> <span class='kw'>=</span> <span class='fl'>3</span> * <span class='no'>x</span> - <span class='fl'>2</span> * <span class='no'>y</span> + <span class='fl'>4</span> * <span class='no'>z</span> + <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='fl'>0.1</span>)
-)</div><div class='output co'>#&gt; <span class='warning'>Warning: `data_frame()` is deprecated, use `tibble()`.</span>
-#&gt; <span class='warning'>This warning is displayed once per session.</span></div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>forest_model</span>(<span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>outcome</span> ~ <span class='no'>.</span>, <span class='no'>data_for_lm</span>)))</div><div class='img'><img src='forest_model-3.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>data_for_logistic</span> <span class='kw'>&lt;-</span> <span class='no'>data_for_lm</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
-  <span class='kw'>outcome</span> <span class='kw'>=</span> (<span class='fl'>0.5</span> * (<span class='no'>x</span> - <span class='fl'>4</span>) * (<span class='no'>y</span> - <span class='fl'>3</span>) * (<span class='no'>z</span> - <span class='fl'>2</span>) + <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='fl'>0.05</span>)) <span class='kw'>&gt;</span> <span class='fl'>0.5</span>
-)
+    <span class='fu'>trans</span><span class='op'>(</span><span class='va'>estimate</span><span class='op'>)</span>, <span class='fu'>trans</span><span class='op'>(</span><span class='va'>conf.low</span><span class='op'>)</span>, <span class='fu'>trans</span><span class='op'>(</span><span class='va'>conf.high</span><span class='op'>)</span>
+  <span class='op'>)</span><span class='op'>)</span>, display_na <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    width <span class='op'>=</span> <span class='fl'>0.05</span>,
+    display <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>reference</span>, <span class='st'>""</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.pval.html'>format.pval</a></span><span class='op'>(</span><span class='va'>p.value</span>, digits <span class='op'>=</span> <span class='fl'>1</span>, eps <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span><span class='op'>)</span>,
+    display_na <span class='op'>=</span> <span class='cn'>NA</span>, hjust <span class='op'>=</span> <span class='fl'>1</span>, heading <span class='op'>=</span> <span class='st'>"p"</span>
+  <span class='op'>)</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.03</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='fu'>forest_model</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/coxph.html'>coxph</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='va'>status</span><span class='op'>)</span> <span class='op'>~</span> <span class='va'>.</span>, <span class='va'>pretty_lung</span><span class='op'>)</span>, <span class='va'>panels</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Unable to resize forest panel to be smaller than its heading; consider a smaller text size</span></div><div class='img'><img src='forest_model-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>data_for_lm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span>
+  x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>4</span><span class='op'>)</span>,
+  y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>3</span>, <span class='fl'>0.5</span><span class='op'>)</span>,
+  z <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
+  outcome <span class='op'>=</span> <span class='fl'>3</span> <span class='op'>*</span> <span class='va'>x</span> <span class='op'>-</span> <span class='fl'>2</span> <span class='op'>*</span> <span class='va'>y</span> <span class='op'>+</span> <span class='fl'>4</span> <span class='op'>*</span> <span class='va'>z</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>0</span>, <span class='fl'>0.1</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>forest_model</span>(<span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='no'>outcome</span> ~ <span class='no'>.</span>, <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span>(), <span class='no'>data_for_logistic</span>)))</div><div class='img'><img src='forest_model-4.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>forest_model</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>outcome</span> <span class='op'>~</span> <span class='va'>.</span>, <span class='va'>data_for_lm</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='forest_model-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>data_for_logistic</span> <span class='op'>&lt;-</span> <span class='va'>data_for_lm</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+  outcome <span class='op'>=</span> <span class='op'>(</span><span class='fl'>0.5</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>x</span> <span class='op'>-</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='fl'>3</span><span class='op'>)</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>z</span> <span class='op'>-</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>0</span>, <span class='fl'>0.05</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0.5</span>
+<span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>forest_model</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span><span class='op'>(</span><span class='va'>outcome</span> <span class='op'>~</span> <span class='va'>.</span>, <span class='fu'><a href='https://rdrr.io/r/stats/family.html'>binomial</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>data_for_logistic</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='forest_model-4.png' alt='' width='700' height='433' /></div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -301,7 +328,7 @@ displayed as text. Defaults to <code>TRUE</code>, since otherwise plot is malfor
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
