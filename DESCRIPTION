@@ -4,7 +4,10 @@ Type: Package
 Title: Forest Plots from Regression Models
 Version: 0.6.2
 Date: 2020-07-19
-Author: Nick Kennedy <r@nick-kennedy.com>
+Authors@R: c(
+    person("Nick", "Kennedy, email = "r@nick-kennedy.com", role = c("aut", "cre")),
+    person("Shixiang", "Wang", email = "w_shixiang@163.com", role = "aut)
+)
 Maintainer: Nick Kennedy <r@nick-kennedy.com>
 Description: Produces forest plots using 'ggplot2' from models produced by functions
     such as stats::lm(), stats::glm() and survival::coxph().
