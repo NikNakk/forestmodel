@@ -24,6 +24,10 @@
 #' @param exclude_infinite_cis whether to exclude points and confidence intervals
 #'   that go to positive or negative infinity from plotting. They will still be
 #'   displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed
+#' @param show_global_p Show model global p value, only works for Cox model.
+#' - 'none', don't show.
+#' - 'bottom', show global p value in the bottom.
+#' - 'aside', show global p value along with 'Reference', this is useful when you plot a list of models.
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
@@ -128,7 +132,11 @@ forest_model <- function(model,
                          theme = theme_forest(),
                          limits = NULL, breaks = NULL, return_data = FALSE,
                          recalculate_width = TRUE, recalculate_height = TRUE,
-                         model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE) {
+                         model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE,
+                         show_global_p = c("none", "bottom", "aside")) {
+
+  show_global_p <- match.arg(show_global_p)
+
   mapping <- aes(estimate, xmin = conf.low, xmax = conf.high)
   if (!is.null(model_list)) {
     if (!is.list(model_list)) {
@@ -268,6 +276,22 @@ forest_model <- function(model,
       )
     if (!is.null(covariates)) {
       forest_terms <- filter(forest_terms, term_label %in% covariates)
+    }
+
+    if (show_global_p != "none") {
+      if (inherits(model, "coxph")) {
+        p_val <- as.numeric(summary(model)$sctest[3])
+        if (show_global_p == "bottom") {
+          label <- paste("Global p", format.pval(p_val, digits = 1, eps = 1e-3))
+          forest_terms <- forest_terms %>%
+            dplyr::add_row(term_label = "Global p", variable = label)
+        } else if (show_global_p == "aside") {
+          if (length(unique(forest_terms$term_label)) > 1) {
+            warning("It is not recommended to show global p value aside 'reference' if there is more than 1 variable.\nThey share the same p value.", immediate. = TRUE)
+          }
+          forest_terms$p.value[forest_terms$reference] <- p_val
+        }
+      }
     }
 
     forest_terms

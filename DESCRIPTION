@@ -2,8 +2,8 @@ Package: forestmodel
 Encoding: UTF-8
 Type: Package
 Title: Forest Plots from Regression Models
-Version: 0.6.2
-Date: 2020-07-19
+Version: 0.6.3
+Date: 2020-08-08
 Authors@R: c(
     person("Nick", "Kennedy, email = "r@nick-kennedy.com", role = c("aut", "cre")),
     person("Shixiang", "Wang", email = "w_shixiang@163.com", role = "aut)
@@ -22,4 +22,4 @@ Imports: dplyr (>= 0.8.0),
 Suggests: survival,
     metafor,
     labelled
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

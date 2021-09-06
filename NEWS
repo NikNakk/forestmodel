@@ -1,3 +1,7 @@
+forestmodel 0.6.3 (2020-08-08)
+------------------------------
+* Improvements to code by @ShixiangWang to add global p value for a model (fixes #31).
+
 forestmodel 0.6.2 (2020-07-17)
 ------------------------------
 * Improvements to code by @ShixiangWang to use `tibble` rather than `data_frame` (fixes #23).
