@@ -303,12 +303,15 @@ forest_model <- function(model,
         mutate(model_name = model_names[i])
     }) %>%
       bind_rows()
+    forest_terms = forest_terms %>% mutate(model_name = factor(model_name, levels = unique(model_name)))
     if (merge_models) {
       forest_terms$model_name <- NULL
     }
   } else {
     forest_terms <- make_forest_terms(model)
   }
+
+  forest_terms = forest_terms %>% mutate(term_label = factor(term_label, levels = unique(term_label)))
 
   # #use_exp <- grepl("exp", deparse(trans))
   if (!is.null(limits)) {
