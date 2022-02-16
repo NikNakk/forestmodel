@@ -1,24 +1,33 @@
-Package: forestmodel
-Encoding: UTF-8
 Type: Package
+Package: forestmodel
 Title: Forest Plots from Regression Models
 Version: 0.6.3
 Date: 2020-08-08
-Authors@R: c(
-    person("Nick", "Kennedy, email = "r@nick-kennedy.com", role = c("aut", "cre")),
-    person("Shixiang", "Wang", email = "w_shixiang@163.com", role = "aut"))
+Authors@R: 
+    c(person(given = "Nick",
+             family = "Kennedy",
+             role = c("aut", "cre"),
+             email = "r@nick-kennedy.com"),
+      person(given = "Shixiang",
+             family = "Wang",
+             role = "aut",
+             email = "w_shixiang@163.com"))
 Maintainer: Nick Kennedy <r@nick-kennedy.com>
-Description: Produces forest plots using 'ggplot2' from models produced by functions
-    such as stats::lm(), stats::glm() and survival::coxph().
+Description: Produces forest plots using 'ggplot2' from models produced by
+    functions such as stats::lm(), stats::glm() and survival::coxph().
 License: GPL-2
-LazyData: TRUE
-Depends: R (>= 3.3.0),
-    ggplot2 (>= 3.1.0)
-Imports: dplyr (>= 0.8.0),
+Depends: 
+    ggplot2 (>= 3.1.0),
+    R (>= 3.3.0)
+Imports: 
     broom (>= 0.5.0),
+    dplyr (>= 0.8.0),
     rlang (>= 0.3.0),
     tibble (>= 1.4.2)
-Suggests: survival,
+Suggests: 
+    labelled,
     metafor,
-    labelled
+    survival
+Encoding: UTF-8
+LazyData: TRUE
 RoxygenNote: 7.1.1
