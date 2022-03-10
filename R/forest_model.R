@@ -24,6 +24,8 @@
 #' @param exclude_infinite_cis whether to exclude points and confidence intervals
 #'   that go to positive or negative infinity from plotting. They will still be
 #'   displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed
+#' @param n_logical_true_only whether to only count TRUE values in n for logical
+#'   covariates
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
@@ -128,7 +130,8 @@ forest_model <- function(model,
                          theme = theme_forest(),
                          limits = NULL, breaks = NULL, return_data = FALSE,
                          recalculate_width = TRUE, recalculate_height = TRUE,
-                         model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE) {
+                         model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE,
+                         n_logical_true_only = FALSE) {
   mapping <- aes(estimate, xmin = conf.low, xmax = conf.high)
   if (!is.null(model_list)) {
     if (!is.list(model_list)) {
@@ -209,6 +212,7 @@ forest_model <- function(model,
               level = names(tab),
               level_no = 1:length(tab),
               n = as.integer(tab),
+              total = sum(as.integer(tab)),
               stringsAsFactors = FALSE
             )
             if (factor_separate_line) {
@@ -233,10 +237,14 @@ forest_model <- function(model,
         } else {
           out <- data.frame(term_row,
             level = NA, level_no = NA, n = sum(!is.na(data[, var])),
+            total = sum(!is.na(data[, var])),
             stringsAsFactors = FALSE
           )
           if (term_row$class == "logical") {
             out$term_label <- paste0(term_row$term_label, "TRUE")
+            if (n_logical_true_only) {
+              out$n <- sum(data[, var], na.rm = TRUE)
+            }
           }
         }
       } else {

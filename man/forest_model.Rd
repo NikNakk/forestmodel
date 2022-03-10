@@ -20,7 +20,8 @@ forest_model(
   recalculate_height = TRUE,
   model_list = NULL,
   merge_models = FALSE,
-  exclude_infinite_cis = TRUE
+  exclude_infinite_cis = TRUE,
+  n_logical_true_only = FALSE
 )
 }
 \arguments{
@@ -63,6 +64,9 @@ or the desired plot height in inches}
 \item{exclude_infinite_cis}{whether to exclude points and confidence intervals
 that go to positive or negative infinity from plotting. They will still be
 displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed}
+
+\item{n_logical_true_only}{whether to only count TRUE values in n for logical
+covariates}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},
@@ -99,8 +103,8 @@ This function takes the model output from one of the common model functions in
 }
 \examples{
 
-library("survival")
-library("dplyr")
+library(survival)
+library(dplyr)
 pretty_lung <- lung \%>\%
   transmute(time,
     status,
