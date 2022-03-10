@@ -28,6 +28,8 @@
 #' - 'none', don't show.
 #' - 'bottom', show global p value in the bottom.
 #' - 'aside', show global p value along with 'Reference', this is useful when you plot a list of models.
+#' @param n_logical_true_only whether to only count TRUE values in n for logical
+#'   covariates
 #'
 #' @return A ggplot ready for display or saving, or (with \code{return_data == TRUE},
 #'   a \code{list} with the parameters to call \code{\link{panel_forest_plot}} in the
@@ -65,8 +67,8 @@
 #'
 #' @examples
 #'
-#' library("survival")
-#' library("dplyr")
+#' library(survival)
+#' library(dplyr)
 #' pretty_lung <- lung %>%
 #'   transmute(time,
 #'     status,
@@ -133,10 +135,9 @@ forest_model <- function(model,
                          limits = NULL, breaks = NULL, return_data = FALSE,
                          recalculate_width = TRUE, recalculate_height = TRUE,
                          model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE,
-                         show_global_p = c("none", "bottom", "aside")) {
-
+                         show_global_p = c("none", "bottom", "aside"),
+                         n_logical_true_only = FALSE) {
   show_global_p <- match.arg(show_global_p)
-
   mapping <- aes(estimate, xmin = conf.low, xmax = conf.high)
   if (!is.null(model_list)) {
     if (!is.list(model_list)) {
@@ -217,6 +218,7 @@ forest_model <- function(model,
               level = names(tab),
               level_no = 1:length(tab),
               n = as.integer(tab),
+              total = sum(as.integer(tab)),
               stringsAsFactors = FALSE
             )
             if (factor_separate_line) {
@@ -241,10 +243,14 @@ forest_model <- function(model,
         } else {
           out <- data.frame(term_row,
             level = NA, level_no = NA, n = sum(!is.na(data[, var])),
+            total = sum(!is.na(data[, var])),
             stringsAsFactors = FALSE
           )
           if (term_row$class == "logical") {
             out$term_label <- paste0(term_row$term_label, "TRUE")
+            if (n_logical_true_only) {
+              out$n <- sum(data[, var], na.rm = TRUE)
+            }
           }
         }
       } else {

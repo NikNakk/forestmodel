@@ -21,7 +21,8 @@ forest_model(
   model_list = NULL,
   merge_models = FALSE,
   exclude_infinite_cis = TRUE,
-  show_global_p = c("none", "bottom", "aside")
+  show_global_p = c("none", "bottom", "aside"),
+  n_logical_true_only = FALSE
 )
 }
 \arguments{
@@ -69,6 +70,9 @@ displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed}
 - 'none', don't show.
 - 'bottom', show global p value in the bottom.
 - 'aside', show global p value along with 'Reference', this is useful when you plot a list of models.}
+
+\item{n_logical_true_only}{whether to only count TRUE values in n for logical
+covariates}
 }
 \value{
 A ggplot ready for display or saving, or (with \code{return_data == TRUE},
@@ -105,8 +109,8 @@ This function takes the model output from one of the common model functions in
 }
 \examples{
 
-library("survival")
-library("dplyr")
+library(survival)
+library(dplyr)
 pretty_lung <- lung \%>\%
   transmute(time,
     status,
