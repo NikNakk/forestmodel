@@ -248,19 +248,17 @@ forest_model <- function(model,
               level_heading = FALSE
             )
             if (inherits(model, "coxph")) {
-              event_detail_tab <- apply(
-                model$y,
-                2,
-                function(y_var) {
-                  cbind(apply(
+              event_detail_tab <- lapply(
+                seq_len(ncol(model$y)),
+                function(y_col) {
+                  apply(
                     cols,
                     2,
                     function(x_var) {
-                      sum(y_var[x_var > 0])
+                      sum(model$y[x_var > 0, y_col])
                     }
-                  )) # cbind forces column output
-                },
-                simplify = FALSE
+                  )
+                }
               ) %>%
                 bind_cols()
               if (ncol(event_detail_tab) == 3) {

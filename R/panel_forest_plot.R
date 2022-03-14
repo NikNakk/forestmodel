@@ -109,6 +109,13 @@ panel_forest_plot <- function(forest_data,
         if (!is.null(panel$display)) "text" else NA
       },
       display = quo_text(panel$display),
+      fontface = if (is.null(panel$fontface) || (is_quosure(panel$fontface) && quo_is_symbolic(panel$fontface))) {
+        "plain"
+      } else if (is_quosure(panel$fontface)) {
+        quo_get_expr(panel$fontface)
+      } else {
+        panel$fontface
+      },
       hjust = as.numeric(panel$hjust %||% 0),
       heading = panel$heading %||% NA,
       linetype = panel$linetype %||% {
