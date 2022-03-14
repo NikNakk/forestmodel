@@ -111,11 +111,6 @@ panel_forest_plot <- function(forest_data,
       display = quo_text(panel$display),
       hjust = as.numeric(panel$hjust %||% 0),
       heading = panel$heading %||% NA,
-      fontface = if (!is.null(panel$fontface) && !quo_is_symbolic(panel$fontface)) {
-        quo_get_expr(panel$fontface)
-      } else {
-        "plain"
-      },
       linetype = panel$linetype %||% {
         if (!is.na(item) && item == "vline") "solid" else NA
       },

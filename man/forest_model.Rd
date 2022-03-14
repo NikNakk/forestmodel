@@ -6,7 +6,7 @@
 \usage{
 forest_model(
   model,
-  panels = default_forest_panels(model, factor_separate_line = factor_separate_line),
+  panels = NULL,
   covariates = NULL,
   exponentiate = NULL,
   funcs = NULL,
