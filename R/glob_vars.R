@@ -55,5 +55,6 @@ utils::globalVariables(names = c(
   ".subheading",
   "line_x",
   "xend",
-  "yend"
+  "yend",
+  "isinteraction"
 ))

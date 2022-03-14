@@ -127,7 +127,7 @@
 #'
 #' print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic)))
 forest_model <- function(model,
-                         panels = default_forest_panels(model, factor_separate_line = factor_separate_line),
+                         panels = NULL,
                          covariates = NULL, exponentiate = NULL, funcs = NULL,
                          factor_separate_line = FALSE,
                          format_options = forest_model_format_options(),
@@ -172,27 +172,28 @@ forest_model <- function(model,
 
   if (exponentiate) trans <- exp else trans <- I
 
-  stopifnot(is.list(panels))
+  forest_terms_basic <- make_forest_terms_basic(model)
 
-  remove_backticks <- function(x) {
-    gsub("^`|`$|\\\\(?=`)|`(?=:)|(?<=:)`", "", x, perl = TRUE)
+  if (
+    any(
+      factor_separate_line *
+      forest_terms_basic$is_interaction * vapply(forest_terms_basic$interaction_terms_are_factors, sum, integer(1)) > 0
+    )
+  ) {
+    warn("`factor_separate_line = TRUE` is not supported when there are interacting terms that include one or more factors")
+    factor_separate_line <- FALSE
   }
 
-  make_forest_terms <- function(model) {
+  if (is.null(panels)) {
+    panels <- default_forest_panels(model, factor_separate_line = factor_separate_line)
+  }
+
+  stopifnot(is.list(panels))
+
+  make_forest_terms <- function(model, forest_terms_basic) {
     tidy_model <- broom::tidy(model, conf.int = TRUE)
     data <- stats::model.frame(model)
-
-    forest_terms <- tibble::tibble(
-      term_label = attr(model$terms, "term.labels"),
-      variable = remove_backticks(term_label)
-    ) %>%
-      inner_join(
-        tibble::tibble(
-          variable = names(attr(model$terms, "dataClasses"))[-1],
-          class = attr(model$terms, "dataClasses")[-1]
-        ),
-        by = "variable"
-      )
+    mmtrx <- stats::model.matrix(model)
 
     forest_labels <- tibble::tibble(
       variable = names(data),
@@ -204,74 +205,165 @@ forest_model <- function(model,
         coalesce(variable)
     )
 
+    xlevels <- c(model$xlevels, lapply(which(vapply(data, is.logical, logical(1))), function(x) c(FALSE, TRUE)))
+
     create_term_data <- function(term_row) {
-      if (!is.na(term_row$class)) {
-        var <- term_row$variable
-        if (term_row$class %in% c("factor", "character")) {
-          tab <- table(data[, var])
-          if (!any(paste0(term_row$term_label, names(tab)) %in% tidy_model$term)) {
+      out <- tibble::as_tibble(term_row)
+      blank_row <- tibble::as_tibble(
+        out,
+        term = term_label,
+        level = NA,
+        level_no = NA,
+        n = sum(!is.na(cols)),
+        total = n,
+        level_heading = FALSE
+      )
+      if (is.na(term_row$inc_factor)) {
+        out <- blank_row
+      } else {
+        cols <-
+          mmtrx[, attr(mmtrx, "assign") == term_row$term_number, drop = FALSE]
+        if (term_row$inc_factor) {
+          if (!any(colnames(cols) %in% tidy_model$term)) {
             # Filter out terms not in final model summary (e.g. strata)
-            out <- tibble::tibble(variable = NA)
+            out <- blank_row
           } else {
-            out <- data.frame(
-              term_row,
+            if (!term_row$is_interaction) {
+              ref_level <- xlevels[[term_row$variable]][1]
+              ref_level_term <-
+                paste0(term_row$term_label, ref_level)
+              if (!(ref_level_term %in% colnames(cols))) {
+                cols <- cbind(data[, term_row$variable] == ref_level, cols)
+                colnames(cols)[1] <- ref_level_term
+              }
+            }
+            tab <- colSums(cols > 0)
+            out <- tibble::tibble(
+              out,
+              term = names(tab),
               level = names(tab),
               level_no = 1:length(tab),
-              n = as.integer(tab),
-              total = sum(as.integer(tab)),
-              stringsAsFactors = FALSE
+              n = tab,
+              total = nrow(mmtrx),
+              level_heading = FALSE
             )
+            if (inherits(model, "coxph")) {
+              event_detail_tab <- apply(
+                model$y,
+                2,
+                function(y_var) {
+                  cbind(apply(
+                    cols,
+                    2,
+                    function(x_var) {
+                      sum(y_var[x_var > 0])
+                    }
+                  )) # cbind forces column output
+                },
+                simplify = FALSE
+              ) %>%
+                bind_cols()
+              if (ncol(event_detail_tab) == 3) {
+                event_detail_tab <- cbind(event_detail_tab[, 2] - event_detail_tab[, 1], event_detail_tab[, 3])
+              }
+              colnames(event_detail_tab) <-
+                c("person_time", "n_events")
+              out <- cbind(out, event_detail_tab)
+            }
             if (factor_separate_line) {
               out <- bind_rows(tibble::as_tibble(term_row), out)
             }
-            if (inherits(model, "coxph")) {
-              data_event <- bind_cols(data[, -1, drop = FALSE],
-                .event_time = data[, 1][, "time"],
-                .event_status = data[, 1][, "status"]
+
+            if (term_row$is_logical) {
+              if (!n_logical_true_only) {
+                out$n <- sum(out$n)
+              }
+              out <- out[grepl("TRUE$", out$level), ]
+              out$level <- NA
+            }
+            if (term_row$is_interaction) {
+              interaction_terms <- term_row$interaction_terms[[1]]
+              interaction_levels <- lapply(
+                seq_along(interaction_terms),
+                function(i) {
+                  if (term_row$interaction_terms_are_factors[[1]][i]) {
+                    ilv <- tibble::tibble(
+                      level = model$xlevels[[remove_backticks(interaction_terms[i])]],
+                      label = paste0(interaction_terms[i], level)
+                    )
+                  } else {
+                    ilv <- tibble::tibble(level = NA, label = interaction_terms[i])
+                  }
+                  colnames(ilv) <- paste0(colnames(ilv), "_", i)
+                  ilv
+                }
               )
-              event_detail_tab <- data_event %>%
-                group_by(!!as.name(var)) %>%
-                summarise(
-                  person_time = sum(.event_time),
-                  n_events = sum(.event_status)
-                )
-              colnames(event_detail_tab)[1] <- "level"
-              event_detail_tab$level <- as.character(event_detail_tab$level)
-              out <- out %>% left_join(event_detail_tab, by = "level")
+
+              interaction_level_table <- Reduce(function(x, y)
+                inner_join(x, y, by = character()),
+                interaction_levels)
+              interaction_level_table_cur_level <-
+                interaction_level_table %>%
+                select(starts_with("label")) %>%
+                apply(1, paste, collapse = ":")
+
+              interaction_levels_final <- interaction_level_table %>%
+                select(starts_with("level"))
+              interaction_levels_final <- interaction_levels_final[term_row$interaction_terms_are_factors[[1]]]
+              colnames(interaction_levels_final) <- paste0("level_", 1:ncol(interaction_levels_final))
+              interaction_levels_final$cur_level <- interaction_level_table_cur_level
+
+              out <- left_join(
+                out,
+                interaction_levels_final %>%
+                  select(-starts_with("label")),
+                by = c("level" = "cur_level")
+              )
+              interaction_col_headers_data <- tibble::tibble(variable = term_row$interaction_vars[[1]][term_row$interaction_terms_are_factors[[1]]]) %>%
+                left_join(forest_labels, by = "variable") %>%
+                mutate(label = coalesce(label, variable))
+              interaction_col_headers <- interaction_col_headers_data$label
+              names(interaction_col_headers) <- paste0("level_", seq_along(interaction_col_headers))
+              out <- bind_rows(
+                tibble::tibble(
+                  tibble::as_tibble(term_row),
+                  !!!interaction_col_headers,
+                  level_heading = TRUE
+                ),
+                out
+              )
+            } else {
+              out$level <- substr(out$level, nchar(term_row$term_label) + 1, nchar(out$level))
             }
           }
         } else {
-          out <- data.frame(term_row,
-            level = NA, level_no = NA, n = sum(!is.na(data[, var])),
-            total = sum(!is.na(data[, var])),
-            stringsAsFactors = FALSE
+          out <- tibble::tibble(
+            out,
+            term = term_label,
+            level = NA,
+            level_no = NA,
+            n = sum(rowSums(!is.na(cols)) > 0),
+            total = nrow(mmtrx),
+            level_heading = FALSE
           )
-          if (term_row$class == "logical") {
-            out$term_label <- paste0(term_row$term_label, "TRUE")
-            if (n_logical_true_only) {
-              out$n <- sum(data[, var], na.rm = TRUE)
-            }
-          }
         }
-      } else {
-        out <- data.frame(term_row, level = NA, level_no = NA, n = NA, stringsAsFactors = FALSE)
+      }
+      if (!("level_1" %in% colnames(out)) && ("level" %in% colnames(out))) {
+        out$level_1 <- out$level
       }
       out
     }
-    forest_terms <- forest_terms %>%
-      rowwise() %>%
-      do(create_term_data(.)) %>%
-      ungroup() %>%
+    forest_terms <- lapply(seq_len(nrow(forest_terms_basic)), function(i) create_term_data(forest_terms_basic[i, ])) %>%
+      bind_rows() %>%
       filter(!is.na(variable)) %>%
-      mutate(term = paste0(term_label, replace(level, is.na(level), ""))) %>%
       left_join(tidy_model, by = "term") %>%
       mutate(
-        reference = ifelse(is.na(level_no), FALSE, level_no == 1),
+        reference = ifelse(is.na(level_no), FALSE, level_no == 1 & !is_interaction),
         estimate = ifelse(reference, 0, estimate),
         variable = ifelse(is.na(variable), remove_backticks(term), variable)
       ) %>%
       mutate(
-        variable = ifelse(is.na(level_no) | (level_no == 1 & !factor_separate_line), variable, NA)
+        variable = ifelse(is.na(level_no) | is_logical | (level_no == 1 & !factor_separate_line & !is_interaction), variable, NA)
       ) %>%
       left_join(
         forest_labels,
@@ -313,7 +405,7 @@ forest_model <- function(model,
       forest_terms$model_name <- NULL
     }
   } else {
-    forest_terms <- make_forest_terms(model)
+    forest_terms <- make_forest_terms(model, forest_terms_basic)
   }
 
   # #use_exp <- grepl("exp", deparse(trans))
@@ -347,4 +439,31 @@ forest_model <- function(model,
   } else {
     main_plot
   }
+}
+
+remove_backticks <- function(x) {
+  gsub("^`|`$|\\\\(?=`)|`(?=:)|(?<=:)`", "", x, perl = TRUE)
+}
+
+make_forest_terms_basic <- function(model) {
+  mdl_terms <- stats::terms(model)
+  term_labels <- attr(mdl_terms, "term.labels")
+  mdl_factors <- attr(mdl_terms, "factors")
+  mdl_data_classes <- attr(mdl_terms, "dataClasses")
+  mdl_data_classes_factors <- mdl_data_classes %in% c("logical", "factor", "character")
+  names(mdl_data_classes_factors) <- names(mdl_data_classes)
+
+  mdl_terms_inc_factors <- colSums((mdl_factors == 1) & (mdl_data_classes_factors[remove_backticks(rownames(mdl_factors))])) > 0
+  mdl_terms_are_logical <- colMeans((mdl_factors == 0) | (mdl_data_classes == "logical")) == 1
+  tibble::tibble(
+    term_number = 1:length(term_labels),
+    term_label = term_labels,
+    variable = remove_backticks(term_label),
+    inc_factor = mdl_terms_inc_factors[term_label],
+    is_logical = mdl_terms_are_logical,
+    is_interaction = colSums(mdl_factors) > 1,
+    interaction_terms = lapply(term_label, function(tl) names(which(attr(mdl_terms, "factors")[, tl] == 1))),
+    interaction_vars = lapply(interaction_terms, remove_backticks),
+    interaction_terms_are_factors = lapply(interaction_vars, function(iv) mdl_data_classes_factors[iv])
+  )
 }

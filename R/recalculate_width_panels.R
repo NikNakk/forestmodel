@@ -1,22 +1,21 @@
 # Recalculate widths of panels using actual text
 # Works using either the current device width or a user-specified width
 recalculate_width_panels <-
-  function(panel_positions, mapped_text, mapped_data, recalculate_width, format_options,
+  function(panel_positions, mapped_items, mapped_data, recalculate_width, format_options,
            theme) {
     # Convert from default pointsize to current text size
     cex <- 2.845 * format_options$text_size / graphics::par("ps") * 1.2
     if (identical(recalculate_width, TRUE)) {
       recalculate_width <- graphics::par("din")[1]
     }
-    n_text <- max(lengths(mapped_text))
+    n_text <- max(vapply(mapped_items, function(x) length(x$text), integer(1)))
 
     family <- if (is.na(theme$text$family) || theme$text$family == "") "sans" else theme$text$family
-    fonts <- as.integer(factor(panel_positions$fontface, levels = c("plain", "bold")))
-
 
     measured_widths <- lapply(seq(nrow(panel_positions)), function(i) {
-      if (!is.null(mapped_text[[i]])) {
-        mt <- mapped_text[[i]]
+      fonts <- as.integer(factor(mapped_items[[i]]$fontface, levels = c("plain", "bold", "italc", "bold italic")))
+      if (!is.null(mapped_items[[i]]$text)) {
+        mt <- mapped_items[[i]]$text
         mt[is.na(mt)] <- ""
         if (panel_positions$parse[i]) {
           mt <- lapply(mt, function(x) parse(text = x))
@@ -25,7 +24,7 @@ recalculate_width_panels <-
         mt[mapped_data$whole_row] <- ""
         widths <- vapply(mt, graphics::strwidth, numeric(1), "inches",
           cex = cex,
-          family = family, font = fonts[i]
+          family = family, font = fonts
         ) / recalculate_width
       } else {
         widths <- rep(panel_positions$width[i], n_text)

@@ -28,6 +28,10 @@ forest_panel <- function(width, item = c("", "forest", "vline"), display = NULL,
   if (is.null(get_expr(display))) {
     display <- NULL
   }
+  fontface = enquo(fontface)
+  if (is.null(get_expr(fontface))) {
+    fontface <- NULL
+  }
   panel <- structure(list(
     width = width %||% NA_real_,
     item = item,

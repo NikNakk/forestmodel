@@ -9,6 +9,8 @@
 #' @return `list` ready to be passed to `forest_model`
 #' @export
 #'
+#' @import rlang
+#'
 default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, measure = NULL, trans_char = "I") {
   if (is.list(model) && inherits(model[[1]], "rma")) {
     model <- model[[1]]
@@ -60,7 +62,7 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
     panels <- list(
       forest_panel(width = 0.03),
       forest_panel(width = 0.1, display = variable, fontface = "bold", heading = "Variable"),
-      forest_panel(width = 0.1, display = level),
+      forest_panel(width = 0.1, display = level_1),
       forest_panel(width = 0.05, display = n, hjust = 1, heading = "N"),
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
       forest_panel(
@@ -81,6 +83,21 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       ),
       forest_panel(width = 0.03)
     )
+    forest_terms_basic <- make_forest_terms_basic(model)
+    max_interaction_terms <- max(
+      vapply(forest_terms_basic$interaction_terms_are_factors, sum, integer(1))
+    )
+    if (max_interaction_terms > 1) {
+      interacting_level_panels <- lapply(
+        seq_len(max_interaction_terms),
+        function(i) {
+          forest_panel(width = 0.1, display = !!rlang::sym(paste0("level_", i)),
+                       fontface = ifelse(!is.na(level_heading) & level_heading, "italic", "plain")
+          )
+        }
+      )
+      panels <- c(panels[1:2], interacting_level_panels, panels[-(1:3)])
+    }
     if (factor_separate_line) {
       panels[[2]][c("width", "width_group", "width_fixed")] <- list(0.02, 1, TRUE)
       panels[[3]][c("width", "width_group", "width_fixed")] <- list(0.02, 1, TRUE)

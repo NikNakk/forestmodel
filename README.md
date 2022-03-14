@@ -9,11 +9,15 @@
 Status](https://travis-ci.org/NikNakk/forestmodel.svg?branch=master)](https://travis-ci.org/NikNakk/forestmodel)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/NikNakk/forestmodel?branch=master&svg=true)](https://ci.appveyor.com/project/NikNakk/forestmodel)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/forestmodel?color=blue)](https://cran.r-project.org/package=forestmodel)
-[![R build
-status](https://github.com/NikNakk/forestmodel/workflows/R-CMD-check/badge.svg)](https://github.com/NikNakk/forestmodel/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/forestmodel)](https://CRAN.R-project.org/package=forestmodel)
+[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/forestmodel?color=blue)](https://cran.r-project.org/package=forestmodel)
+[![R build
+status](https://github.com/NikNakk/forestmodel/workflows/R-CMD-check/badge.svg)](https://github.com/NikNakk/forestmodel/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/NikNakk/forestmodel/branch/master/graph/badge.svg)](https://codecov.io/gh/NikNakk/forestmodel?branch=master)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/NikNakk/forestmodel?branch=master&svg=true)](https://ci.appveyor.com/project/NikNakk/forestmodel)
 <!-- badges: end -->
 
 This is an R package to generate forest plots of the coefficients of

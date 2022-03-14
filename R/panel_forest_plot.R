@@ -62,8 +62,8 @@ panel_forest_plot <- function(forest_data,
           as_tibble(.)
         )
       })
-    mapping$subheading <- quo(.subheading)
-    mapping$whole_row <- quo(.whole_row)
+    mapping$subheading <- expr(.subheading)
+    mapping$whole_row <- expr(.whole_row)
   }
 
   fd_for_eval <- c(as.list(forest_data), trans = trans, funcs)
@@ -83,15 +83,21 @@ panel_forest_plot <- function(forest_data,
       y = n():1
     )
 
-  mapped_text <- lapply(seq(panels), function(i) {
-    if (!is.null(panels[[i]]$display)) {
+  mapped_items <- lapply(panels, function(panel) {
+    text <- if (!is.null(panel$display)) {
       as.character(ifelse(!is.na(mapped_data$x),
-        eval_tidy(panels[[i]]$display, fd_for_eval),
-        eval_tidy(panels[[i]]$display_na, fd_for_eval)
+        eval_tidy(panel$display, fd_for_eval),
+        eval_tidy(panel$display_na, fd_for_eval)
       ))
     } else {
       NULL
     }
+    fontface <- if (!is.null(panel$fontface)) {
+      as.character(eval_tidy(panel$fontface, fd_for_eval))
+    } else {
+      NULL
+    }
+    list(text = text, fontface = fontface)
   })
 
   max_y <- max(mapped_data$y)
@@ -105,7 +111,11 @@ panel_forest_plot <- function(forest_data,
       display = quo_text(panel$display),
       hjust = as.numeric(panel$hjust %||% 0),
       heading = panel$heading %||% NA,
-      fontface = panel$fontface %||% "plain",
+      fontface = if (!is.null(panel$fontface) && !quo_is_symbolic(panel$fontface)) {
+        quo_get_expr(panel$fontface)
+      } else {
+        "plain"
+      },
       linetype = panel$linetype %||% {
         if (!is.na(item) && item == "vline") "solid" else NA
       },
@@ -162,7 +172,7 @@ panel_forest_plot <- function(forest_data,
   if (!is.null(recalculate_width) && !(identical(recalculate_width, FALSE))) {
     panel_positions <-
       recalculate_width_panels(panel_positions,
-        mapped_text = mapped_text,
+        mapped_items = mapped_items,
         mapped_data = mapped_data,
         recalculate_width = recalculate_width,
         format_options = format_options,
@@ -253,15 +263,15 @@ panel_forest_plot <- function(forest_data,
   }
 
   forest_text <- lapply(seq(panels), function(i) {
-    if (!is.null(mapped_text[[i]])) {
+    if (!is.null(mapped_items[[i]]$text)) {
       with(
         panel_positions[i, ],
         tibble(
           x = text_x,
           y = mapped_data$y,
           hjust = hjust,
-          label = mapped_text[[i]],
-          fontface = fontface,
+          label = mapped_items[[i]]$text,
+          fontface = mapped_items[[i]]$fontface %||% "plain",
           parse = parse
         )
       )
