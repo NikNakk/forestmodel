@@ -56,5 +56,9 @@ utils::globalVariables(names = c(
   "line_x",
   "xend",
   "yend",
-  "isinteraction"
+  "interaction_terms",
+  "interaction_vars",
+  "is_interaction",
+  "level_1",
+  "level_heading"
 ))
