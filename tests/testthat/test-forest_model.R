@@ -1,10 +1,11 @@
+library(survival)
 test_that("forest_model function returns expected output", {
   pretty_lung <- lung %>%
     transmute(time,
               status,
               Age = age,
               Sex = factor(sex, labels = c("Male", "Female")),
-              ECOG = factor(lung$ph.ecog),
+              ECOG = factor(ph.ecog),
               `Meal Cal` = meal.cal
     )
 
