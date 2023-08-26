@@ -70,7 +70,7 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
       forest_panel(
         width = 0.12,
-        display = if_else(reference, if_else(is_na(p.value), "Reference", "Reference;  Variable logrank:"),
+        display = if_else(reference, if_else(is_na(p.value), "Reference", "Reference;  Likelihood ratio:"),
           sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high))
         ),
         display_na = NA

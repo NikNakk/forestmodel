@@ -286,7 +286,7 @@ forest_model <- function(model,
 
     if (show_global_p != "none") {
       if (inherits(model, "coxph")) {
-        p_val <- as.numeric(summary(model)$sctest[3])
+        p_val <- as.numeric(summary(model)$logtest[3])
         if (show_global_p == "bottom") {
           label <- paste("Global p", format.pval(p_val, digits = 1, eps = 1e-3))
           forest_terms <- forest_terms %>%
