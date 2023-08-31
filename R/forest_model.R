@@ -160,9 +160,6 @@ forest_model <- function(model,
       exponentiate <- inherits(model_list[[1]], "coxph") ||
         (inherits(model_list[[1]], "glm") && model_list[[1]]$family$link == "logit")
     }
-    if (missing(panels)) {
-      panels <- default_forest_panels(model_list[[1]], factor_separate_line = factor_separate_line)
-    }
   } else {
     if (is.null(exponentiate)) {
       exponentiate <- inherits(model, "coxph") ||
@@ -172,33 +169,28 @@ forest_model <- function(model,
 
   if (exponentiate) trans <- exp else trans <- I
 
-  forest_terms_basic <- make_forest_terms_basic(model)
-
-  if (
-    any(
-      factor_separate_line *
-      forest_terms_basic$is_interaction * vapply(forest_terms_basic$interaction_terms_are_factors, sum, integer(1)) > 0
-    )
-  ) {
-    warn("`factor_separate_line = TRUE` is not supported when there are interacting terms that include one or more factors")
-    factor_separate_line <- FALSE
+  if (!is.null(panels) && !is.list(panels)) {
+    stop("panels should be a list")
   }
 
-  if (is.null(panels)) {
-    panels <- default_forest_panels(model, factor_separate_line = factor_separate_line)
-  }
+  make_forest_terms <- function(model) {
+    forest_terms_basic <- make_forest_terms_basic(model)
 
-  stopifnot(is.list(panels))
-
-  make_forest_terms <- function(model, forest_terms_basic) {
     tidy_model <- broom::tidy(model, conf.int = TRUE)
     data <- stats::model.frame(model)
     mmtrx <- stats::model.matrix(model)
 
+    if (inherits(model, "coxph")) {
+      # Cope with the way survival:::model.frame.coxph drops attributes from factors
+      data_for_labels <- model_frame_coxph_simple(model)
+    } else {
+      data_for_labels <- data
+    }
+
     forest_labels <- tibble::tibble(
-      variable = names(data),
+      variable = names(data_for_labels),
       label = vapply(
-        data,
+        data_for_labels,
         function(x) attr(x, "label", exact = TRUE) %||% NA_character_,
         character(1)
       ) %>%
@@ -249,7 +241,7 @@ forest_model <- function(model,
             )
             if (inherits(model, "coxph")) {
               event_detail_tab <- lapply(
-                seq_len(ncol(model$y)),
+                setNames(seq_len(ncol(model$y)), colnames(model$y)),
                 function(y_col) {
                   apply(
                     cols,
@@ -371,7 +363,7 @@ forest_model <- function(model,
         variable = coalesce(label, variable)
       )
     if (!is.null(covariates)) {
-      forest_terms <- filter(forest_terms, term_label %in% covariates)
+      forest_terms <- filter(forest_terms, term %in% covariates)
     }
 
     if (show_global_p != "none") {
@@ -403,8 +395,13 @@ forest_model <- function(model,
       forest_terms$model_name <- NULL
     }
   } else {
-    forest_terms <- make_forest_terms(model, forest_terms_basic)
+    forest_terms <- make_forest_terms(model)
   }
+
+  if (is.null(panels)) {
+    panels <- default_forest_panels(model, factor_separate_line = factor_separate_line)
+  }
+
 
   # #use_exp <- grepl("exp", deparse(trans))
   if (!is.null(limits)) {
@@ -447,13 +444,13 @@ make_forest_terms_basic <- function(model) {
   mdl_terms <- stats::terms(model)
   term_labels <- attr(mdl_terms, "term.labels")
   mdl_factors <- attr(mdl_terms, "factors")
-  mdl_data_classes <- attr(mdl_terms, "dataClasses")
+  mdl_data_classes <- attr(mdl_terms, "dataClasses")[remove_backticks(rownames(mdl_factors))]
   mdl_data_classes_factors <- mdl_data_classes %in% c("logical", "factor", "character")
   names(mdl_data_classes_factors) <- names(mdl_data_classes)
 
   mdl_terms_inc_factors <- colSums((mdl_factors == 1) & (mdl_data_classes_factors[remove_backticks(rownames(mdl_factors))])) > 0
   mdl_terms_are_logical <- colMeans((mdl_factors == 0) | (mdl_data_classes == "logical")) == 1
-  tibble::tibble(
+  forest_terms_basic <- tibble::tibble(
     term_number = 1:length(term_labels),
     term_label = term_labels,
     variable = remove_backticks(term_label),

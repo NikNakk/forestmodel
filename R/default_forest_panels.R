@@ -58,6 +58,24 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
         measure <- "Estimate"
       }
     }
+
+    max_interaction_terms <- 0
+    if (!is.null(model)) {
+      forest_terms_basic <- make_forest_terms_basic(model)
+      if (
+        any(
+          factor_separate_line *
+          forest_terms_basic$is_interaction * vapply(forest_terms_basic$interaction_terms_are_factors, sum, integer(1)) > 0
+        )
+      ) {
+        warning("`factor_separate_line = TRUE` is not supported when there are interacting terms that include one or more factors")
+        factor_separate_line <- FALSE
+      }
+      max_interaction_terms <- max(
+        vapply(forest_terms_basic$interaction_terms_are_factors, sum, integer(1))
+      )
+    }
+
     is_na <- function(x) sapply(x, is.na)
     panels <- list(
       forest_panel(width = 0.03),
@@ -83,10 +101,6 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       ),
       forest_panel(width = 0.03)
     )
-    forest_terms_basic <- make_forest_terms_basic(model)
-    max_interaction_terms <- max(
-      vapply(forest_terms_basic$interaction_terms_are_factors, sum, integer(1))
-    )
     if (max_interaction_terms > 1) {
       interacting_level_panels <- lapply(
         seq_len(max_interaction_terms),
@@ -98,6 +112,7 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       )
       panels <- c(panels[1:2], interacting_level_panels, panels[-(1:3)])
     }
+
     if (factor_separate_line) {
       panels[[2]][c("width", "width_group", "width_fixed")] <- list(0.02, 1, TRUE)
       panels[[3]][c("width", "width_group", "width_fixed")] <- list(0.02, 1, TRUE)
