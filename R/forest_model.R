@@ -286,9 +286,9 @@ forest_model <- function(model,
 
     if (show_global_p != "none") {
       if (inherits(model, "coxph")) {
-        p_val <- as.numeric(summary(model)$logtest[3])
+        p_val <- as.numeric(summary(model)$waldtest[3])
         if (show_global_p == "bottom") {
-          label <- paste("Global p", format.pval(p_val, digits = 1, eps = 1e-3))
+          label <- paste("    Global p (Wald test):", format.pval(p_val, digits = 1, eps = 1e-3))
           forest_terms <- forest_terms %>%
             dplyr::add_row(term_label = "Global p", variable = label)
         } else if (show_global_p == "aside") {
