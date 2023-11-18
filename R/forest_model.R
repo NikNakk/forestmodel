@@ -127,7 +127,7 @@
 #'
 #' print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic)))
 forest_model <- function(model,
-                         panels = default_forest_panels(model, factor_separate_line = factor_separate_line),
+                         panels = default_forest_panels(model, factor_separate_line = factor_separate_line, which_global_p = which_global_p),
                          covariates = NULL, exponentiate = NULL, funcs = NULL,
                          factor_separate_line = FALSE,
                          format_options = forest_model_format_options(),
@@ -136,8 +136,10 @@ forest_model <- function(model,
                          recalculate_width = TRUE, recalculate_height = TRUE,
                          model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE,
                          show_global_p = c("none", "bottom", "aside"),
+                         which_global_p = c("logtest", "waldtest", "sctest"),
                          n_logical_true_only = FALSE) {
   show_global_p <- match.arg(show_global_p)
+  which_global_p <- match.arg(which_global_p)
   mapping <- aes(estimate, xmin = conf.low, xmax = conf.high)
   if (!is.null(model_list)) {
     if (!is.list(model_list)) {
@@ -286,9 +288,26 @@ forest_model <- function(model,
 
     if (show_global_p != "none") {
       if (inherits(model, "coxph")) {
-        p_val <- as.numeric(summary(model)$waldtest[3])
+        p_val_logtest <- as.numeric(summary(model)$logtest[3])
+        p_val_waldtest <- as.numeric(summary(model)$waldtest[3])
+        p_val_sctest <- as.numeric(summary(model)$sctest[3])
+        if (which_global_p != "none") {
+            if (which_global_p == "logtest") {
+                p_val <- p_val_logtest
+                global_p_text <- "(Likelihood ratio test)"
+            } else if (which_global_p == "waldtest") {
+                p_val <- p_val_waldtest
+                global_p_text <- "(Wald test)"
+            } else if (which_global_p == "sctest") {
+                p_val <- p_val_sctest
+                global_p_text <- "(Score (logrank))"
+            }
+        } else {
+            p_val <- p_val_logtest
+            global_p_text <- "(Likelihood ratio test)"
+        }
         if (show_global_p == "bottom") {
-          label <- paste("    Global p (Wald test):", format.pval(p_val, digits = 1, eps = 1e-3))
+          label <- paste("    Global p ", global_p_text, ":", format.pval(p_val, digits = 1, eps = 1e-3))
           forest_terms <- forest_terms %>%
             dplyr::add_row(term_label = "Global p", variable = label)
         } else if (show_global_p == "aside") {
