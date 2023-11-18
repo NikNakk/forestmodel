@@ -22,6 +22,7 @@ forest_model(
   merge_models = FALSE,
   exclude_infinite_cis = TRUE,
   show_global_p = c("none", "bottom", "aside"),
+  which_global_p = c("logtest", "waldtest", "sctest"),
   n_logical_true_only = FALSE
 )
 }
@@ -70,6 +71,11 @@ displayed as text. Defaults to \code{TRUE}, since otherwise plot is malformed}
 - 'none', don't show.
 - 'bottom', show global p value in the bottom.
 - 'aside', show global p value along with 'Reference', this is useful when you plot a list of models.}
+
+\item{which_global_p}{Select which global p value to show, only works for Cox model.
+- 'logtest', Likelihood ratio test.
+- 'waldtest', Wald test.
+- 'sctest', Score (logrank).}
 
 \item{n_logical_true_only}{whether to only count TRUE values in n for logical
 covariates}
