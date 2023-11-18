@@ -9,7 +9,16 @@
 #' @return `list` ready to be passed to `forest_model`
 #' @export
 #'
-default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, measure = NULL, trans_char = "I") {
+default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, measure = NULL, trans_char = "I", which_global_p = "logtest") {
+    if (which_global_p != "logtest") {
+        if (which_global_p == "waldtest") {
+            global_p_text <- "(Wald test)"
+        } else if (which_global_p == "sctest") {
+            global_p_text <- "(Score (logrank))"
+        }
+    } else {
+        global_p_text <- "(Likelihood ratio test)"
+    }
   if (is.list(model) && inherits(model[[1]], "rma")) {
     model <- model[[1]]
   }
@@ -70,7 +79,7 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
       forest_panel(width = 0.03, item = "vline", hjust = 0.5),
       forest_panel(
         width = 0.12,
-        display = if_else(reference, if_else(is_na(p.value), "Reference", "Reference;  Variable logrank:"),
+        display = if_else(reference, if_else(is_na(p.value), "Reference", paste0("Reference | Global p ", global_p_text, ":")),
           sprintf("%0.2f (%0.2f, %0.2f)", trans(estimate), trans(conf.low), trans(conf.high))
         ),
         display_na = NA
