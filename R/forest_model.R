@@ -127,6 +127,7 @@
 #'
 #' print(forest_model(glm(outcome ~ ., binomial(), data_for_logistic)))
 forest_model <- function(model,
+                         which_global_p = c("logtest", "waldtest", "sctest"),
                          panels = default_forest_panels(model, factor_separate_line = factor_separate_line, which_global_p = which_global_p),
                          covariates = NULL, exponentiate = NULL, funcs = NULL,
                          factor_separate_line = FALSE,
@@ -136,7 +137,6 @@ forest_model <- function(model,
                          recalculate_width = TRUE, recalculate_height = TRUE,
                          model_list = NULL, merge_models = FALSE, exclude_infinite_cis = TRUE,
                          show_global_p = c("none", "bottom", "aside"),
-                         which_global_p = c("logtest", "waldtest", "sctest"),
                          n_logical_true_only = FALSE) {
   show_global_p <- match.arg(show_global_p)
   which_global_p <- match.arg(which_global_p)

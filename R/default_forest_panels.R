@@ -19,7 +19,7 @@ default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, me
             global_p_text <- "(Score (logrank))"
         }
     } else {
-    global_p_text <- "(I was none)"
+    global_p_text <- "(Likelihood ratio test)"
     }
   if (is.list(model) && inherits(model[[1]], "rma")) {
     model <- model[[1]]
