@@ -291,11 +291,8 @@ forest_model <- function(model,
         p_val_logtest <- as.numeric(summary(model)$logtest[3])
         p_val_waldtest <- as.numeric(summary(model)$waldtest[3])
         p_val_sctest <- as.numeric(summary(model)$sctest[3])
-        if (which_global_p != "none") {
-            if (which_global_p == "logtest") {
-                p_val <- p_val_logtest
-                global_p_text <- "(Likelihood ratio test)"
-            } else if (which_global_p == "waldtest") {
+        if (which_global_p != "logtest") {
+            if (which_global_p == "waldtest") {
                 p_val <- p_val_waldtest
                 global_p_text <- "(Wald test)"
             } else if (which_global_p == "sctest") {

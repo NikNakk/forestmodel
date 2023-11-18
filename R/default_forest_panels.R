@@ -9,17 +9,15 @@
 #' @return `list` ready to be passed to `forest_model`
 #' @export
 #'
-default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, measure = NULL, trans_char = "I", which_global_p = "none") {
-    if (which_global_p != "none") {
-        if (which_global_p == "logtest") {
-            global_p_text <- "(Likelihood ratio test)"
-        } else if (which_global_p == "waldtest") {
+default_forest_panels <- function(model = NULL, factor_separate_line = FALSE, measure = NULL, trans_char = "I", which_global_p = "logtest") {
+    if (which_global_p != "logtest") {
+        if (which_global_p == "waldtest") {
             global_p_text <- "(Wald test)"
         } else if (which_global_p == "sctest") {
             global_p_text <- "(Score (logrank))"
         }
     } else {
-    global_p_text <- "(Likelihood ratio test)"
+        global_p_text <- "(Likelihood ratio test)"
     }
   if (is.list(model) && inherits(model[[1]], "rma")) {
     model <- model[[1]]
