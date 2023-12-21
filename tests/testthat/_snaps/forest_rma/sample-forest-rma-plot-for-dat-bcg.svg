@@ -27,14 +27,14 @@
 </defs>
 <g clip-path='url(#cpOC4yMnw3MTQuNTJ8MjIuNzh8NTU3Ljcx)'>
 <rect x='8.22' y='22.78' width='706.30' height='534.92' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='8.22' y='56.22' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='123.08' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='189.95' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='256.81' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='323.68' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='390.54' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='457.41' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<polygon points='361.83,507.56 373.43,502.54 385.03,507.56 373.43,512.57 361.83,507.56 ' style='stroke-width: 1.07; stroke: none; fill: #000000;' />
+<rect x='8.22' y='56.22' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='123.08' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='189.95' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='256.81' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='323.68' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='390.54' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='457.41' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<polygon points='361.83,507.56 373.43,502.54 385.03,507.56 373.43,512.57 361.83,507.56 ' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; fill: #000000;' />
 <polygon points='361.99,78.62 373.37,78.62 373.37,67.24 361.99,67.24 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
 <polygon points='339.08,112.05 350.46,112.05 350.46,100.68 339.08,100.68 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
 <polygon points='346.89,145.49 358.27,145.49 358.27,134.11 346.89,134.11 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
@@ -89,7 +89,7 @@
 <polyline points='379.14,476.63 379.14,471.62 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='301.74' y1='557.71' x2='301.74' y2='22.78' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='396.95' y1='557.71' x2='396.95' y2='56.22' style='stroke-width: 1.07; stroke-dasharray: 5.69,5.69; stroke-linecap: butt;' />
-<rect x='8.22' y='524.27' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #FFFFFF;' />
+<rect x='8.22' y='524.27' width='706.30' height='33.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #FFFFFF;' />
 <text x='26.76' y='77.83' style='font-size: 14.23px; font-family: sans;' textLength='88.60px' lengthAdjust='spacingAndGlyphs'>Aronson 1948</text>
 <text x='26.76' y='111.26' style='font-size: 14.23px; font-family: sans;' textLength='152.65px' lengthAdjust='spacingAndGlyphs'>Ferguson &amp; Simes 1949</text>
 <text x='26.76' y='144.69' style='font-size: 14.23px; font-family: sans;' textLength='130.51px' lengthAdjust='spacingAndGlyphs'>Rosenthal et al 1960</text>

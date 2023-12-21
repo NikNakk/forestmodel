@@ -27,10 +27,10 @@
 </defs>
 <g clip-path='url(#cpOC4yMnw3MTQuNTJ8MjIuNzh8NTU3Ljcx)'>
 <rect x='8.22' y='22.78' width='706.30' height='534.92' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='8.22' y='82.22' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='201.09' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='319.96' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
-<rect x='8.22' y='438.83' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='82.22' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='201.09' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='319.96' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
+<rect x='8.22' y='438.83' width='706.30' height='59.44' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #EFEFEF;' />
 <polygon points='254.06,117.63 265.44,117.63 265.44,106.25 254.06,106.25 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
 <polygon points='253.58,177.06 264.96,177.06 264.96,165.68 253.58,165.68 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />
 <polygon points='222.41,236.50 233.79,236.50 233.79,225.12 222.41,225.12 ' style='stroke-width: 0.71; stroke: none; fill: #000000;' />

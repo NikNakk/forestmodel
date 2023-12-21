@@ -26,4 +26,3 @@ Suggests:
     covr,
     testthat,
     vdiffr
-RoxygenNote: 7.1.2

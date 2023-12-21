@@ -1,5 +1,5 @@
 model_frame_coxph_simple <- function(model) {
-  cph_terms <- terms(model)
+  cph_terms <- stats::terms(model)
   fcall <- model$call
   indx <- match(c("formula", "data", "weights", "subset",
                   "na.action", "cluster", "id", "istate"), names(fcall),

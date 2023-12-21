@@ -241,7 +241,7 @@ forest_model <- function(model,
             )
             if (inherits(model, "coxph")) {
               event_detail_tab <- lapply(
-                setNames(seq_len(ncol(model$y)), colnames(model$y)),
+                stats::setNames(seq_len(ncol(model$y)), colnames(model$y)),
                 function(y_col) {
                   apply(
                     cols,
@@ -277,10 +277,17 @@ forest_model <- function(model,
                 seq_along(interaction_terms),
                 function(i) {
                   if (term_row$interaction_terms_are_factors[[1]][i]) {
-                    ilv <- tibble::tibble(
-                      level = model$xlevels[[remove_backticks(interaction_terms[i])]],
-                      label = paste0(interaction_terms[i], level)
-                    )
+                    if (term_row$interaction_terms_are_logical[[1]][i]) {
+                      ilv <- tibble::tibble(
+                        level = c("FALSE", "TRUE"),
+                        label = paste0(interaction_terms[i], level)
+                      )
+                    } else {
+                      ilv <- tibble::tibble(
+                        level = model$xlevels[[remove_backticks(interaction_terms[i])]],
+                        label = paste0(interaction_terms[i], level)
+                      )
+                    }
                   } else {
                     ilv <- tibble::tibble(level = NA, label = interaction_terms[i])
                   }
@@ -459,6 +466,7 @@ make_forest_terms_basic <- function(model) {
     is_interaction = colSums(mdl_factors) > 1,
     interaction_terms = lapply(term_label, function(tl) names(which(attr(mdl_terms, "factors")[, tl] == 1))),
     interaction_vars = lapply(interaction_terms, remove_backticks),
-    interaction_terms_are_factors = lapply(interaction_vars, function(iv) mdl_data_classes_factors[iv])
+    interaction_terms_are_factors = lapply(interaction_vars, function(iv) mdl_data_classes_factors[iv]),
+    interaction_terms_are_logical = lapply(interaction_vars, function(iv) mdl_terms_are_logical[iv])
   )
 }
